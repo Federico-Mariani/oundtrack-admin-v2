@@ -1,0 +1,12 @@
+# Build output and caches
+dist
+coverage
+.angular
+node_modules
+
+# Generated / lock files
+package-lock.json
+
+# IDE
+.idea
+.vscode

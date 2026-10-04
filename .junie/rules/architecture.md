@@ -1,0 +1,138 @@
+# Architecture rules
+
+Feature-first Clean Architecture. Every rule in this file that can be checked automatically **is** checked by ESLint (`eslint/architecture-boundaries.mjs`, `eslint/restricted-imports.mjs`,
+`eslint/project-structure.mjs`) and produces an error. Keep this document and those files in sync.
+
+## Top-level structure
+
+```text
+src/
+├── main.ts, app/app.ts, app/app.config.ts, app/app.routes.ts   # app composition root
+├── environments/                                                # environment configuration
+└── app/
+    ├── core/        # application-wide concerns only (e.g. HTTP envelope contract)
+    ├── shared/      # feature-agnostic, reusable primitives (RequestState, StoreFacade, Id)
+    └── features/    # one folder per bounded context / vertical slice
+        └── <feature>/
+            ├── index.ts                 # PUBLIC API — the only cross-feature entry point
+            ├── <feature>.providers.ts   # composition root (DI bindings, NgRx registration)
+            ├── domain/                  # pure TypeScript business model
+            ├── application/
+            │   ├── ports/               # interfaces implemented by infrastructure
+            │   ├── tokens/              # InjectionTokens for the ports
+            │   └── state/               # NgRx: actions/ reducers/ effects/ facades/, *.feature.ts
+            ├── infrastructure/          # HTTP, storage, DTOs, mappers, interceptors
+            ├── presentation/            # pages, components, guards, routes, paths
+            └── testing/                 # fakes and fixtures shared by the feature's specs
+```
+
+No other folders are allowed at these levels (ESLint `project/structure/*`). A feature root may
+contain only `index.ts` and `<feature>.providers.ts`.
+
+## Layer responsibilities
+
+| Layer                                  | Contains                                                                      | Must NOT know                                                                             |
+| -------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `domain/`                              | models, errors, pure functions (`isAccessTokenExpired`)                       | Angular, NgRx, RxJS, HttpClient, DTOs, env, any outer layer                               |
+| `application/ports                     | tokens`                                                                       | interfaces (`AuthRepository`, `AuthSessionStorage`, `AccessTokenProvider`) + their tokens | state, infrastructure, presentation |
+| `application/state/`                   | NgRx actions, micro-reducers, functional effects, feature, facades            | infrastructure implementations, presentation                                              |
+| `application/state/facades/`           | `XFacade` + micro facades: the ONLY API presentation may use                  | infrastructure, presentation                                                              |
+| `infrastructure/`                      | HTTP repositories, storage adapters, DTOs, mappers, interceptors              | NgRx (state, actions, facades), presentation                                              |
+| `presentation/`                        | Angular pages/components, guards, routes                                      | `@ngrx/*`, state internals, infrastructure, providers                                     |
+| `<feature>.providers.ts`               | `provideX()`: binds ports → implementations, `provideState`, `provideEffects` | presentation                                                                              |
+| `index.ts`                             | re-exports of what other features/app may use                                 | —                                                                                         |
+| `shared/`                              | cross-feature, domain-agnostic abstractions                                   | features, core, app, environments; NgRx anywhere                                          |
+| `shared/types`, `shared/state/request` | pure TypeScript primitives                                                    | Angular, NgRx, RxJS as well                                                               |
+| `core/`                                | application-wide concerns                                                     | feature internals, NgRx                                                                   |
+
+Ports whose contract needs RxJS (`Observable`) live in `application/ports`, not in `domain`.
+
+## Dependency matrix (what each layer may import)
+
+```text
+FROM                      → ALLOWED TARGETS (same feature unless stated)
+domain                    → domain, shared-pure
+application (ports/tokens)→ domain, application, shared, shared-pure
+application/state         → domain, application, application/state, shared, shared-pure,
+                            other features' public API
+facades                   → domain, application, application/state, facades, shared, shared-pure
+infrastructure            → domain, application (ports/tokens), infrastructure, shared, shared-pure,
+                            core, environments
+presentation              → domain, application (types), facades, presentation, shared, shared-pure,
+                            core, other features' public API
+<feature>.providers.ts    → domain, application, state, facades, infrastructure, shared, core,
+                            environments, other features' public API
+index.ts                  → anything inside its own feature
+testing/                  → anything inside its own feature, shared, core, environments, public APIs
+*.spec.ts                 → anything inside its own feature, shared, core, environments, public APIs
+shared                    → shared, shared-pure
+shared-pure               → shared-pure
+core                      → core, shared, shared-pure, environments, feature public APIs
+app (src/app/*.ts, main)  → app, core, shared, shared-pure, environments, feature public APIs
+environments              → environments
+```
+
+Everything not listed is an error (`boundaries/dependencies`, default `disallow`).
+
+## External packages per layer (`no-restricted-imports`)
+
+- `@ngrx/*` only in `features/*/application/state/**`, `features/*/testing/**`,
+  `<feature>.providers.ts`, `app.config.ts`.
+- `@ngrx/signals` is forbidden everywhere. `createFeatureSelector` is forbidden everywhere.
+- `domain/**` and `shared/types/**`, `shared/state/request/**`: no `@angular/*`, `@ngrx/*`,
+  `rxjs`, `@environments/*`, `@app/*` (domain additionally: no `jwt-decode`).
+- `shared/**`: no `@features/**`.
+
+## Cross-feature communication
+
+```ts
+// ALLOWED (from another feature, core or app)
+import { AuthFacade, authGuard, AUTH_ROUTES } from '@features/auth';
+
+// NOT ALLOWED (anywhere: alias or relative)
+import { AuthFacade } from '@features/auth/application/state/facades/auth.facade';
+import { authFeature } from '../../auth/application/state/auth.feature';
+import { provideAuth } from '../auth/auth.providers';
+```
+
+- `features/<feature>/index.ts` is the only cross-feature entry point. Export only what consumers
+  need (facade, domain types, errors, guards, routes, `provideX`), never DTOs, mappers, actions,
+  reducers, effects, implementations.
+- Inside a feature use **relative** imports; use aliases only to cross boundaries:
+  `@shared/*`, `@features/<feature>`, `@app/core/*`, `@environments/*`.
+- When two features must collaborate, go through the public API (facade), a shared abstraction,
+  or an application-level service — never through internals.
+
+## Composition roots
+
+`app.config.ts`, `app.routes.ts` and `<feature>.providers.ts` wire the application. They are the
+only places that may bind ports to infrastructure implementations and register NgRx state/effects.
+Infrastructure that needs application state (e.g. the HTTP interceptor needs the access token)
+consumes a **port** (`AccessTokenProvider`) bound in the providers file — never the facade or the
+store directly.
+
+## Examples
+
+```ts
+// ALLOWED
+// features/auth/application/state/effects/auth-login.effects.ts
+import { AUTH_REPOSITORY } from '../../tokens/auth-repository.token';
+// features/auth/infrastructure/storage/local-storage-auth-session.storage.ts
+import type { AuthSessionStorage } from '../../application/ports/auth-session-storage';
+// features/auth/presentation/pages/login/login-page.ts
+import { AuthFacade } from '../../../application/state/facades/auth.facade';
+// features/home/presentation/home.routes.ts
+import { authGuard } from '@features/auth';
+
+// NOT ALLOWED
+// features/auth/domain/models/user.ts
+import { Injectable } from '@angular/core'; // domain → Angular
+// features/auth/application/state/effects/auth-login.effects.ts
+import { HttpAuthRepository } from '../../../infrastructure/...'; // state → implementation
+// features/auth/infrastructure/http/auth-token.interceptor.ts
+import { AuthFacade } from '../../application/state/facades/...'; // infrastructure → facade
+// features/auth/presentation/pages/login/login-page.ts
+import { Store } from '@ngrx/store'; // presentation → NgRx
+// shared/state/store-facade.ts
+import { AuthFacade } from '@features/auth'; // shared → feature
+```

@@ -1,0 +1,31 @@
+<form (ngSubmit)="submit()" [formGroup]="form" novalidate>
+  <h1>Login</h1>
+
+  <label>
+    Email
+    <input autocomplete="email" formControlName="email" type="email" />
+  </label>
+  @if (form.controls.email.touched && form.controls.email.invalid) {
+    <p role="alert">Please enter a valid email address.</p>
+  }
+
+  <label>
+    Password
+    <input autocomplete="current-password" formControlName="password" type="password" />
+  </label>
+  @if (form.controls.password.touched && form.controls.password.invalid) {
+    <p role="alert">Password is required.</p>
+  }
+
+  @if (loginError(); as error) {
+    <p role="alert">{{ error.message }}</p>
+  }
+
+  <button [disabled]="isLoggingIn()" type="submit">
+    @if (isLoggingIn()) {
+      Signing in…
+    } @else {
+      Sign in
+    }
+  </button>
+</form>
