@@ -1,6 +1,6 @@
-import type { Routes } from '@angular/router';
-import { AUTH_PATHS } from './auth.paths';
-import { guestGuard } from './guards/auth.guards';
+import type {Routes} from '@angular/router';
+import {AUTH_PATHS} from './auth.paths';
+import {guestGuard} from '@features/auth/presentation/routing/guards/guest.guards';
 
 /** Routes owned by the Auth feature. Pages are lazily loaded. */
 export const AUTH_ROUTES: Routes = [

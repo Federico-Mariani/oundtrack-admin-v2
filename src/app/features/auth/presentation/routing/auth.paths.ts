@@ -3,6 +3,7 @@
  * representation (routes, navigation commands, guards) derives from these.
  */
 export const AUTH_PATHS = {
+  root: 'auth',
   login: 'login',
 } as const;
 

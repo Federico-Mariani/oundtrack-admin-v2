@@ -1,4 +1,4 @@
-import { AUTH_PATHS } from './auth.paths';
+import {AUTH_PATHS} from './auth.paths';
 
 /**
  * Typed navigation commands (Router `commands` arrays) for the Auth feature.
@@ -7,5 +7,5 @@ import { AUTH_PATHS } from './auth.paths';
  * `routerLink` bindings in templates.
  */
 export const AUTH_NAVIGATION = {
-  login: () => ['/', AUTH_PATHS.login] as const,
+  login: () => ['/', AUTH_PATHS.root, AUTH_PATHS.login] as const,
 } as const;

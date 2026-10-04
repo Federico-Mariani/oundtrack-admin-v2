@@ -1,18 +1,36 @@
-import type { Routes } from '@angular/router';
+import type {Routes} from '@angular/router';
+import {AUTH_PATHS} from '@features/auth/presentation/routing/auth.paths';
 
-/**
- * Application composition root for routing: it only composes the public routing
- * API of each feature (lazily) and defines app-level fallback. It knows no
- * feature internals (pages, guards, paths); each feature owns its own routes.
- */
 export const routes: Routes = [
   {
-    path: '',
-    loadChildren: () => import('@features/auth').then((feature) => feature.AUTH_ROUTES),
+    path: AUTH_PATHS.root,
+    loadChildren: () =>
+      import('@features/auth').then(
+        ({AUTH_ROUTES}) => AUTH_ROUTES,
+      ),
   },
+
   {
     path: '',
-    loadChildren: () => import('@features/home').then((feature) => feature.HOME_ROUTES),
+    loadComponent: () =>
+      import(
+        './presentation/layouts/default-layout/default-layout'
+        ).then(
+        ({DefaultLayout}) => DefaultLayout,
+      ),
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('@features/home').then(
+            ({HOME_ROUTES}) => HOME_ROUTES,
+          ),
+      },
+    ],
   },
-  { path: '**', redirectTo: '' },
+
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
