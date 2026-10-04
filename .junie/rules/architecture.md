@@ -53,9 +53,10 @@ Ports whose contract needs RxJS (`Observable`) live in `application/ports`, not 
 FROM                      → ALLOWED TARGETS (same feature unless stated)
 domain                    → domain, shared-pure
 application (ports/tokens)→ domain, application, shared, shared-pure
-application/state         → domain, application, application/state, shared, shared-pure,
-                            other features' public API
+application/state         → domain, application, application/state, shared, shared-pure
+                            (NOT another feature's public API — state is local by default)
 facades                   → domain, application, application/state, facades, shared, shared-pure
+                            (NOT another feature's public API — state is local by default)
 infrastructure            → domain, application (ports/tokens), infrastructure, shared, shared-pure,
                             core, environments
 presentation              → domain, application (types), facades, presentation, shared, shared-pure,
@@ -102,6 +103,45 @@ import { provideAuth } from '../auth/auth.providers';
   `@shared/*`, `@features/<feature>`, `@app/core/*`, `@environments/*`.
 - When two features must collaborate, go through the public API (facade), a shared abstraction,
   or an application-level service — never through internals.
+
+## Feature state is local by default
+
+NgRx state management is **feature-local by default**. A feature's reducers, effects, actions and
+facades must not depend directly on the state manager of another bounded context — not even through
+its public API. This stops effects from silently becoming a global orchestrator across features and
+keeps each store independently reasoned about and tested. ESLint enforces it: `feature-application-state`
+and `feature-facade` cannot import `@features/<other-feature>`.
+
+```text
+GOOD
+Presentation A      → Public API B           (a page may use AuthFacade from @features/auth)
+App composition     → Public APIs A / B       (app.config.ts / app.routes.ts / providers)
+Effect A            → own Repository Port     (collaborate via an application contract)
+
+BAD
+Effect A            → Facade B                (state-manager-to-state-manager coupling)
+Effect A            → Store/Actions B
+Reducer A           → Feature B internals
+```
+
+If a feature's state genuinely must depend on another bounded context, prefer first: an **application
+port**, a **shared domain-neutral contract**, or **input passed from a composition/orchestration
+layer** — before reaching for `Effect A → Facade B`. Such a dependency is **opt-in**: add a narrow,
+documented exception to `eslint/architecture-boundaries.mjs` for that specific case only; never open a
+wildcard between all features, and do not introduce a global event bus / mediator / command bus to
+work around the rule. Today there are **no** cross-feature application-state exceptions.
+
+## Project structure: strict but intentionally evolvable
+
+`eslint/project-structure.mjs` rejects any folder the architecture does not foresee (e.g. a stray
+`src/app/services/` or `features/<feature>/application/helpers/`). This prevents accidental drift, not
+intentional evolution. A new, semantically valid category (for example `domain/value-objects`,
+`domain/services`, `application/services`, `presentation/components`) is **not** architecturally wrong
+by definition — it is simply **forbidden until it is intentionally added to the architecture rules**.
+When a task genuinely needs a new architectural folder, do **not** bypass `project-structure` with a
+disable: update `eslint/project-structure.mjs` (and this document) on purpose and explain why the
+category exists. Never create generic buckets (`services/`, `managers/`, `helpers/`, `common/`) and
+then add an exception just to make lint pass.
 
 ## Composition roots
 

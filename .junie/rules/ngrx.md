@@ -83,3 +83,23 @@ Choose the RxJS operator per operation semantics and say why in a comment:
   validate that a late response is still relevant before applying it.
 - Side-effect-only effects use `{ functional: true, dispatch: false }`.
 - Reducers are pure: no HTTP, storage, routing, injection or dispatch.
+
+## Feature state is local by default (⚙ ESLint-enforced)
+
+NgRx state management is **feature-local by default**. A feature's reducers, effects, actions and
+facades must not depend on the state manager of another bounded context — not even through its public
+API. Effects must not become a cross-feature orchestrator.
+
+```text
+GOOD                                   BAD
+Presentation A → Public API B          Effect A   → Facade B
+App composition → Public APIs A / B    Effect A   → Store/Actions B
+Effect A → own Repository Port         Reducer A  → Feature B internals
+```
+
+`feature-application-state` and `feature-facade` cannot import `@features/<other-feature>`
+(`boundaries/dependencies`). Presentation and composition roots (`app.config.ts`, `app.routes.ts`,
+`<feature>.providers.ts`) may still consume another feature's public API. If a feature state truly
+needs another context, prefer an application port, a shared domain-neutral contract, or composition
+at the app boundary; make it an explicit, documented, narrow opt-in exception — never a global event
+bus. See `architecture.md` → "Feature state is local by default".

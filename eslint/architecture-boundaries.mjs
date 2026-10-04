@@ -98,6 +98,15 @@ const featureProviders = {
   file: { categories: FILES.providers },
 };
 
+/** The public API (index.ts) of a feature OTHER than the importer's. */
+const otherFeaturePublicApi = {
+  element: {
+    type: TYPES.featureRoot,
+    captured: { feature: '!{{ from.element.captured.feature }}' },
+  },
+  file: { categories: FILES.publicApi },
+};
+
 /**
  * Every feature file except the public API entry point: the layer folders plus
  * the providers file. (Files without categories are described with
@@ -171,7 +180,9 @@ const policies = [
       to: [
         sameFeature(TYPES.featureDomain, TYPES.featureApplication, TYPES.featureApplicationState),
         element(TYPES.shared, TYPES.sharedPure),
-        featurePublicApi,
+        // NOTE: a feature's own public API (index.ts) is intentionally NOT allowed here.
+        // Feature state is local by default: state managers must not couple to each
+        // other through another feature's public API (see the explicit disallow below).
       ],
     },
   },
@@ -336,6 +347,15 @@ const policies = [
     },
     message:
       "Presentation cannot import '{{ to.type }}'. Use the feature Facade (application/state/facades) as the only entry to application state.",
+  },
+  // Feature state is local by default: a feature's reducers/effects/actions/facades
+  // must not depend on ANOTHER feature's state manager, even through its public API.
+  // Presentation and composition roots may still consume `@features/<feature>`.
+  {
+    from: element(TYPES.featureApplicationState, TYPES.featureFacade),
+    disallow: { to: otherFeaturePublicApi },
+    message:
+      "Feature state is local by default: '{{ from.type }}' of feature '{{ from.captured.feature }}' cannot depend on another feature's public API ('@features/{{ to.captured.feature }}'). State managers must not couple to each other; collaborate through an application port, a shared domain-neutral contract, or composition at the app/providers boundary.",
   },
   // After the layer rules so that a cross-feature violation gets this message, whatever the layer.
   {
