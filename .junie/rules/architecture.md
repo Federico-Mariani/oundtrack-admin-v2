@@ -22,7 +22,8 @@ src/
             │   ├── tokens/              # InjectionTokens for the ports
             │   └── state/               # NgRx: actions/ reducers/ effects/ facades/, *.feature.ts
             ├── infrastructure/          # HTTP, storage, DTOs, mappers, interceptors
-            ├── presentation/            # pages, components, guards, routes, paths
+            ├── presentation/            # pages, components and feature-owned routing
+            │   └── routing/             # <feature>.paths/.navigation/.routes, *-navigation.service, guards/
             └── testing/                 # fakes and fixtures shared by the feature's specs
 ```
 
@@ -31,19 +32,19 @@ contain only `index.ts` and `<feature>.providers.ts`.
 
 ## Layer responsibilities
 
-| Layer                                  | Contains                                                                      | Must NOT know                                                                             |
-| -------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `domain/`                              | models, errors, pure functions (`isAccessTokenExpired`)                       | Angular, NgRx, RxJS, HttpClient, DTOs, env, any outer layer                               |
-| `application/ports                     | tokens`                                                                       | interfaces (`AuthRepository`, `AuthSessionStorage`, `AccessTokenProvider`) + their tokens | state, infrastructure, presentation |
-| `application/state/`                   | NgRx actions, micro-reducers, functional effects, feature, facades            | infrastructure implementations, presentation                                              |
-| `application/state/facades/`           | `XFacade` + micro facades: the ONLY API presentation may use                  | infrastructure, presentation                                                              |
-| `infrastructure/`                      | HTTP repositories, storage adapters, DTOs, mappers, interceptors              | NgRx (state, actions, facades), presentation                                              |
-| `presentation/`                        | Angular pages/components, guards, routes                                      | `@ngrx/*`, state internals, infrastructure, providers                                     |
-| `<feature>.providers.ts`               | `provideX()`: binds ports → implementations, `provideState`, `provideEffects` | presentation                                                                              |
-| `index.ts`                             | re-exports of what other features/app may use                                 | —                                                                                         |
-| `shared/`                              | cross-feature, domain-agnostic abstractions                                   | features, core, app, environments; NgRx anywhere                                          |
-| `shared/types`, `shared/state/request` | pure TypeScript primitives                                                    | Angular, NgRx, RxJS as well                                                               |
-| `core/`                                | application-wide concerns                                                     | feature internals, NgRx                                                                   |
+| Layer                                  | Contains                                                                                                                        | Must NOT know                                                                             |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `domain/`                              | models, errors, pure functions (`isAccessTokenExpired`)                                                                         | Angular, NgRx, RxJS, HttpClient, DTOs, env, any outer layer                               |
+| `application/ports                     | tokens`                                                                                                                         | interfaces (`AuthRepository`, `AuthSessionStorage`, `AccessTokenProvider`) + their tokens | state, infrastructure, presentation |
+| `application/state/`                   | NgRx actions, micro-reducers, functional effects, feature, facades                                                              | infrastructure implementations, presentation                                              |
+| `application/state/facades/`           | `XFacade` + micro facades: the ONLY API presentation may use                                                                    | infrastructure, presentation                                                              |
+| `infrastructure/`                      | HTTP repositories, storage adapters, DTOs, mappers, interceptors                                                                | NgRx (state, actions, facades), presentation                                              |
+| `presentation/`                        | Angular pages/components and feature-owned routing (`routing/`: paths, navigation commands, navigation service, routes, guards) | `@ngrx/*`, state internals, infrastructure, providers                                     |
+| `<feature>.providers.ts`               | `provideX()`: binds ports → implementations, `provideState`, `provideEffects`                                                   | presentation                                                                              |
+| `index.ts`                             | re-exports of what other features/app may use                                                                                   | —                                                                                         |
+| `shared/`                              | cross-feature, domain-agnostic abstractions                                                                                     | features, core, app, environments; NgRx anywhere                                          |
+| `shared/types`, `shared/state/request` | pure TypeScript primitives                                                                                                      | Angular, NgRx, RxJS as well                                                               |
+| `core/`                                | application-wide concerns                                                                                                       | feature internals, NgRx                                                                   |
 
 Ports whose contract needs RxJS (`Observable`) live in `application/ports`, not in `domain`.
 
@@ -104,6 +105,37 @@ import { provideAuth } from '../auth/auth.providers';
 - When two features must collaborate, go through the public API (facade), a shared abstraction,
   or an application-level service — never through internals.
 
+## Feature-owned routing
+
+Each feature owns its routing. There is **no** global route config, **no** global route registry (`ROUTES`, `APP_PATHS`, `GLOBAL_NAVIGATION`, ...) and **no** global God `RouterService` that knows
+every feature. A feature's routing lives in `presentation/routing/` (a presentation concern) and
+contains, when needed:
+
+- `<feature>.paths.ts` — route **segments**, the single source of truth (`AUTH_PATHS`), plus
+  feature-specific query-param / route-param keys. Not full URLs.
+- `<feature>.navigation.ts` — pure, framework-light, typed navigation commands derived only from the
+  paths (`AUTH_NAVIGATION.login() === ['/', 'login']`).
+- `<feature>-navigation.service.ts` — the only place that encapsulates the Angular `Router` for
+  imperative navigation; injectable (`providedIn: 'root'`), knows the Router only (never the Store,
+  actions or feature state). Navigation methods return `Promise<boolean>` / `UrlTree` so the caller
+  decides to `await` or `void`.
+- `<feature>.routes.ts` — the feature `Routes`, lazily loading pages (`loadComponent` /
+  `loadChildren`).
+- `routing/guards/` — functional guards (`CanActivateFn` / `CanMatchFn`) that redirect by returning
+  a `UrlTree` and consume only the feature facade.
+
+`app.routes.ts` is **composition only**: it lazily composes each feature's public routing API (`FEATURE_ROUTES`), app-level redirects and the `**` fallback. It never imports feature internals (pages, guards, paths). The `**` wildcard is a matcher, never a navigable URL. A feature exposes
+through its `index.ts` only what the app or other features consume for routing (`FEATURE_ROUTES`,
+and `FeatureNavigationService` / `FEATURE_PATHS` when actually needed cross-boundary); pages, route
+params and private routing helpers stay internal.
+
+Declarative navigation stays declarative (`routerLink` / `routerLinkActive` in templates); the
+navigation service is for imperative TypeScript navigation. Cross-feature navigation goes through the
+target feature's public API (`import { AuthNavigationService } from '@features/auth'`), never through
+a global router. Routing files are classified as `feature-presentation` by ESLint, so routing cannot
+import infrastructure or NgRx internals, and `app` cannot import feature internals. See
+`.junie/rules/routing.md` for the full routing conventions.
+
 ## Feature state is local by default
 
 NgRx state management is **feature-local by default**. A feature's reducers, effects, actions and
@@ -161,7 +193,7 @@ import { AUTH_REPOSITORY } from '../../tokens/auth-repository.token';
 import type { AuthSessionStorage } from '../../application/ports/auth-session-storage';
 // features/auth/presentation/pages/login/login-page.ts
 import { AuthFacade } from '../../../application/state/facades/auth.facade';
-// features/home/presentation/home.routes.ts
+// features/home/presentation/routing/home.routes.ts
 import { authGuard } from '@features/auth';
 
 // NOT ALLOWED

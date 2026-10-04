@@ -7,7 +7,7 @@ import {
   type RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
-import { AuthFacade } from '../../application/state/facades/auth.facade';
+import { AuthFacade } from '../../../application/state/facades/auth.facade';
 import { authGuard, guestGuard } from './auth.guards';
 
 describe('auth guards', () => {

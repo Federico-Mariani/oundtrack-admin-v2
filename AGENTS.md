@@ -9,6 +9,7 @@ effects / facades). The detailed, **mandatory** project rules live in `.junie/ru
 | `.junie/rules/architecture.md`       | Layers, dependency rule, feature public API, aliases      |
 | `.junie/rules/ngrx.md`               | NgRx conventions, facades, request state, concurrency     |
 | `.junie/rules/angular-typescript.md` | Modern Angular APIs, strict TypeScript, file organization |
+| `.junie/rules/routing.md`            | Feature-owned routing: paths, navigation, guards, lazy    |
 | `.junie/rules/testing.md`            | What to test, where, and how                              |
 | `.junie/rules/quality-gates.md`      | Commands that must pass before a task is complete         |
 

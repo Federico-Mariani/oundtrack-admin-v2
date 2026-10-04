@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { AUTH_PATHS, AuthFacade } from '@features/auth';
+import { AuthFacade, AuthNavigationService } from '@features/auth';
 
 @Component({
   selector: 'app-home-page',
@@ -19,10 +18,10 @@ export class HomePage {
   private readonly auth = inject(AuthFacade);
   protected readonly userFullName = this.auth.data.userFullName;
   protected readonly isLoadingCurrentUser = this.auth.loadingStatuses.isLoadingCurrentUser;
-  private readonly router = inject(Router);
+  private readonly authNavigation = inject(AuthNavigationService);
 
   protected logout(): void {
     this.auth.actions.logout();
-    void this.router.navigate([`/${AUTH_PATHS.login}`]);
+    void this.authNavigation.goToLogin();
   }
 }

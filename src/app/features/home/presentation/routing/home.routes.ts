@@ -7,6 +7,6 @@ export const HOME_ROUTES: Routes = [
     path: '',
     pathMatch: 'full',
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/home-page').then((m) => m.HomePage),
+    loadComponent: () => import('../pages/home-page').then((m) => m.HomePage),
   },
 ];
