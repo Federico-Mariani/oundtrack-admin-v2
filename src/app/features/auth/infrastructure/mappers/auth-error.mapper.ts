@@ -1,6 +1,6 @@
 import { type HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import type { ApiErrorBody } from '@app/core/http/api-response';
-import type { AuthError, AuthErrorCode } from '../../domain/errors/auth-error';
+import type { AuthError, AuthErrorCode } from '@features/auth';
 
 /** Endpoint that failed; the same HTTP status means different things per operation. */
 export type AuthApiOperation = 'login' | 'register' | 'current-user';
@@ -23,22 +23,23 @@ function toApiErrorBody(error: unknown): ApiErrorBody | null {
 
   const candidate: Partial<Record<keyof ApiErrorBody, unknown>> = error;
   const message = typeof candidate.message === 'string' ? candidate.message : undefined;
-  const fields = isStringRecord(candidate.fields) ? candidate.fields : undefined;
+  const fields = isStringArrayRecord(candidate.fields) ? candidate.fields : undefined;
 
   return { message, fields };
 }
 
-function isStringRecord(value: unknown): value is Readonly<Record<string, string>> {
+function isStringArrayRecord(value: unknown): value is Readonly<Record<string, readonly string[]>> {
   return (
     typeof value === 'object' &&
     value !== null &&
-    Object.values(value).every((entry) => typeof entry === 'string')
+    Object.values(value).every(
+      (entry) => Array.isArray(entry) && entry.every((item) => typeof item === 'string'),
+    )
   );
 }
 
 /** Status of a request that never reached the server (CORS, offline, timeout). */
 const NO_RESPONSE = 0;
-// `HttpStatusCode` widened to plain numbers so they can be compared with `HttpErrorResponse.status`.
 const UNAUTHORIZED: number = HttpStatusCode.Unauthorized;
 const CONFLICT: number = HttpStatusCode.Conflict;
 const BAD_REQUEST: number = HttpStatusCode.BadRequest;

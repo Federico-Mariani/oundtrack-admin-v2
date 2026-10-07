@@ -1,64 +1,37 @@
 import {ChangeDetectionStrategy, Component, effect, inject, input, InputSignal,} from '@angular/core';
-import {
-  type FormControl,
-  type FormGroup,
-  NonNullableFormBuilder,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import {type FormControl, ReactiveFormsModule,} from '@angular/forms';
 import {AuthFacade, AuthNavigationService,} from '@features/auth';
+import {SignalFormCustomControlDemo} from '@features/auth/presentation/components/login-form/login-form';
 
 interface LoginForm {
-  readonly email: FormControl<string>;
-  readonly password: FormControl<string>;
+    readonly email: FormControl<string>;
+    readonly password: FormControl<string>;
 }
 
 @Component({
-  selector: 'app-login-page',
-  imports: [ReactiveFormsModule],
-  templateUrl: './login-page.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-login-page',
+    imports: [ReactiveFormsModule, SignalFormCustomControlDemo,],
+    templateUrl: './login-page.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
-  private readonly auth = inject(AuthFacade);
-  private readonly navigation = inject(AuthNavigationService);
-  private readonly formBuilder = inject(NonNullableFormBuilder);
+    private readonly authFacade = inject(AuthFacade);
+    private readonly authNavigation = inject(AuthNavigationService);
 
-  readonly returnUrl: InputSignal<string> = input<string>('');
+    readonly returnUrl: InputSignal<string> = input<string>('');
 
-  protected readonly isLoggingIn =
-    this.auth.loadingStatuses.isLoggingIn;
-  protected readonly loginError =
-    this.auth.errorStatuses.login;
-  
-  protected readonly form: FormGroup<LoginForm> =
-    this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-    });
+    protected readonly isLoggingIn =
+        this.authFacade.loadingStatuses.isLoggingIn;
+    protected readonly loginError =
+        this.authFacade.errorStatuses.login;
 
-  constructor() {
-    effect(() => {
-      if (this.auth.data.isAuthenticated()) {
-        void this.navigation.navigateAfterLogin(
-          this.returnUrl(),
-        );
-      }
-    });
-  }
-
-  protected submit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
+    constructor() {
+        effect(() => {
+            if (this.authFacade.data.isAuthenticated()) {
+                void this.authNavigation.navigateAfterLogin(
+                    this.returnUrl(),
+                );
+            }
+        });
     }
-
-    if (this.isLoggingIn()) {
-      return;
-    }
-
-    this.auth.actions.login(
-      this.form.getRawValue(),
-    );
-  }
 }

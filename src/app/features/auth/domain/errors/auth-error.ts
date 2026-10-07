@@ -13,5 +13,5 @@ export type AuthErrorCode =
 export interface AuthError {
   readonly code: AuthErrorCode;
   readonly message: string;
-  readonly fieldErrors?: Readonly<Record<string, string>>;
+  readonly fieldErrors?: Readonly<Record<string, readonly string[]>>;
 }

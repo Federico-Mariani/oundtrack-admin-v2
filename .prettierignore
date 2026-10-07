@@ -6,6 +6,7 @@ node_modules
 
 # Generated / lock files
 package-lock.json
+patches
 
 # IDE
 .idea
