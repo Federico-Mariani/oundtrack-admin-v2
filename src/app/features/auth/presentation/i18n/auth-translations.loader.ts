@@ -13,9 +13,11 @@ export const authTranslationsLoader = composeScopeLoader({
   en: {
     common: () => import('./en/common.json'),
     login: () => import('./en/login.json'),
+    errors: () => import('./en/errors.json'),
   },
   it: {
     common: () => import('./it/common.json'),
     login: () => import('./it/login.json'),
+    errors: () => import('./it/errors.json'),
   },
 });

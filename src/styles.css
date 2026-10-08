@@ -1,9 +1,12 @@
 @layer theme, base, components, utilities;
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/preflight.css' layer(base);
-@import 'tailwindcss/utilities.css';
+@import 'tailwindcss/utilities.css' layer(utilities);
 
 @import '@spartan-ng/brain/hlm-tailwind-preset.css';
+
+/* ----- Custom Styles ----- */
+@import './styles/components/toast.css';
 
 :root {
   color-scheme: light;
@@ -33,6 +36,7 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
@@ -44,6 +48,14 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+    --success: oklch(0.63 0.17 145);
+    --success-foreground: oklch(0.985 0 0);
+
+    --warning: oklch(0.76 0.17 75);
+    --warning-foreground: oklch(0.25 0.055 70);
+
+    --info: oklch(0.62 0.15 250);
+    --info-foreground: oklch(0.985 0 0);
 }
 
 :root.dark {
@@ -69,6 +81,7 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
+    --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
@@ -80,6 +93,14 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+    --success: oklch(0.72 0.17 145);
+    --success-foreground: oklch(0.16 0.035 145);
+
+    --warning: oklch(0.82 0.16 80);
+    --warning-foreground: oklch(0.22 0.05 70);
+
+    --info: oklch(0.72 0.15 250);
+    --info-foreground: oklch(0.16 0.035 250);
 }
 
 @layer base {

@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import type {ValidationError} from '@angular/forms/signals';
-import {HlmFieldError} from '@spartan-ng/helm/field';
-import {TranslocoDirective} from '@jsverse/transloco';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import type { ValidationError } from '@angular/forms/signals';
+import { HlmFieldError } from '@spartan-ng/helm/field';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 /**
  * Renders a field's validation errors and localizes them in one place, so
@@ -18,7 +18,7 @@ import {TranslocoDirective} from '@jsverse/transloco';
   templateUrl: './field-error.html',
   imports: [HlmFieldError, TranslocoDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {'class': 'flex flex-col gap-1'}
+  host: { class: 'flex flex-col gap-1' },
 })
 export class FieldError {
   readonly errors = input<readonly ValidationError[]>([]);

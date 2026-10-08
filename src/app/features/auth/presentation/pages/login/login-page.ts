@@ -22,9 +22,6 @@ export class LoginPage {
 
   readonly returnUrl: InputSignal<string> = input<string>('');
 
-  protected readonly isLoggingIn = this.authFacade.loadingStatuses.isLoggingIn;
-  protected readonly loginError = this.authFacade.errorStatuses.login;
-
   constructor() {
     effect(() => {
       if (this.authFacade.data.isAuthenticated()) {

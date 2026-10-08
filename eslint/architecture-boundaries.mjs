@@ -241,8 +241,11 @@ const policies = [
 
   // ---------------------------------------------------------------- feature root files
   // `<feature>.providers.ts` is the composition root: it binds ports to
-  // infrastructure and registers the NgRx feature. `index.ts` is the public
-  // API and may re-export anything from its own feature.
+  // infrastructure and registers the NgRx feature. As a composition root it may
+  // also bind an application port to a presentation adapter (e.g. a feedback
+  // port implemented by a presentation service that owns i18n), so it is the one
+  // place allowed to reference presentation. `index.ts` is the public API and
+  // may re-export anything from its own feature.
   {
     from: { element: element(TYPES.featureRoot).element, file: { categories: FILES.providers } },
     allow: {
@@ -253,6 +256,7 @@ const policies = [
           TYPES.featureApplicationState,
           TYPES.featureFacade,
           TYPES.featureInfrastructure,
+          TYPES.featurePresentation,
         ),
         element(TYPES.shared, TYPES.sharedPure, TYPES.core, TYPES.environments),
         featurePublicApi,

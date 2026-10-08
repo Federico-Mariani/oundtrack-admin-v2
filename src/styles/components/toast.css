@@ -1,0 +1,7 @@
+[data-sonner-toast] {
+    @apply bg-red-500!;
+}
+
+[data-sonner-toast][data-type='error'] {
+    @apply bg-red-500!;
+}

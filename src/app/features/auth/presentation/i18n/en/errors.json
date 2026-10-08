@@ -1,0 +1,8 @@
+{
+  "invalidCredentials": "Invalid email or password.",
+  "emailAlreadyRegistered": "This email is already registered.",
+  "validation": "Please check the entered data and try again.",
+  "unauthorized": "Your session has expired. Please sign in again.",
+  "network": "Network error. Please check your connection and try again.",
+  "unknown": "Something went wrong. Please try again."
+}
