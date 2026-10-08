@@ -1,7 +1,19 @@
-[data-sonner-toast] {
-    @apply bg-red-500!;
+[data-sonner-toast] [data-icon] {
+    color: var(--toast-accent);
+}
+
+[data-sonner-toast][data-type='success'] {
+    --toast-accent: var(--success);
+}
+
+[data-sonner-toast][data-type='warning'] {
+    --toast-accent: var(--warning);
+}
+
+[data-sonner-toast][data-type='info'] {
+    --toast-accent: var(--info);
 }
 
 [data-sonner-toast][data-type='error'] {
-    @apply bg-red-500!;
+    --toast-accent: var(--destructive);
 }

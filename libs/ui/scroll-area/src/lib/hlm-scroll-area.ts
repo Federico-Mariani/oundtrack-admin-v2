@@ -16,6 +16,6 @@ import { provideScrollbarOptions } from 'ngx-scrollbar';
 })
 export class HlmScrollArea {
   constructor() {
-    classes(() => 'rounded-2xl [--scrollbar-thumb-shape:9999px] block');
+    classes(() => 'rounded-md [--scrollbar-thumb-shape:9999px] block');
   }
 }

@@ -9,7 +9,7 @@ export class HlmMessageFooter {
   constructor() {
     classes(
       () =>
-        'text-muted-foreground px-4 text-xs font-medium flex max-w-full min-w-0 items-center group-has-data-[variant=ghost]/message:px-0 group-data-[align=end]/message:justify-end',
+        'text-muted-foreground px-3.5 text-xs font-medium flex max-w-full min-w-0 items-center group-has-data-[variant=ghost]/message:px-0 group-data-[align=end]/message:justify-end',
     );
   }
 }

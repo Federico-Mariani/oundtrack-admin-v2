@@ -9,7 +9,7 @@ export class HlmItemContent {
   constructor() {
     classes(
       () =>
-        'gap-1 group-data-[size=xs]/item:gap-0.5 flex flex-1 flex-col [&+[data-slot=item-content]]:flex-none',
+        'gap-1 group-data-[size=xs]/item:gap-0 flex flex-1 flex-col [&+[data-slot=item-content]]:flex-none',
     );
   }
 }

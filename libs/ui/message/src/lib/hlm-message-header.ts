@@ -9,7 +9,7 @@ export class HlmMessageHeader {
   constructor() {
     classes(
       () =>
-        'text-muted-foreground px-4 text-xs font-medium flex max-w-full min-w-0 items-center group-has-data-[variant=ghost]/message:px-0',
+        'text-muted-foreground px-3.5 text-xs font-medium flex max-w-full min-w-0 items-center group-has-data-[variant=ghost]/message:px-0',
     );
   }
 }

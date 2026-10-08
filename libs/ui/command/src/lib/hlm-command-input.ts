@@ -14,7 +14,9 @@ import { classes } from '@spartan-ng/helm/utils';
     'data-slot': 'command-input-wrapper',
   },
   template: `
-    <hlm-input-group class="bg-input/50 h-9">
+    <hlm-input-group
+      class="bg-input/30 border-input/30 h-8! rounded-lg! shadow-none! *:data-[slot=input-group-addon]:pl-2!"
+    >
       <input
         brnCommandInput
         data-slot="command-input"

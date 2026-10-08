@@ -95,7 +95,7 @@ export class HlmTh {
   constructor() {
     classes(
       () =>
-        'text-foreground h-12 px-3 text-start align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pe-0',
+        'text-foreground h-10 px-2 text-start align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pe-0',
     );
   }
 }
@@ -110,7 +110,7 @@ export class HlmTh {
 })
 export class HlmTd {
   constructor() {
-    classes(() => 'p-3 align-middle whitespace-nowrap [&:has([role=checkbox])]:pe-0');
+    classes(() => 'p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pe-0');
   }
 }
 

@@ -14,7 +14,7 @@ export function hlmChartTooltip<
     use: tooltip,
     ...options,
     className: hlm(
-      '[--ts-chart-tooltip-background:var(--popover)] [--ts-chart-tooltip-border-radius:calc(var(--radius)*1.4)] [--ts-chart-tooltip-border:0_solid_transparent] [--ts-chart-tooltip-color:var(--popover-foreground)] [--ts-chart-tooltip-font:500_var(--text-xs)/var(--text-xs--line-height)_var(--font-sans)] [--ts-chart-tooltip-padding:--spacing(1.5)_--spacing(2.5)] [--ts-chart-tooltip-shadow:var(--shadow-lg),0_0_0_1px_color-mix(in_oklab,var(--foreground)_5%,transparent)] dark:[--ts-chart-tooltip-shadow:var(--shadow-lg),0_0_0_1px_color-mix(in_oklab,var(--foreground)_10%,transparent)]',
+      '[--ts-chart-tooltip-background:var(--popover)] [--ts-chart-tooltip-border-radius:var(--radius)] [--ts-chart-tooltip-border:1px_solid_var(--border)] [--ts-chart-tooltip-color:var(--popover-foreground)] [--ts-chart-tooltip-font:500_var(--text-xs)/var(--text-xs--line-height)_var(--font-sans)] [--ts-chart-tooltip-padding:--spacing(1.5)_--spacing(2.5)] [--ts-chart-tooltip-shadow:var(--shadow-xl)]',
       options.className,
     ),
   };

@@ -17,60 +17,54 @@ import {Button} from '@shared/ui/button/button';
 import {NotificationService} from "@app/core/notifications/notification.service";
 
 @Component({
-  selector: 'app-login-form',
-  templateUrl: './login-form.html',
-  imports: [
-    FormRoot,
-    FormField,
-    HlmCardImports,
-    HlmFieldImports,
-    PasswordInput,
-    EmailInput,
-    TranslocoDirective,
-    Button,
-  ],
-  host: { class: 'w-full sm:max-w-md' },
+    selector: 'app-login-form',
+    templateUrl: './login-form.html',
+    imports: [
+        FormRoot,
+        FormField,
+        HlmCardImports,
+        HlmFieldImports,
+        PasswordInput,
+        EmailInput,
+        TranslocoDirective,
+        Button,
+    ],
+    host: {class: 'w-full sm:max-w-md'},
 })
 export class LoginForm {
-  private readonly authFacade = inject(AuthFacade);
+    private readonly authFacade = inject(AuthFacade);
     private readonly n = inject(NotificationService);
 
-  protected readonly i18nScope = AUTH_I18N_SCOPE;
-  protected readonly keys = AUTH_LOGIN_TRANSLATION_KEYS;
+    protected readonly i18nScope = AUTH_I18N_SCOPE;
+    protected readonly keys = AUTH_LOGIN_TRANSLATION_KEYS;
 
-  protected readonly isLoggingIn = computed(() => this.authFacade.loadingStatuses.isLoggingIn());
+    protected readonly isLoggingIn = computed(() => this.authFacade.loadingStatuses.isLoggingIn());
     protected readonly loginError = computed(() => this.authFacade.errorStatuses.login());
 
     private readonly loginFieldErrors = computed(() => this.loginError()?.fieldErrors);
-  protected readonly canSubmit: Signal<boolean> = computed(() => {
-    return this.loginFormController.form().valid();
-  });
+    protected readonly canSubmit: Signal<boolean> = computed(() => {
+        return this.loginFormController.form().valid();
+    });
 
-  protected readonly loginFormController = new AppFormController<LoginFormModel>(
-    [
-      new AppFormField('email', [new RequiredInputRule(), new EmailInputRule()]),
-      new AppFormField('password', [new RequiredInputRule()]),
-    ],
-    () => {
-      this.onSubmit();
-    },
-    this.loginFieldErrors,
-  );
+    protected readonly loginFormController = new AppFormController<LoginFormModel>(
+        [
+            new AppFormField('email', [new RequiredInputRule(), new EmailInputRule()]),
+            new AppFormField('password', [new RequiredInputRule()]),
+        ],
+        () => {
+            this.onSubmit();
+        },
+        this.loginFieldErrors,
+    );
 
-    constructor() {
-        setInterval(() => {
-            this.n.message('test');
-        }, 2000);
+    protected onSubmit(): void {
+        this.authFacade.actions.login({
+            email: this.loginFormController.model().email,
+            password: this.loginFormController.model().password,
+        });
     }
 
-  protected onSubmit(): void {
-    this.authFacade.actions.login({
-      email: this.loginFormController.model().email,
-      password: this.loginFormController.model().password,
-    });
-  }
-
-  protected reset(): void {
-    this.loginFormController.form().reset({ email: '', password: '' });
-  }
+    protected reset(): void {
+        this.loginFormController.form().reset({email: '', password: ''});
+    }
 }

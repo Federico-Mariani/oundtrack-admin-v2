@@ -13,7 +13,7 @@ import { classes } from '@spartan-ng/helm/utils';
   },
   template: `
     @if (showIcon()) {
-      <hlm-skeleton data-sidebar="menu-skeleton-icon" class="size-4 rounded-xl" />
+      <hlm-skeleton data-sidebar="menu-skeleton-icon" class="size-4 rounded-md" />
     } @else {
       <hlm-skeleton
         data-sidebar="menu-skeleton-text"
@@ -28,6 +28,6 @@ export class HlmSidebarMenuSkeleton {
   protected readonly _width = `${Math.floor(Math.random() * 40) + 50}%`;
 
   constructor() {
-    classes(() => 'h-8 gap-2 rounded-xl px-2 flex items-center');
+    classes(() => 'h-8 gap-2 rounded-md px-2 flex items-center');
   }
 }

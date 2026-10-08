@@ -9,6 +9,6 @@ import { classes } from '@spartan-ng/helm/utils';
 })
 export class HlmAutocompleteSeparator {
   constructor() {
-    classes(() => 'bg-border -mx-1.5 my-1.5 h-px');
+    classes(() => 'bg-border -mx-1 my-1 h-px');
   }
 }

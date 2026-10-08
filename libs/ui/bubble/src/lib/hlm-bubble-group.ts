@@ -7,6 +7,6 @@ import { classes } from '@spartan-ng/helm/utils';
 })
 export class HlmBubbleGroup {
   constructor() {
-    classes(() => 'gap-3 flex min-w-0 flex-col');
+    classes(() => 'gap-2.5 flex min-w-0 flex-col');
   }
 }

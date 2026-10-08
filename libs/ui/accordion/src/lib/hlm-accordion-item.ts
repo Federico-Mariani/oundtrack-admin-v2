@@ -17,6 +17,6 @@ import { classes } from '@spartan-ng/helm/utils';
 })
 export class HlmAccordionItem {
   constructor() {
-    classes(() => 'data-open:bg-muted/50 not-last:border-b flex flex-col');
+    classes(() => 'not-last:border-b flex flex-col');
   }
 }

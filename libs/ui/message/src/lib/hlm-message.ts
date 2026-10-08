@@ -18,7 +18,7 @@ export class HlmMessage {
   constructor() {
     classes(
       () =>
-        'gap-3 text-sm group/message relative flex w-full min-w-0 data-[align=end]:flex-row-reverse',
+        'gap-2.5 text-sm group/message relative flex w-full min-w-0 data-[align=end]:flex-row-reverse',
     );
   }
 }

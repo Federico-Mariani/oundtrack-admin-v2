@@ -1,7 +1,1 @@
-<h1>Welcome{{ userFullName() ? ', ' + userFullName() : '' }}</h1>
-
-@if (isLoadingCurrentUser()) {
-  <p>Loading your profile…</p>
-}
-
 <button type="button" (click)="logout()">Sign out</button>

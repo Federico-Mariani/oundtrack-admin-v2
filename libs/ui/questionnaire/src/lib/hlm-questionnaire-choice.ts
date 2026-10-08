@@ -40,12 +40,12 @@ import { classes } from '@spartan-ng/helm/utils';
     <span
       aria-hidden="true"
       data-slot="questionnaire-choice-indicator"
-      class="bg-input/90 group-data-checked/questionnaire-choice:border-primary group-data-checked/questionnaire-choice:bg-primary group-data-checked/questionnaire-choice:text-primary-foreground dark:group-data-checked/questionnaire-choice:bg-primary pointer-events-none relative flex size-4 shrink-0 translate-y-[--spacing(0.45)] items-center justify-center rounded-[5px] border border-transparent group-has-data-[slot=questionnaire-choice-description]/questionnaire-choice:translate-y-0.5 group-data-[type=radio]/questionnaire-choice:rounded-full"
+      class="border-input group-data-checked/questionnaire-choice:border-primary group-data-checked/questionnaire-choice:bg-primary group-data-checked/questionnaire-choice:text-primary-foreground dark:bg-input/30 dark:group-data-checked/questionnaire-choice:bg-primary pointer-events-none relative flex size-4 shrink-0 translate-y-[--spacing(0.45)] items-center justify-center rounded-[4px] border group-has-data-[slot=questionnaire-choice-description]/questionnaire-choice:translate-y-0.5 group-data-[type=radio]/questionnaire-choice:rounded-full"
     >
       @if (_choice.checked() && _choice.type() === 'radio') {
         <span
           data-slot="questionnaire-choice-indicator-dot"
-          class="bg-primary-foreground size-2 rounded-full dark:size-2.5"
+          class="bg-primary-foreground size-2 rounded-full"
         ></span>
       }
       @if (_choice.checked() && _choice.type() === 'checkbox') {
@@ -67,7 +67,7 @@ import { classes } from '@spartan-ng/helm/utils';
       <span
         brnQuestionnaireChoiceShortcut
         data-slot="questionnaire-choice-shortcut"
-        class="border-primary/10 bg-background/80 text-muted-foreground pointer-events-none ms-auto inline-flex size-5 shrink-0 translate-y-[--spacing(0.45)] items-center justify-center rounded-full border font-mono text-[0.625rem] leading-none font-medium group-has-data-[slot=questionnaire-choice-description]/questionnaire-choice:translate-y-0.5"
+        class="border-input bg-background text-muted-foreground pointer-events-none ms-auto inline-flex size-5 shrink-0 translate-y-[--spacing(0.45)] items-center justify-center rounded-md border font-mono text-[0.625rem] leading-none font-medium shadow-xs group-has-data-[slot=questionnaire-choice-description]/questionnaire-choice:translate-y-0.5"
       >
         {{ shortcut }}
       </span>
@@ -80,7 +80,7 @@ export class HlmQuestionnaireChoice {
   constructor() {
     classes(
       () =>
-        'border-input bg-input/20 hover:bg-input/40 has-[>input:focus-visible]:border-ring has-[>input:focus-visible]:ring-ring/50 data-invalid:border-destructive data-checked:border-primary/40 data-checked:bg-primary/10 gap-2.5 rounded-3xl border px-4 py-3 text-sm transition-colors has-[>input:focus-visible]:ring-3 data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50 group/questionnaire-choice relative flex min-h-11 cursor-pointer items-start text-start outline-none select-none',
+        'border-input hover:bg-muted/50 has-[>input:focus-visible]:border-ring has-[>input:focus-visible]:ring-ring/50 data-invalid:border-destructive dark:bg-input/20 data-checked:border-primary/40 data-checked:bg-muted dark:data-checked:bg-muted gap-3 rounded-md border bg-transparent px-4 py-3.5 text-sm shadow-xs transition-colors has-[>input:focus-visible]:ring-3 data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50 group/questionnaire-choice relative flex min-h-11 cursor-pointer items-start text-start outline-none select-none',
     );
   }
 }

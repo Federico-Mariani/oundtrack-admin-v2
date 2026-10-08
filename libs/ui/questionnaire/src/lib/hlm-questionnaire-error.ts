@@ -25,6 +25,6 @@ export class HlmQuestionnaireError {
   public readonly message = input<string | undefined>(undefined);
 
   constructor() {
-    classes(() => 'mt-2 text-sm text-destructive');
+    classes(() => 'text-sm text-destructive');
   }
 }

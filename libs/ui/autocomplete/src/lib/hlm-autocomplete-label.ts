@@ -9,6 +9,6 @@ import { classes } from '@spartan-ng/helm/utils';
 })
 export class HlmAutocompleteLabel {
   constructor() {
-    classes(() => 'text-muted-foreground px-3 py-2.5 text-xs');
+    classes(() => 'text-muted-foreground px-2 py-1.5 text-xs');
   }
 }
