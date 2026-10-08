@@ -1,0 +1,14 @@
+<button
+  hlmBtn
+  class="w-full"
+  [variant]="variant()"
+  [size]="size()"
+  [disabled]="disabled()"
+  [type]="type()"
+  [attr.form]="form()"
+>
+  @if (loading()) {
+    <hlm-spinner data-icon="inline-start" />
+  }
+  {{ text() }}
+</button>

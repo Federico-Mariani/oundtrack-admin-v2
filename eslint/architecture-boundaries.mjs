@@ -108,6 +108,20 @@ const otherFeaturePublicApi = {
 };
 
 /**
+ * The public API (index.ts) of the importer's OWN feature. A file inside a
+ * feature must never reach its own bounded context through `@features/<feature>`:
+ * `@features/<feature>` is the entry point for consumers OUTSIDE the feature.
+ * Same-feature dependencies use relative imports.
+ */
+const sameFeaturePublicApi = {
+  element: {
+    type: TYPES.featureRoot,
+    captured: { feature: '{{ from.element.captured.feature }}' },
+  },
+  file: { categories: FILES.publicApi },
+};
+
+/**
  * Every feature file except the public API entry point: the layer folders plus
  * the providers file. (Files without categories are described with
  * `categories: null`, so this is expressed positively rather than with `noneOf`.)
@@ -378,6 +392,20 @@ const policies = [
       ],
     },
   },
+
+  // ---------------------------------------------------------------- self-import through the public API (last: wins over every allow above, specs included)
+  // Internal feature imports must stay internal: a file inside `features/<feature>/**`
+  // must not import its own bounded context through `@features/<same-feature>`.
+  // `@features/<feature>` (index.ts) is the entry point for consumers OUTSIDE the
+  // feature; same-feature dependencies use relative imports. Generic for every
+  // current and future feature (no per-feature hardcoding). Cross-feature public
+  // API imports stay allowed because they target another feature's public API.
+  {
+    from: element(...FEATURE_TYPES),
+    disallow: { to: sameFeaturePublicApi },
+    message:
+      "Self-import through the public API is forbidden: feature '{{ from.captured.feature }}' must not import its own public API ('@features/{{ to.captured.feature }}'). Use relative imports inside the feature; '@features/<feature>' is the entry point for consumers outside the bounded context.",
+  },
 ];
 
 /**
@@ -391,6 +419,11 @@ export const architectureBoundaries = {
   settings: {
     'boundaries/elements': elements,
     'boundaries/files': files,
+    // The `@spartan-ng/helm/*` UI kit is vendored under `libs/` and resolved
+    // there via tsconfig path aliases. It is third-party code (like anything in
+    // node_modules), not part of our architecture, so the plugin must treat it
+    // as external and never classify it as an unknown local element.
+    'boundaries/ignore': ['libs/**'],
     'boundaries/dependency-nodes': ['import', 'dynamic-import', 'export'],
     'import/resolver': { typescript: { project: './tsconfig.json' } },
   },

@@ -34,8 +34,8 @@ export const projectStructure = [
   forbidLocation(
     'app-root',
     ['src/app/*/**/*.ts'],
-    ['src/app/core/**', 'src/app/shared/**', 'src/app/features/**'],
-    'Unknown top-level folder under src/app. Allowed: core/ (application-wide concerns), shared/ (feature-agnostic primitives), features/<feature>/ (bounded contexts).',
+    ['src/app/core/**', 'src/app/shared/**', 'src/app/features/**', 'src/app/presentation/**'],
+    'Unknown top-level folder under src/app. Allowed: core/ (application-wide concerns), shared/ (feature-agnostic primitives), presentation/ (app shell: layouts, shared UI components and app-level i18n), features/<feature>/ (bounded contexts).',
   ),
   forbidLocation(
     'feature-root-files',

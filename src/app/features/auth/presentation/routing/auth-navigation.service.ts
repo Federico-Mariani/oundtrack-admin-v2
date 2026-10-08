@@ -1,8 +1,8 @@
-import {inject, Injectable} from '@angular/core';
-import {ActivatedRoute, type NavigationExtras, Router, type UrlTree} from '@angular/router';
-import {AUTH_NAVIGATION} from './auth.navigation';
-import {RETURN_URL_QUERY_PARAM} from './auth.paths';
-import {resolveAuthReturnUrl} from '@features/auth/presentation/routing/auth-return-url';
+import { inject, Injectable } from '@angular/core';
+import { ActivatedRoute, type NavigationExtras, Router, type UrlTree } from '@angular/router';
+import { AUTH_NAVIGATION } from './auth.navigation';
+import { RETURN_URL_QUERY_PARAM } from './auth.paths';
+import { resolveAuthReturnUrl } from './auth-return-url';
 
 /**
  * Imperative navigation to Auth destinations. Encapsulates the Angular Router so
@@ -11,7 +11,7 @@ import {resolveAuthReturnUrl} from '@features/auth/presentation/routing/auth-ret
  *
  * It knows the Router only — never the Store, actions or the feature state.
  */
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthNavigationService {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -21,15 +21,10 @@ export class AuthNavigationService {
     return this.router.navigate([...AUTH_NAVIGATION.login()], extras);
   }
 
-  navigateAfterLogin(
-    requestedUrl: string | null,
-  ): Promise<boolean> {
-    const returnUrl =
-      resolveAuthReturnUrl(requestedUrl);
+  navigateAfterLogin(requestedUrl: string | null): Promise<boolean> {
+    const returnUrl = resolveAuthReturnUrl(requestedUrl);
 
-    return returnUrl
-      ? this.router.navigateByUrl(returnUrl)
-      : this.router.navigate(['/']);
+    return returnUrl ? this.router.navigateByUrl(returnUrl) : this.router.navigate(['/']);
   }
 
   /**
@@ -39,7 +34,7 @@ export class AuthNavigationService {
   loginRedirect(returnUrl?: string): UrlTree {
     return this.router.createUrlTree(
       [...AUTH_NAVIGATION.login()],
-      returnUrl ? {queryParams: {[RETURN_URL_QUERY_PARAM]: returnUrl}} : {},
+      returnUrl ? { queryParams: { [RETURN_URL_QUERY_PARAM]: returnUrl } } : {},
     );
   }
 }

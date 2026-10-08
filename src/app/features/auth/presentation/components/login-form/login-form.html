@@ -1,26 +1,41 @@
-<hlm-card>
-    <hlm-card-header>
-        <h3 hlmCardTitle>Login to your account</h3>
-        <p hlmCardDescription>Enter your email below to login to your account</p>
-    </hlm-card-header>
-    <div hlmCardContent>
-        <form [formRoot]="loginFormController.form" id="login-form">
-            <hlm-field-group>
-                <app-email-input [formField]="loginFormController.form.email"
-                                 [errorsData]="loginFormController.form.email().errors()"></app-email-input>
-                <app-password-input [formField]="loginFormController.form.password"
-                                    [errorsData]="loginFormController.form.password().errors()"></app-password-input>
-            </hlm-field-group>
-        </form>
-    </div>
-    <hlm-card-footer>
-        <hlm-field>
-            <button hlmBtn [disabled]="!canSubmit()" type="submit" form="login-form">Login</button>
-            <button hlmBtn variant="outline" type="button" (click)="reset()">Reset</button>
-            <hlm-field-description class="text-center">
-                Don't have an account?
-                <a href="#">Sign up</a>
-            </hlm-field-description>
-        </hlm-field>
-    </hlm-card-footer>
+<hlm-card *transloco="let translator; prefix: i18nScope">
+  <hlm-card-header>
+    <h3 hlmCardTitle>{{ translator(keys.title) }}</h3>
+    <p hlmCardDescription>{{ translator(keys.description) }}</p>
+  </hlm-card-header>
+  <div hlmCardContent>
+    <form [formRoot]="loginFormController.form" id="login-form">
+      <hlm-field-group>
+        <app-email-input
+          [formField]="loginFormController.form.email"
+          [errorsData]="loginFormController.form.email().errors()"
+        />
+        <app-password-input
+          [formField]="loginFormController.form.password"
+          [errorsData]="loginFormController.form.password().errors()"
+        />
+      </hlm-field-group>
+    </form>
+  </div>
+  <hlm-card-footer>
+    <hlm-field>
+      <app-button
+        [loading]="isLoggingIn()"
+        [text]="translator(keys.actions.submit)"
+        [disabled]="!canSubmit()"
+        type="submit"
+        form="login-form"
+      />
+      <app-button
+        (click)="reset()"
+        [text]="translator(keys.actions.reset)"
+        [disabled]="!canSubmit()"
+        variant="outline"
+      />
+      <hlm-field-description class="text-center">
+        {{ translator(keys.signUp.prompt) }}
+        <a href="#">{{ translator(keys.signUp.link) }}</a>
+      </hlm-field-description>
+    </hlm-field>
+  </hlm-card-footer>
 </hlm-card>

@@ -32,7 +32,6 @@ export function provideAuth(): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: AUTH_REPOSITORY, useClass: HttpAuthRepository },
     { provide: AUTH_SESSION_STORAGE, useClass: LocalStorageAuthSessionStorage },
-    // The interceptor reads the token through this port; the store stays the single source of truth.
     { provide: ACCESS_TOKEN_PROVIDER, useExisting: AuthStoreDataFacade },
     provideState(authFeature),
     provideEffects(authSessionEffects, authLoginEffects, authRegistrationEffects, authUserEffects),

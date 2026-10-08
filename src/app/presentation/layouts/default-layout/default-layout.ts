@@ -1,14 +1,10 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-default-layout',
   templateUrl: './default-layout.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    RouterOutlet
-  ]
+  imports: [RouterOutlet],
 })
-export class DefaultLayout {
-
-}
+export class DefaultLayout {}

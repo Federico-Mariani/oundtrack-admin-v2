@@ -1,6 +1,6 @@
 import { type HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import type { ApiErrorBody } from '@app/core/http/api-response';
-import type { AuthError, AuthErrorCode } from '@features/auth';
+import type { AuthError, AuthErrorCode } from '../../domain/errors/auth-error';
 
 /** Endpoint that failed; the same HTTP status means different things per operation. */
 export type AuthApiOperation = 'login' | 'register' | 'current-user';

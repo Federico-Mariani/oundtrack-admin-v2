@@ -1,4 +1,4 @@
-import type {ValidationError} from '@angular/forms/signals';
+import type { ValidationError } from '@angular/forms/signals';
 
 /**
  * Field-scoped validation errors coming from a backend API, keyed by the model
@@ -26,10 +26,10 @@ export const SERVER_VALIDATION_ERROR_KIND = 'server';
  * @param fieldName The model property to read the messages for.
  */
 export function serverFieldErrors(
-    fieldErrors: ServerFieldErrors | null | undefined,
-    fieldName: string,
+  fieldErrors: ServerFieldErrors | null | undefined,
+  fieldName: string,
 ): ValidationError.WithoutFieldTree[] {
-    const messages = fieldErrors?.[fieldName] ?? [];
+  const messages = fieldErrors?.[fieldName] ?? [];
 
-    return messages.map((message) => ({kind: SERVER_VALIDATION_ERROR_KIND, message}));
+  return messages.map((message) => ({ kind: SERVER_VALIDATION_ERROR_KIND, message }));
 }

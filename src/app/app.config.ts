@@ -9,6 +9,7 @@ import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { routes } from './app.routes';
 import { authTokenInterceptor, provideAuth } from '@features/auth';
+import { provideAppTransloco } from '@app/core/i18n/transloco.providers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,6 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authTokenInterceptor])),
     provideStore(),
     provideStoreDevtools({ logOnly: !isDevMode() }),
+    provideAppTransloco(),
     provideAuth(),
   ],
 };

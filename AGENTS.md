@@ -11,14 +11,17 @@ effects / facades). The detailed, **mandatory** project rules live in `.junie/ru
 | `.junie/rules/angular-typescript.md` | Modern Angular APIs, strict TypeScript, file organization |
 | `.junie/rules/routing.md`            | Feature-owned routing: paths, navigation, guards, lazy    |
 | `.junie/rules/testing.md`            | What to test, where, and how                              |
+| `.junie/rules/i18n.md`               | Transloco i18n: feature-owned scopes, JSON, boundaries    |
 | `.junie/rules/quality-gates.md`      | Commands that must pass before a task is complete         |
 
 ## Non-negotiables
 
-- The architecture boundaries are **constraints, not suggestions**. ESLint (`eslint.config.mjs` + `eslint/*.mjs`) is the executable source of truth for everything
+- The architecture boundaries are **constraints, not suggestions**. ESLint (`eslint.config.mjs` + `eslint/*.mjs`) is the
+  executable source of truth for everything
   it can verify; the rule files explain the intent and cover what ESLint cannot check.
 - Never bypass a lint error: no `eslint-disable`, no lowered severity, no new exception
-  in the ESLint config just to make existing code pass. If code violates the architecture, **fix the code**. A disable is acceptable only when local, rule-specific and explained
+  in the ESLint config just to make existing code pass. If code violates the architecture, **fix the code**. A disable
+  is acceptable only when local, rule-specific and explained
   in a comment.
 - Respect the dependency rule: `presentation → facade → application/state → domain`,
   `infrastructure → domain / application ports`, `shared` and `core` never depend on

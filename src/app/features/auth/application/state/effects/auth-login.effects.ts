@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, exhaustMap, map, of } from 'rxjs';
-import type { AuthError } from '@features/auth';
+import type { AuthError } from '../../../domain/errors/auth-error';
 import { AUTH_REPOSITORY } from '../../tokens/auth-repository.token';
 import { AuthLoginActions, AuthLoginApiActions } from '../actions/auth-login.actions';
 

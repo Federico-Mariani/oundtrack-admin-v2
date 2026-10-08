@@ -50,6 +50,23 @@ const ngrxForbidden = {
   message: NGRX_IN_STATE_ONLY,
 };
 
+const TRANSLOCO_GROUP = [
+  '@jsverse/transloco',
+  '@jsverse/transloco/**',
+  '@jsverse/transloco-*',
+  '@jsverse/transloco-*/**',
+];
+
+/**
+ * Transloco is a presentation concern. Only presentation and the technical
+ * i18n configuration (core/i18n) may know about it; the inner layers expose
+ * semantic codes/data and let presentation translate them.
+ */
+const translocoForbidden = (layer) => ({
+  group: TRANSLOCO_GROUP,
+  message: `${layer} must not depend on Transloco: expose semantic codes/data and translate them in presentation (core/i18n owns the technical i18n configuration).`,
+});
+
 const frameworkFree = (layer) => [
   {
     group: ['@angular/*', '@angular/*/**'],
@@ -67,6 +84,7 @@ const frameworkFree = (layer) => [
     group: ['@environments/**', '@app/**'],
     message: `${layer} cannot depend on environment configuration or application-wide infrastructure.`,
   },
+  translocoForbidden(layer),
 ];
 
 const featureInternalsForbidden = {
@@ -156,6 +174,17 @@ export const restrictedImports = [
         message:
           'Infrastructure cannot import NgRx. Implement domain repositories / application ports; state lives in application/state.',
       },
+      translocoForbidden('Infrastructure'),
     ],
+  }),
+
+  // Application (ports / tokens / state) stays translation-agnostic. This block
+  // re-forbids NgRx for ports/tokens; the state-specific block below re-allows
+  // NgRx while keeping Transloco forbidden.
+  restrict('feature-application', [`${FEATURE_ROOT}/application/**/*.ts`], {
+    patterns: [ngrxForbidden, translocoForbidden('Application (ports/tokens/state)')],
+  }),
+  restrict('feature-application-state', [`${FEATURE_ROOT}/application/state/**/*.ts`], {
+    patterns: [translocoForbidden('Application state')],
   }),
 ];

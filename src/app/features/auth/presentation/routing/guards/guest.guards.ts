@@ -1,6 +1,6 @@
-import {inject} from '@angular/core';
-import {type CanActivateFn, Router} from '@angular/router';
-import {AuthFacade} from '@features/auth';
+import { inject } from '@angular/core';
+import { type CanActivateFn, Router } from '@angular/router';
+import { AuthFacade } from '../../../application/state/facades/auth.facade';
 
 /** Keeps authenticated users away from guest-only pages such as login. */
 export const guestGuard: CanActivateFn = () => {

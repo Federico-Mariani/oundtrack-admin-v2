@@ -1,4 +1,4 @@
-import {AUTH_PATHS} from './auth.paths';
+import { AUTH_PATHS } from './auth.paths';
 
 /**
  * Typed navigation commands (Router `commands` arrays) for the Auth feature.

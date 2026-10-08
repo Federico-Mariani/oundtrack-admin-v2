@@ -1,6 +1,7 @@
 # Architecture rules
 
-Feature-first Clean Architecture. Every rule in this file that can be checked automatically **is** checked by ESLint (`eslint/architecture-boundaries.mjs`, `eslint/restricted-imports.mjs`,
+Feature-first Clean Architecture. Every rule in this file that can be checked automatically **is** checked by ESLint
+(`eslint/architecture-boundaries.mjs`, `eslint/restricted-imports.mjs`,
 `eslint/project-structure.mjs`) and produces an error. Keep this document and those files in sync.
 
 ## Top-level structure
@@ -102,12 +103,20 @@ import { provideAuth } from '../auth/auth.providers';
   reducers, effects, implementations.
 - Inside a feature use **relative** imports; use aliases only to cross boundaries:
   `@shared/*`, `@features/<feature>`, `@app/core/*`, `@environments/*`.
+- **Internal feature imports must stay internal.** A file inside `features/<feature>/**` must not
+  import its own bounded context through `@features/<same-feature>`; use relative imports for
+  same-feature dependencies. `@features/<feature>` is the public API intended for consumers OUTSIDE
+  that bounded context, so a self-import would couple a feature to its own `index.ts` and can create
+  circular dependencies. This is enforced generically (every current and future feature) by the
+  self-import `disallow` policy in `eslint/architecture-boundaries.mjs`. The IDE "Import can be
+  shortened" suggestion (a WebStorm inspection, not ESLint) must never override this boundary.
 - When two features must collaborate, go through the public API (facade), a shared abstraction,
   or an application-level service — never through internals.
 
 ## Feature-owned routing
 
-Each feature owns its routing. There is **no** global route config, **no** global route registry (`ROUTES`, `APP_PATHS`, `GLOBAL_NAVIGATION`, ...) and **no** global God `RouterService` that knows
+Each feature owns its routing. There is **no** global route config, **no** global route registry (`ROUTES`, `APP_PATHS`,
+`GLOBAL_NAVIGATION`, ...) and **no** global God `RouterService` that knows
 every feature. A feature's routing lives in `presentation/routing/` (a presentation concern) and
 contains, when needed:
 
@@ -124,7 +133,9 @@ contains, when needed:
 - `routing/guards/` — functional guards (`CanActivateFn` / `CanMatchFn`) that redirect by returning
   a `UrlTree` and consume only the feature facade.
 
-`app.routes.ts` is **composition only**: it lazily composes each feature's public routing API (`FEATURE_ROUTES`), app-level redirects and the `**` fallback. It never imports feature internals (pages, guards, paths). The `**` wildcard is a matcher, never a navigable URL. A feature exposes
+`app.routes.ts` is **composition only**: it lazily composes each feature's public routing API (`FEATURE_ROUTES`),
+app-level redirects and the `**` fallback. It never imports feature internals (pages, guards, paths). The `**` wildcard
+is a matcher, never a navigable URL. A feature exposes
 through its `index.ts` only what the app or other features consume for routing (`FEATURE_ROUTES`,
 and `FeatureNavigationService` / `FEATURE_PATHS` when actually needed cross-boundary); pages, route
 params and private routing helpers stay internal.

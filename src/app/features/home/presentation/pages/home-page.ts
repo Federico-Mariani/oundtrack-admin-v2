@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {AuthFacade, AuthNavigationService} from '@features/auth';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AuthFacade, AuthNavigationService } from '@features/auth';
 
 @Component({
   selector: 'app-home-page',
@@ -9,7 +9,7 @@ import {AuthFacade, AuthNavigationService} from '@features/auth';
 export class HomePage {
   private readonly auth = inject(AuthFacade);
   private readonly authNavigation = inject(AuthNavigationService);
-  
+
   protected readonly userFullName = this.auth.data.userFullName;
   protected readonly isLoadingCurrentUser = this.auth.loadingStatuses.isLoadingCurrentUser;
 

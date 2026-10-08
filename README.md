@@ -53,7 +53,7 @@ Gli environment vivono in `src/environments/` e vengono sostituiti a build time 
 `fileReplacements` definiti in `angular.json`.
 
 | File                         | Configurazione Angular | Descrizione                                   |
-|------------------------------|------------------------|-----------------------------------------------|
+| ---------------------------- | ---------------------- | --------------------------------------------- |
 | `environment.ts`             | (default / base)       | Usato se nessuna sostituzione viene applicata |
 | `environment.development.ts` | `development`          | Sviluppo locale                               |
 | `environment.staging.ts`     | `staging`              | Ambiente di staging                           |
@@ -64,9 +64,9 @@ Ogni file espone un oggetto `environment` con la seguente forma:
 
 ```ts
 export const environment = {
-    production: false,
-    apiUrl: 'http://localhost:3000/api',
-    authStorageKey: 'oundtrack-admin.auth-session',
+  production: false,
+  apiUrl: 'http://localhost:3000/api',
+  authStorageKey: 'oundtrack-admin.auth-session',
 };
 ```
 
@@ -176,7 +176,7 @@ I confini sono **vincoli**, non suggerimenti: sono verificati da ESLint (`eslint
 regole dettagliate e vincolanti vivono in `.junie/rules/`:
 
 | File                                 | Ambito                                                 |
-|--------------------------------------|--------------------------------------------------------|
+| ------------------------------------ | ------------------------------------------------------ |
 | `.junie/rules/architecture.md`       | Layer, regola delle dipendenze, public API, alias      |
 | `.junie/rules/ngrx.md`               | Convenzioni NgRx, facades, request state, concorrenza  |
 | `.junie/rules/angular-typescript.md` | API Angular moderne, TypeScript strict, organizzazione |

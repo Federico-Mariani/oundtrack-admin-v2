@@ -1,0 +1,13 @@
+<hlm-field>
+  <label hlmFieldLabel for="email">Email</label>
+  <hlm-input-group>
+    <input
+      hlmInputGroupInput
+      [formField]="formField()"
+      [placeholder]="placeholder()"
+      [type]="'email'"
+      (blur)="touch.emit()"
+    />
+  </hlm-input-group>
+  <app-field-error [errors]="errorsData() ?? []" />
+</hlm-field>
