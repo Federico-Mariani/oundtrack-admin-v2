@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { type Field, FormField, type ValidationError } from '@angular/forms/signals';
 import { provideIcons } from '@ng-icons/core';
 import { lucideEye, lucideEyeOff } from '@ng-icons/lucide';
@@ -15,8 +15,18 @@ import { FieldError } from '@shared/ui/field-error/field-error';
 })
 export class EmailInput {
   readonly formField = input.required<Field<string>>();
-  readonly errorsData = input<ValidationError[]>();
   readonly placeholder = input<string>('email@gmail.com');
 
   readonly touch = output();
+
+  /**
+   * Validation errors are only surfaced once the user has interacted with the
+   * field: an untouched field (e.g. an empty required input on first render)
+   * is already invalid, but showing that error before any interaction is noise.
+   */
+  protected readonly visibleErrors = computed<readonly ValidationError[]>(() => {
+    const field = this.formField()();
+
+    return field.touched() ? field.errors() : [];
+  });
 }

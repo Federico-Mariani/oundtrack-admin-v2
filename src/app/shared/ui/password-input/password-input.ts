@@ -15,12 +15,22 @@ import { FieldError } from '@shared/ui/field-error/field-error';
 })
 export class PasswordInput {
   readonly formField = input.required<Field<string>>();
-  readonly errorsData = input<ValidationError[]>();
   readonly placeholder = input<string>('********');
 
   readonly touch = output();
 
   protected readonly inputType = signal<'text' | 'password'>('password');
+
+  /**
+   * Validation errors are only surfaced once the user has interacted with the
+   * field: an untouched field (e.g. an empty required input on first render)
+   * is already invalid, but showing that error before any interaction is noise.
+   */
+  protected readonly visibleErrors = computed<readonly ValidationError[]>(() => {
+    const field = this.formField()();
+
+    return field.touched() ? field.errors() : [];
+  });
 
   protected readonly icon = computed(() =>
     this.inputType() === 'password' ? 'lucideEye' : 'lucideEyeOff',

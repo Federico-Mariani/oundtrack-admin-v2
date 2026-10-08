@@ -6,14 +6,8 @@
   <div hlmCardContent>
     <form [formRoot]="loginFormController.form" id="login-form">
       <hlm-field-group>
-        <app-email-input
-          [formField]="loginFormController.form.email"
-          [errorsData]="loginFormController.form.email().errors()"
-        />
-        <app-password-input
-          [formField]="loginFormController.form.password"
-          [errorsData]="loginFormController.form.password().errors()"
-        />
+        <app-email-input [formField]="loginFormController.form.email" />
+        <app-password-input [formField]="loginFormController.form.password" />
       </hlm-field-group>
     </form>
   </div>

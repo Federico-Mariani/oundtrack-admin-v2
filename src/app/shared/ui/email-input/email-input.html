@@ -9,5 +9,7 @@
       (blur)="touch.emit()"
     />
   </hlm-input-group>
-  <app-field-error [errors]="errorsData() ?? []" />
+  @if (visibleErrors().length > 0) {
+    <app-field-error [errors]="visibleErrors()" />
+  }
 </hlm-field>
