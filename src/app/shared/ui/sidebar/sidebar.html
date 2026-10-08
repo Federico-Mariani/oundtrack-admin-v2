@@ -21,7 +21,42 @@
             </div>
             <div hlmSidebarGroup></div>
         </div>
-        <div hlmSidebarFooter></div>
+        <div hlmSidebarFooter>
+            <ul hlmSidebarMenu>
+                <li hlmSidebarMenuItem>
+                    <button hlmSidebarMenuButton size="lg" align="end" [hlmDropdownMenuTrigger]="menu">
+                        <app-avatar [alt]="'avatar'"
+                                    [source]="'https://image.tmdb.org/t/p/original/9i6966Py1jvnGHFFwxf3CGku7GV.jpg'"></app-avatar>
+                        <div class="grid flex-1 text-start text-sm leading-tight">
+                            <span class="truncate font-medium">Federico Mariani</span>
+                            <span class="truncate text-xs">mario&#64;gmail.com</span>
+                        </div>
+                        <ng-icon name="lucideChevronsUpDown"/>
+                    </button>
+                    <ng-template #menu>
+                        <hlm-dropdown-menu>
+                            <hlm-dropdown-menu-group>
+                                <button class="p-3 pe-10 pointer-events-none" hlmDropdownMenuItem size="lg">
+                                    <app-avatar [alt]="'avatar'"
+                                                [source]="'https://image.tmdb.org/t/p/original/9i6966Py1jvnGHFFwxf3CGku7GV.jpg'"></app-avatar>
+                                    <div class="grid flex-1 text-start text-sm leading-tight">
+                                        <span class="truncate font-medium">Federico Mariani</span>
+                                        <span class="truncate text-xs">mario&#64;gmail.com</span>
+                                    </div>
+                                </button>
+                            </hlm-dropdown-menu-group>
+                            <hlm-dropdown-menu-separator/>
+                            <hlm-dropdown-menu-group>
+                                <hlm-dropdown-menu-label>My Account</hlm-dropdown-menu-label>
+                                <button hlmDropdownMenuItem>Profile</button>
+                                <button hlmDropdownMenuItem>Billing</button>
+                                <button hlmDropdownMenuItem>Settings</button>
+                            </hlm-dropdown-menu-group>
+                        </hlm-dropdown-menu>
+                    </ng-template>
+                </li>
+            </ul>
+        </div>
     </hlm-sidebar>
     <ng-content/>
 </div>
