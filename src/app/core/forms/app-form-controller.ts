@@ -10,6 +10,15 @@ export class AppFormController<MODEL> {
   private readonly _onSubmission: () => void;
   private readonly _serverErrors?: Signal<ServerFieldErrors | null | undefined>;
 
+  /**
+   * Snapshot of the field values at the moment the form was submitted. Server
+   * errors belong to those exact values, so a field surfaces its server error
+   * only while its value still matches the submitted one; editing the field
+   * clears the stale error automatically.
+   */
+  private readonly _submittedValues: WritableSignal<Readonly<Record<string, string>> | null> =
+    signal(null);
+
   constructor(
     fields: AppFormField[],
     onSubmission: () => void,
@@ -59,6 +68,7 @@ export class AppFormController<MODEL> {
       {
         submission: {
           action: () => {
+            this._captureSubmittedValues();
             this._onSubmission();
 
             return Promise.resolve();
@@ -69,10 +79,29 @@ export class AppFormController<MODEL> {
   }
 
   /**
+   * Records the submitted value of every field, so later edits can be detected
+   * and the server errors tied to the submitted values can be discarded.
+   */
+  private _captureSubmittedValues(): void {
+    const model = this._model() as Record<string, string>;
+    const submitted = this._fields.reduce<Record<string, string>>((values, field) => {
+      values[field.name] = model[field.name];
+
+      return values;
+    }, {});
+
+    this._submittedValues.set(submitted);
+  }
+
+  /**
    * Binds the API field errors signal to a field: whenever it emits an error
    * for `fieldName`, the message surfaces on that field like any other
    * validation error. Reading the signal inside `validate` keeps it reactive,
    * so errors appear and clear automatically without any imperative wiring.
+   *
+   * The error is kept only while the field still holds the value that was
+   * submitted: as soon as the user edits the field its value diverges from the
+   * submitted snapshot and the stale server error disappears.
    */
   private _applyServerErrors(fieldName: string, fieldPath: SchemaPath<string>): void {
     const serverErrors = this._serverErrors;
@@ -81,6 +110,14 @@ export class AppFormController<MODEL> {
       return;
     }
 
-    validate(fieldPath, () => serverFieldErrors(serverErrors(), fieldName));
+    validate(fieldPath, ({ value }) => {
+      const submitted = this._submittedValues();
+
+      if (submitted?.[fieldName] !== value()) {
+        return [];
+      }
+
+      return serverFieldErrors(serverErrors(), fieldName);
+    });
   }
 }
