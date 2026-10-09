@@ -35,18 +35,37 @@ const ROOT_TRANSLATION_LOADERS: Readonly<
 };
 
 /**
+ * App-shell UI component translations, keyed by language. These belong to
+ * feature-agnostic components rendered by the application shell (e.g. the
+ * sidebar) and are loaded eagerly in the root namespace under
+ * `components.*`, so any shell component can resolve them with a full key
+ * (`components.sidebar.home`). Like the other root loaders, this must NEVER
+ * know about any feature.
+ */
+const COMPONENT_TRANSLATION_LOADERS: Readonly<
+  Record<SupportedLanguage, () => Promise<{ readonly default: Translation }>>
+> = {
+  en: () => import('./en/components/sidebar.json'),
+  it: () => import('./it/components/sidebar.json'),
+};
+
+/**
  * Root translation loader. It exposes only global app-shell copy under semantic
- * namespaces (currently `validation.*`); feature translations stay lazy via
- * `provideTranslocoScope()` in each feature's routing. This root loader must
+ * namespaces (`validation.*`, `components.*`); feature translations stay lazy
+ * via `provideTranslocoScope()` in each feature's routing. This root loader must
  * therefore NEVER know about any feature.
  */
 @Injectable({ providedIn: 'root' })
 export class RootTranslocoLoader implements TranslocoLoader {
   async getTranslation(language: string): Promise<Translation> {
     const loadValidation = ROOT_TRANSLATION_LOADERS[language as SupportedLanguage];
-    const validation = (await loadValidation()).default;
+    const loadSidebar = COMPONENT_TRANSLATION_LOADERS[language as SupportedLanguage];
+    const [validation, sidebar] = await Promise.all([
+      loadValidation().then((module) => module.default),
+      loadSidebar().then((module) => module.default),
+    ]);
 
-    return { validation };
+    return { validation, components: { sidebar } };
   }
 }
 

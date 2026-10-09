@@ -1,62 +1,127 @@
 <div hlmSidebarWrapper>
-    <hlm-sidebar>
-        <div hlmSidebarHeader>
-            <ul hlmSidebarMenu>
-                <li hlmSidebarMenuItem>
-                    <button hlmSidebarMenuButton size="lg">
-                        <div class="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-
-                        </div>
-                        <div class="grid flex-1 text-start text-sm leading-tight">
-                            <span class="truncate font-medium">Oundtrack</span>
-                            <span class="truncate text-xs">Staging</span>
-                        </div>
-                    </button>
-                </li>
-            </ul>
-        </div>
-        <div hlmSidebarContent>
-            <div hlmSidebarGroup></div>
-            <div hlmSidebarGroupContent>
+  <hlm-sidebar collapsible="icon" *transloco="let t">
+    <div hlmSidebarHeader>
+      <ul hlmSidebarMenu>
+        <li hlmSidebarMenuItem>
+          <button hlmSidebarMenuButton size="lg">
+            <img class="w-8 h-8" src="assets/images/logo.png" alt="Oundtrack logo" />
+            <div class="grid flex-1 text-start text-sm leading-tight">
+              <span class="truncate font-medium">{{ t('components.sidebar.title') }}</span>
+              <span class="truncate text-xs">{{ t('components.sidebar.subTitle') }}</span>
             </div>
-            <div hlmSidebarGroup></div>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div hlmSidebarContent>
+      <div hlmSidebarGroup>
+        <div hlmSidebarGroupContent>
+          <ul hlmSidebarMenu>
+            <li hlmSidebarMenuItem>
+              <a
+                class="cursor-pointer"
+                hlmSidebarMenuButton
+                routerLink=""
+                routerLinkActive
+                #homeLinkActive="routerLinkActive"
+                [routerLinkActiveOptions]="{ exact: true }"
+                [isActive]="homeLinkActive.isActive"
+              >
+                <ng-icon name="lucideHome" />
+                <span>{{ t('components.sidebar.home') }}</span>
+              </a>
+            </li>
+          </ul>
         </div>
-        <div hlmSidebarFooter>
-            <ul hlmSidebarMenu>
-                <li hlmSidebarMenuItem>
-                    <button hlmSidebarMenuButton size="lg" align="end" [hlmDropdownMenuTrigger]="menu">
-                        <app-avatar [alt]="'avatar'"
-                                    [source]="'https://image.tmdb.org/t/p/original/9i6966Py1jvnGHFFwxf3CGku7GV.jpg'"></app-avatar>
-                        <div class="grid flex-1 text-start text-sm leading-tight">
-                            <span class="truncate font-medium">Federico Mariani</span>
-                            <span class="truncate text-xs">mario&#64;gmail.com</span>
-                        </div>
-                        <ng-icon name="lucideChevronsUpDown"/>
-                    </button>
-                    <ng-template #menu>
-                        <hlm-dropdown-menu>
-                            <hlm-dropdown-menu-group>
-                                <button class="p-3 pe-10 pointer-events-none" hlmDropdownMenuItem size="lg">
-                                    <app-avatar [alt]="'avatar'"
-                                                [source]="'https://image.tmdb.org/t/p/original/9i6966Py1jvnGHFFwxf3CGku7GV.jpg'"></app-avatar>
-                                    <div class="grid flex-1 text-start text-sm leading-tight">
-                                        <span class="truncate font-medium">Federico Mariani</span>
-                                        <span class="truncate text-xs">mario&#64;gmail.com</span>
-                                    </div>
-                                </button>
-                            </hlm-dropdown-menu-group>
-                            <hlm-dropdown-menu-separator/>
-                            <hlm-dropdown-menu-group>
-                                <hlm-dropdown-menu-label>My Account</hlm-dropdown-menu-label>
-                                <button hlmDropdownMenuItem>Profile</button>
-                                <button hlmDropdownMenuItem>Billing</button>
-                                <button hlmDropdownMenuItem>Settings</button>
-                            </hlm-dropdown-menu-group>
-                        </hlm-dropdown-menu>
-                    </ng-template>
-                </li>
-            </ul>
+      </div>
+      <div hlmSidebarGroup>
+        <div hlmSidebarGroupLabel>{{ t('components.sidebar.entities') }}</div>
+        <div hlmSidebarGroupContent>
+          <ul hlmSidebarMenu>
+            <hlm-collapsible class="group/collapsible">
+              <li hlmSidebarMenuItem>
+                <button
+                  hlmCollapsibleTrigger
+                  hlmSidebarMenuButton
+                  class="flex w-full items-center justify-between"
+                >
+                  <ng-icon name="lucideFilm" />
+                  <span>{{ t('components.sidebar.movies.label') }}</span>
+                  <ng-icon
+                    name="lucideChevronRight"
+                    class="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90"
+                  />
+                </button>
+                <hlm-collapsible-content>
+                  <ul hlmSidebarMenuSub>
+                    <li hlmSidebarMenuSubItem>
+                      <button hlmSidebarMenuSubButton class="w-full">
+                        <span>{{ t('components.sidebar.movies.all') }}</span>
+                      </button>
+                    </li>
+                    <li hlmSidebarMenuSubItem>
+                      <button hlmSidebarMenuSubButton class="w-full">
+                        <span>{{ t('components.sidebar.movies.createOne') }}</span>
+                      </button>
+                    </li>
+                  </ul>
+                </hlm-collapsible-content>
+              </li>
+            </hlm-collapsible>
+          </ul>
         </div>
-    </hlm-sidebar>
-    <ng-content/>
+      </div>
+    </div>
+    <div hlmSidebarFooter>
+      <ul hlmSidebarMenu>
+        <li hlmSidebarMenuItem>
+          <button
+            hlmSidebarMenuButton
+            size="lg"
+            align="end"
+            side="right"
+            [hlmDropdownMenuTrigger]="menu"
+          >
+            <app-avatar
+              [alt]="'avatar'"
+              [source]="'https://image.tmdb.org/t/p/original/9i6966Py1jvnGHFFwxf3CGku7GV.jpg'"
+            />
+            <div class="grid flex-1 text-start text-sm leading-tight">
+              <span class="truncate font-medium"
+                >{{ user()?.firstName }} {{ user()?.lastName }}</span
+              >
+              <span class="truncate text-xs">{{ user()?.email }}</span>
+            </div>
+            <ng-icon name="lucideChevronsUpDown" />
+          </button>
+          <ng-template #menu>
+            <hlm-dropdown-menu>
+              <hlm-dropdown-menu-group>
+                <button class="p-3 pe-10 pointer-events-none" hlmDropdownMenuItem size="lg">
+                  <app-avatar
+                    [alt]="'avatar'"
+                    [source]="'https://image.tmdb.org/t/p/original/9i6966Py1jvnGHFFwxf3CGku7GV.jpg'"
+                  />
+                  <div class="grid flex-1 text-start text-sm leading-tight">
+                    <span class="truncate font-medium"
+                      >{{ user()?.firstName }} {{ user()?.lastName }}</span
+                    >
+                    <span class="truncate text-xs">{{ user()?.email }}</span>
+                  </div>
+                </button>
+              </hlm-dropdown-menu-group>
+              <hlm-dropdown-menu-separator />
+              <hlm-dropdown-menu-group>
+                <button (click)="logout.emit()" hlmDropdownMenuItem variant="destructive">
+                  <ng-icon name="lucideLogOut" />
+                  {{ t('components.sidebar.logout') }}
+                </button>
+              </hlm-dropdown-menu-group>
+            </hlm-dropdown-menu>
+          </ng-template>
+        </li>
+      </ul>
+    </div>
+  </hlm-sidebar>
+  <ng-content />
 </div>

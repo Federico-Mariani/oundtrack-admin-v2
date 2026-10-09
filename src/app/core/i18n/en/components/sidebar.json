@@ -1,0 +1,12 @@
+{
+  "title": "Oundtrack",
+  "subTitle": "Staging",
+  "home": "Home",
+  "entities": "Entities",
+  "movies": {
+    "label": "Movies",
+    "all": "All",
+    "createOne": "Create one"
+  },
+  "logout": "Log out"
+}

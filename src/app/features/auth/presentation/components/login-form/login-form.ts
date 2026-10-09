@@ -39,6 +39,7 @@ export class LoginForm {
     protected readonly keys = AUTH_LOGIN_TRANSLATION_KEYS;
 
     protected readonly isLoggingIn = computed(() => this.authFacade.loadingStatuses.isLoggingIn());
+    protected readonly isLoadingCurrentUser = computed(() => this.authFacade.loadingStatuses.isLoadingCurrentUser());
     protected readonly loginError = computed(() => this.authFacade.errorStatuses.login());
 
     private readonly loginFieldErrors = computed(() => this.loginError()?.fieldErrors);

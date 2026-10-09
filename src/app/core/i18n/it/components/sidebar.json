@@ -1,0 +1,12 @@
+{
+  "title": "Oundtrack",
+  "subTitle": "Staging",
+  "home": "Home",
+  "entities": "Entità",
+  "movies": {
+    "label": "Film",
+    "all": "Tutti",
+    "createOne": "Creane uno"
+  },
+  "logout": "Esci"
+}

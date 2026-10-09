@@ -1,8 +1,18 @@
-<app-sidebar>
-    <main hlmSidebarInset>
-        <header class="flex h-12 items-center justify-between px-4">
-            <button hlmSidebarTrigger><span class="sr-only"></span></button>
-            <router-outlet/>
-        </header>
-    </main>
+<app-sidebar [user]="currentUser()" (logout)="logout()">
+  <main hlmSidebarInset>
+    <header class="flex items-center justify-between p-2">
+      <button hlmSidebarTrigger size="lg"><span class="sr-only"></span></button>
+      <div class="flex gap-2">
+        <app-icon-button [icon]="themeIcon()" (click)="toggleTheme()" />
+        <app-select
+          [items]="languagesAvailable"
+          [value]="activeLanguage()"
+          (valueChange)="changeLanguage($event)"
+        />
+      </div>
+    </header>
+    <section class="px-4 pb-4">
+      <router-outlet />
+    </section>
+  </main>
 </app-sidebar>

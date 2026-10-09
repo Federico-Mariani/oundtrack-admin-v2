@@ -14,7 +14,7 @@
   <hlm-card-footer>
     <hlm-field>
       <app-button
-        [loading]="isLoggingIn()"
+        [loading]="isLoggingIn() || isLoadingCurrentUser()"
         [text]="translator(keys.actions.submit)"
         [disabled]="!canSubmit()"
         type="submit"
