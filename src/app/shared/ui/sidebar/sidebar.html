@@ -38,7 +38,10 @@
         <div hlmSidebarGroupLabel>{{ t('components.sidebar.entities') }}</div>
         <div hlmSidebarGroupContent>
           <ul hlmSidebarMenu>
-            <hlm-collapsible class="group/collapsible">
+            <hlm-collapsible class="group/collapsible"
+                             routerLinkActive
+                             #moviesGroupActive="routerLinkActive"
+                             [expanded]="moviesGroupActive.isActive">
               <li hlmSidebarMenuItem>
                 <button
                   hlmCollapsibleTrigger
