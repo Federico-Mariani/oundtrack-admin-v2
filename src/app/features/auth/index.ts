@@ -6,8 +6,6 @@
 export { AuthFacade } from './application/state/facades/auth.facade';
 export type { User } from './domain/models/user';
 export type { LoginCredentials } from './domain/models/login-credentials';
-export type { RegistrationData } from './domain/models/registration-data';
-export type { AuthError, AuthErrorCode } from './domain/errors/auth-error';
 export { provideAuth } from './auth.providers';
 export { authTokenInterceptor } from './infrastructure/http/auth-token.interceptor';
 export { authGuard } from './presentation/routing/guards/auth.guards';

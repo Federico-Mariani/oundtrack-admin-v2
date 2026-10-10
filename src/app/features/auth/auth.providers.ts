@@ -6,9 +6,8 @@ import {
 } from '@angular/core';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
-import * as authFeedbackEffects from './application/state/effects/auth-feedback.effects';
+import * as authFeedbackEffects from './application/state/effects/auth-login-feedback.effects';
 import * as authLoginEffects from './application/state/effects/auth-login.effects';
-import * as authRegistrationEffects from './application/state/effects/auth-registration.effects';
 import * as authSessionEffects from './application/state/effects/auth-session.effects';
 import * as authUserEffects from './application/state/effects/auth-user.effects';
 import { AuthStoreDataFacade } from './application/state/facades/auth-store-data.facade';
@@ -22,15 +21,6 @@ import { AuthFeedbackService } from './presentation/notifications/auth-feedback.
 import { HttpAuthRepository } from './infrastructure/repositories/http-auth.repository';
 import { LocalStorageAuthSessionStorage } from './infrastructure/storage/local-storage-auth-session.storage';
 
-/**
- * Composition root of the Auth feature: binds ports to their implementations,
- * registers the NgRx feature state and effects, and restores the persisted
- * session before the first navigation.
- *
- * Auth is application-wide (guards, interceptor, bootstrap), so register it
- * once in `app.config.ts` after `provideStore()`. `authTokenInterceptor` is
- * registered separately with `provideHttpClient(withInterceptors([...]))`.
- */
 export function provideAuth(): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: AUTH_REPOSITORY, useClass: HttpAuthRepository },
@@ -38,13 +28,7 @@ export function provideAuth(): EnvironmentProviders {
     { provide: ACCESS_TOKEN_PROVIDER, useExisting: AuthStoreDataFacade },
     { provide: AUTH_FEEDBACK_PORT, useExisting: AuthFeedbackService },
     provideState(authFeature),
-    provideEffects(
-      authSessionEffects,
-      authLoginEffects,
-      authRegistrationEffects,
-      authUserEffects,
-      authFeedbackEffects,
-    ),
+    provideEffects(authSessionEffects, authLoginEffects, authUserEffects, authFeedbackEffects),
     provideAppInitializer(() => {
       inject(AuthFacade).actions.restoreSession();
     }),

@@ -20,7 +20,6 @@ export const authFeature = createFeature({
   reducer: authReducer,
   extraSelectors: ({
     selectSession,
-    selectUser,
     selectLoginRequest,
     selectRegistrationRequest,
     selectSessionRestoreRequest,
@@ -28,9 +27,6 @@ export const authFeature = createFeature({
   }) => ({
     selectIsAuthenticated: createSelector(selectSession, (session) => session !== null),
     selectAccessToken: createSelector(selectSession, (session) => session?.accessToken ?? null),
-    selectUserFullName: createSelector(selectUser, (user) =>
-      user ? `${user.firstName} ${user.lastName}`.trim() : null,
-    ),
 
     selectIsLoggingIn: createSelector(selectLoginRequest, isRequestPending),
     selectIsRegistering: createSelector(selectRegistrationRequest, isRequestPending),

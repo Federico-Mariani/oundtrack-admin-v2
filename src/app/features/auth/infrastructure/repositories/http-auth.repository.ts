@@ -5,16 +5,14 @@ import { environment } from '@environments/environment';
 import type { ApiResponse } from '@app/core/http/api-response';
 import type { AuthSession } from '../../domain/models/auth-session';
 import type { LoginCredentials } from '../../domain/models/login-credentials';
-import type { RegistrationData } from '../../domain/models/registration-data';
 import type { User } from '../../domain/models/user';
 import type { AuthRepository } from '../../application/ports/auth.repository';
-import type { RegistrationRequestDto } from '../api/dto/registration-request.dto';
 import type { TokensResponseDto } from '../api/dto/tokens-response.dto';
 import type { UserResponseDto } from '../api/dto/user-response.dto';
-import { toAuthError } from '../mappers/auth-error.mapper';
 import { toAuthSession } from '../mappers/auth-session.mapper';
 import { toLoginRequestDto } from '../mappers/login-request.mapper';
 import { toUser } from '../mappers/user.mapper';
+import {toRequestError} from "../../../../core/http/http-error.mapper";
 
 @Injectable()
 export class HttpAuthRepository implements AuthRepository {
@@ -30,27 +28,16 @@ export class HttpAuthRepository implements AuthRepository {
       .pipe(
         map(({ data }) => toAuthSession(data)),
         catchError((response: HttpErrorResponse) =>
-          throwError(() => toAuthError(response, 'login')),
+          throwError(() => toRequestError(response)),
         ),
       );
-  }
-
-  register(data: RegistrationData): Observable<AuthSession> {
-    const body: RegistrationRequestDto = data;
-
-    return this.http.post<ApiResponse<TokensResponseDto>>(`${this.baseUrl}/sign-up`, body).pipe(
-      map((response) => toAuthSession(response.data)),
-      catchError((response: HttpErrorResponse) =>
-        throwError(() => toAuthError(response, 'register')),
-      ),
-    );
   }
 
   getCurrentUser(): Observable<User> {
     return this.http.get<ApiResponse<UserResponseDto>>(`${this.baseUrl}/me`).pipe(
       map(({ data }) => toUser(data)),
-      catchError((response: HttpErrorResponse) =>
-        throwError(() => toAuthError(response, 'current-user')),
+      catchError((error: HttpErrorResponse) =>
+        throwError(() => toRequestError(error)),
       ),
     );
   }

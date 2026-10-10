@@ -11,5 +11,4 @@ export class AuthStoreDataFacade {
   readonly user = this.store.selectSignal(authFeature.selectUser);
   readonly isAuthenticated = this.store.selectSignal(authFeature.selectIsAuthenticated);
   readonly accessToken = this.store.selectSignal(authFeature.selectAccessToken);
-  readonly userFullName = this.store.selectSignal(authFeature.selectUserFullName);
 }

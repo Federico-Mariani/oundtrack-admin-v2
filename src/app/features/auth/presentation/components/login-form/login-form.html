@@ -1,7 +1,7 @@
 <hlm-card *transloco="let translator; prefix: i18nScope">
   <hlm-card-header>
-    <h3 hlmCardTitle>{{ translator(keys.title) }}</h3>
-    <p hlmCardDescription>{{ translator(keys.description) }}</p>
+    <h3 hlmCardTitle>{{ translator('components.loginForm.title') }}</h3>
+    <p hlmCardDescription>{{ translator('components.loginForm.description') }}</p>
   </hlm-card-header>
   <div hlmCardContent>
     <form [formRoot]="loginFormController.form" id="login-form">
@@ -15,21 +15,17 @@
     <hlm-field>
       <app-button
         [loading]="isLoggingIn() || isLoadingCurrentUser()"
-        [text]="translator(keys.actions.submit)"
+        [text]="translator('components.loginForm.actions.submit')"
         [disabled]="!canSubmit()"
         type="submit"
         form="login-form"
       />
       <app-button
         (click)="reset()"
-        [text]="translator(keys.actions.reset)"
+        [text]="translator('components.loginForm.actions.reset')"
         [disabled]="!canSubmit()"
         variant="outline"
       />
-      <hlm-field-description class="text-center">
-        {{ translator(keys.signUp.prompt) }}
-        <a href="#">{{ translator(keys.signUp.link) }}</a>
-      </hlm-field-description>
     </hlm-field>
   </hlm-card-footer>
 </hlm-card>

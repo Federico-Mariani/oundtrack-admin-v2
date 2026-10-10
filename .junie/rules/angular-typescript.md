@@ -34,25 +34,25 @@ state. Business logic lives in domain / application.
 - ⚙ `interface` over `type` for object shapes; string-literal unions instead of `enum`.
 - ⚙ `readonly` on members never reassigned; immutable state (spread, never mutate).
 - ⚙ `eqeqeq`, `curly`, no fallthrough, no duplicate imports, no useless constructors.
-- Explicit generics where a default would hide a modelling decision (`RequestState<AuthError>`).
+- Explicit generics where a default would hide a modelling decision (`RequestState<RequestError>`).
 - Pure functions for mappers and shared primitives; no `@Injectable()` for stateless functions.
 
 ## Files and naming
 
 - **One primary concept per file.** A file exports one main thing and is named after it.
 - kebab-case filenames with a role suffix when it adds clarity:
-  `auth-login.actions.ts`, `auth-login.reducer.ts`, `auth-login.effects.ts`,
-  `auth-store-data.facade.ts`, `http-auth.repository.ts`, `local-storage-auth-session.storage.ts`,
-  `auth-session.mapper.ts`, `tokens-response.dto.ts`, `auth-repository.token.ts`,
-  `login-page.ts`, `auth.guards.ts`, `auth.routes.ts`.
-- Domain models and ports are plain nouns without suffix: `user.ts`, `auth-session.ts`,
-  `auth.repository.ts`, `auth-session-storage.ts`.
+  `movies-load.actions.ts`, `movies-load.reducer.ts`, `movies-load.effects.ts`,
+  `movies-store-data.facade.ts`, `http-movies.repository.ts`, `local-storage-auth-session.storage.ts`,
+  `auth-session.mapper.ts`, `tokens-response.dto.ts`, `movies-repository.token.ts`,
+  `movies-page.ts`, `auth.guards.ts`, `movies.routes.ts`.
+- Domain models and ports are plain nouns without suffix: `movie.ts`, `auth-session.ts`,
+  `movies-repository.port.ts`, `auth-session-storage.ts`.
 - Spec files sit next to the code they test: `x.ts` → `x.spec.ts`.
 - Forbidden: generic catch-all files such as `utils.ts`, `helpers.ts`, `common.ts`, `types.ts`,
   `interfaces.ts`, `models.ts`, `constants.ts`, `*-api.dto.ts`, `*-api.mappers.ts` that aggregate
   independent concepts. Split them. (Not ESLint-enforced — reviewers and agents must refuse them.)
 - Forbidden names: `Manager`, `Handler`, `Helper`, `Util`, `Base`, `Data`, `Service` when a precise
-  domain name exists (`AuthApi`, `HttpAuthRepository`, `AuthSessionStorage`).
+  domain name exists (`AuthApi`, `HttpMoviesRepository`, `AuthSessionStorage`).
 - No barrel `index.ts` except `features/<feature>/index.ts` (public API).
 - Folder structure is ⚙ enforced (`eslint/project-structure.mjs`): see `architecture.md`.
 

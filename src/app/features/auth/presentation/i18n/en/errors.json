@@ -1,8 +1,13 @@
 {
-  "invalidCredentials": "Invalid email or password.",
-  "emailAlreadyRegistered": "This email is already registered.",
-  "validation": "Please check the entered data and try again.",
-  "unauthorized": "Your session has expired. Please sign in again.",
-  "network": "Network error. Please check your connection and try again.",
-  "unknown": "Something went wrong. Please try again."
+  "login": {
+    "network": "Unable to connect to the server. Please check your connection and try again.",
+    "bad-request": "The sign-in request is invalid. Please check your details and try again.",
+    "unauthorized": "Invalid email or password.",
+    "forbidden": "You are not allowed to sign in.",
+    "not-found": "The sign-in service is currently unavailable.",
+    "conflict": "The sign-in request could not be completed. Please try again.",
+    "validation": "Please check your email and password and try again.",
+    "server": "The server could not complete the sign-in request. Please try again later.",
+    "unknown": "Something went wrong while signing in. Please try again."
+  }
 }

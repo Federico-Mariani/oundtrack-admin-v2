@@ -4,6 +4,6 @@ import { createActionGroup, emptyProps } from '@ngrx/store';
 export const AuthLogoutActions = createActionGroup({
   source: 'AUTH - Logout',
   events: {
-    Requested: emptyProps(),
+    'Logout Submitted': emptyProps(),
   },
 });

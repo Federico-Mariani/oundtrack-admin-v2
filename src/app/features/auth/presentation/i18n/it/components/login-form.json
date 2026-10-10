@@ -1,0 +1,8 @@
+{
+  "title": "Accedi al tuo account",
+  "description": "Inserisci la tua email qui sotto per accedere al tuo account",
+  "actions": {
+    "submit": "Accedi",
+    "reset": "Reimposta"
+  }
+}

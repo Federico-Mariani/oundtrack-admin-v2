@@ -24,7 +24,7 @@ Action names must read well in Redux DevTools: `[Auth Login] Requested`,
 - ⚙ `@ngrx/signals` / `signalStore` / `signalStoreFeature` / `rxMethod` / `withState` …
 - ⚙ `createFeatureSelector` — `createFeature` already generates `selectXState` and one selector per
   top-level property. Never hand-write `select<Property>` that `createFeature` provides.
-- ⚙ `Store`, `authFeature`, actions in `presentation/**` — the UI knows only the facade.
+- ⚙ `Store`, `moviesFeature`, actions in `presentation/**` — the UI knows only the facade.
 - ⚙ `@ngrx/*` outside `application/state/**`, `testing/**`, `<feature>.providers.ts`, `app.config.ts`.
 - Class-based actions, `enum ActionTypes`, `switch (action.type)`, `StoreModule`/`EffectsModule`,
   NgModules created for NgRx.

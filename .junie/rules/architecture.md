@@ -36,7 +36,7 @@ contain only `index.ts` and `<feature>.providers.ts`.
 | Layer                                  | Contains                                                                                                                           | Must NOT know                                                                             |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | `domain/`                              | models, errors, pure functions (`isAccessTokenExpired`)                                                                            | Angular, NgRx, RxJS, HttpClient, DTOs, env, any outer layer                               |
-| `application/ports                     | tokens`                                                                                                                            | interfaces (`AuthRepository`, `AuthSessionStorage`, `AccessTokenProvider`) + their tokens | state, infrastructure, presentation |
+| `application/ports                     | tokens`                                                                                                                            | interfaces (`MoviesRepositoryPort`, `AuthSessionStorage`, `AccessTokenProvider`) + their tokens | state, infrastructure, presentation |
 | `application/state/`                   | NgRx actions, micro-reducers, functional effects, feature, facades                                                                 | infrastructure implementations, presentation                                              |
 | `application/state/facades/`           | `XFacade` + micro facades: the ONLY API presentation may use                                                                       | infrastructure, presentation                                                              |
 | `infrastructure/`                      | HTTP repositories, storage adapters, DTOs, mappers, interceptors                                                                   | NgRx (state, actions, facades), presentation                                              |
@@ -66,7 +66,7 @@ presentation              → domain, application (types), facades, presentation
 <feature>.providers.ts    → domain, application, state, facades, infrastructure, presentation,
                             shared, core, environments, other features' public API
                             (presentation only to bind an application port to a presentation
-                            adapter, e.g. AUTH_FEEDBACK_PORT → AuthFeedbackService)
+                            adapter, e.g. AUTH_FEEDBACK_PORT → MoviesFeedbackService)
 index.ts                  → anything inside its own feature
 testing/                  → anything inside its own feature, shared, core, environments, public APIs
 *.spec.ts                 → anything inside its own feature, shared, core, environments, public APIs
@@ -96,7 +96,7 @@ import { AuthFacade, authGuard, AUTH_ROUTES } from '@features/auth';
 
 // NOT ALLOWED (anywhere: alias or relative)
 import { AuthFacade } from '@features/auth/application/state/facades/auth.facade';
-import { authFeature } from '../../auth/application/state/auth.feature';
+import { moviesFeature } from '../../auth/application/state/auth.feature';
 import { provideAuth } from '../auth/auth.providers';
 ```
 
@@ -200,23 +200,23 @@ store directly.
 
 ```ts
 // ALLOWED
-// features/auth/application/state/effects/auth-login.effects.ts
+// features/auth/application/state/effects/movies-load.effects.ts
 import { AUTH_REPOSITORY } from '../../tokens/auth-repository.token';
 // features/auth/infrastructure/storage/local-storage-auth-session.storage.ts
 import type { AuthSessionStorage } from '../../application/ports/auth-session-storage';
-// features/auth/presentation/pages/login/login-page.ts
+// features/auth/presentation/pages/login/movies-page.ts
 import { AuthFacade } from '../../../application/state/facades/auth.facade';
 // features/home/presentation/routing/home.routes.ts
 import { authGuard } from '@features/auth';
 
 // NOT ALLOWED
-// features/auth/domain/models/user.ts
+// features/auth/domain/models/movie.ts
 import { Injectable } from '@angular/core'; // domain → Angular
-// features/auth/application/state/effects/auth-login.effects.ts
-import { HttpAuthRepository } from '../../../infrastructure/...'; // state → implementation
+// features/auth/application/state/effects/movies-load.effects.ts
+import { HttpMoviesRepository } from '../../../infrastructure/...'; // state → implementation
 // features/auth/infrastructure/http/auth-token.interceptor.ts
 import { AuthFacade } from '../../application/state/facades/...'; // infrastructure → facade
-// features/auth/presentation/pages/login/login-page.ts
+// features/auth/presentation/pages/login/movies-page.ts
 import { Store } from '@ngrx/store'; // presentation → NgRx
 // shared/state/store-facade.ts
 import { AuthFacade } from '@features/auth'; // shared → feature

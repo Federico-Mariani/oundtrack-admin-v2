@@ -1,8 +1,13 @@
 {
-  "invalidCredentials": "Email o password non validi.",
-  "emailAlreadyRegistered": "Questa email è già registrata.",
-  "validation": "Controlla i dati inseriti e riprova.",
-  "unauthorized": "La tua sessione è scaduta. Accedi di nuovo.",
-  "network": "Errore di rete. Controlla la connessione e riprova.",
-  "unknown": "Si è verificato un errore. Riprova."
+  "login": {
+    "network": "Impossibile connettersi al server. Controlla la connessione e riprova.",
+    "bad-request": "La richiesta di accesso non è valida. Controlla i dati inseriti e riprova.",
+    "unauthorized": "Email o password non corretti.",
+    "forbidden": "Non sei autorizzato ad accedere.",
+    "not-found": "Il servizio di accesso non è momentaneamente disponibile.",
+    "conflict": "Non è stato possibile completare l'accesso. Riprova.",
+    "validation": "Controlla email e password e riprova.",
+    "server": "Il server non è riuscito a completare l'accesso. Riprova più tardi.",
+    "unknown": "Si è verificato un errore durante l'accesso. Riprova."
+  }
 }

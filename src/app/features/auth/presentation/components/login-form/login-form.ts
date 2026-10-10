@@ -12,7 +12,6 @@ import {EmailInputRule} from '@app/core/forms/rules/email-input-rule';
 import {AuthFacade} from '../../../application/state/facades/auth.facade';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {AUTH_I18N_SCOPE} from '../../i18n/auth-translations.loader';
-import {AUTH_LOGIN_TRANSLATION_KEYS} from '../../i18n/auth-login-translation-keys';
 import {Button} from '@shared/ui/button/button';
 import {NotificationService} from "@app/core/notifications/notification.service";
 
@@ -33,10 +32,9 @@ import {NotificationService} from "@app/core/notifications/notification.service"
 })
 export class LoginForm {
     private readonly authFacade = inject(AuthFacade);
-    private readonly n = inject(NotificationService);
+    private readonly notificationService = inject(NotificationService);
 
     protected readonly i18nScope = AUTH_I18N_SCOPE;
-    protected readonly keys = AUTH_LOGIN_TRANSLATION_KEYS;
 
     protected readonly isLoggingIn = computed(() => this.authFacade.loadingStatuses.isLoggingIn());
     protected readonly isLoadingCurrentUser = computed(() => this.authFacade.loadingStatuses.isLoadingCurrentUser());

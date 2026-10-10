@@ -7,7 +7,7 @@ import type { RequestStatus } from './request-status';
  * knows nothing about Angular, NgRx or any feature.
  *
  * The error type has no default on purpose: every feature must state which
- * error it models (`RequestState<AuthError>`); use `RequestState<never>` for an
+ * error it models (`RequestState<RequestError>`); use `RequestState<never>` for an
  * operation that cannot fail.
  */
 export interface RequestState<E> {

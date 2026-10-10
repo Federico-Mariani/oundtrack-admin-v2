@@ -1,7 +1,6 @@
 import type { Observable } from 'rxjs';
 import type { AuthSession } from '../../domain/models/auth-session';
 import type { LoginCredentials } from '../../domain/models/login-credentials';
-import type { RegistrationData } from '../../domain/models/registration-data';
 import type { User } from '../../domain/models/user';
 
 /**
@@ -14,8 +13,6 @@ import type { User } from '../../domain/models/user';
  */
 export interface AuthRepository {
   login(credentials: LoginCredentials): Observable<AuthSession>;
-
-  register(data: RegistrationData): Observable<AuthSession>;
 
   getCurrentUser(): Observable<User>;
 }

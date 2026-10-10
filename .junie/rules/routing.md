@@ -63,7 +63,7 @@ export const AUTH_NAVIGATION = {
 
 ```ts
 @Injectable({ providedIn: 'root' })
-export class AuthNavigationService {
+export class MoviesNavigationService {
   private readonly router = inject(Router);
 
   goToLogin(extras?: NavigationExtras): Promise<boolean> {
@@ -83,13 +83,13 @@ export class AuthNavigationService {
   parallel `FeatureRouter` / `FeatureRouteService` / `FeatureRoutingFacade` doing the same thing.
 - It hides the Router from consumers, exposes semantically clear methods, accepts `NavigationExtras`
   and can build URLs via `createUrlTree` / `serializeUrl`. It contains **no** business logic.
-- It must **not** know the Store, actions or `authFeature`. Navigation decisions that need state are
+- It must **not** know the Store, actions or `moviesFeature`. Navigation decisions that need state are
   taken by the consumer / guard / orchestrator.
 - `inject()` only, `private readonly`, no constructor injection.
 - Return the Router's `Promise<boolean>` / a `UrlTree`; never swallow it (`void this.router.navigate(...)`
   inside the service) and never hide errors with `.catch(() => {})`. The caller chooses `await` or `void`.
 - Separate from the facade: `AuthFacade` does state/application operations (`login()`),
-  `AuthNavigationService` does navigation (`goToLogin()`). Do not mix both in one class.
+  `MoviesNavigationService` does navigation (`goToLogin()`). Do not mix both in one class.
 
 ## Routes — lazy and feature-local
 
@@ -98,7 +98,7 @@ export const AUTH_ROUTES: Routes = [
   {
     path: AUTH_PATHS.login,
     canActivate: [guestGuard],
-    loadComponent: () => import('../pages/login/login-page').then((m) => m.LoginPage),
+    loadComponent: () => import('../pages/login/login-page').then((m) => m.MoviesPage),
   },
 ];
 ```
@@ -117,7 +117,7 @@ export const AUTH_ROUTES: Routes = [
 ```ts
 export const authGuard: CanActivateFn = (_route, state) => {
   const auth = inject(AuthFacade);
-  const navigation = inject(AuthNavigationService);
+  const navigation = inject(MoviesNavigationService);
   return auth.data.isAuthenticated() ? true : navigation.loginRedirect(state.url);
 };
 ```
@@ -125,7 +125,7 @@ export const authGuard: CanActivateFn = (_route, state) => {
 - Functional guards (`CanActivateFn` / `CanMatchFn`) in `routing/guards/`, close to the routes.
 - Prefer returning a `UrlTree` (or `RedirectCommand`) to describe a redirect instead of an imperative
   `router.navigate(...)` + `return false`.
-- Guards consume the feature facade only — never `Store`, actions or `authFeature` internals. They
+- Guards consume the feature facade only — never `Store`, actions or `moviesFeature` internals. They
   control access/navigation; they are not business services.
 
 ## `app.routes.ts` — composition only

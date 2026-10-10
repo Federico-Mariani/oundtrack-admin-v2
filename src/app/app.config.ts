@@ -1,23 +1,28 @@
-import {provideHttpClient, withInterceptors} from '@angular/common/http';
-import {type ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners,} from '@angular/core';
-import {provideRouter} from '@angular/router';
-import {provideStore} from '@ngrx/store';
-import {provideStoreDevtools} from '@ngrx/store-devtools';
-import {routes} from './app.routes';
-import {authTokenInterceptor, provideAuth} from '@features/auth';
-import {provideAppTransloco} from '@app/core/i18n/transloco/transloco.providers';
-import {provideAppTheme} from '@app/core/theme/theme.providers';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  type ApplicationConfig,
+  isDevMode,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideStore } from '@ngrx/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { routes } from './app.routes';
+import { authTokenInterceptor, provideAuth } from '@features/auth';
+import { provideAppTransloco } from '@app/core/i18n/transloco/transloco.providers';
+import { provideAppTheme } from '@app/core/theme/theme.providers';
+import { provideMovies } from '@features/movies';
 
 export const appConfig: ApplicationConfig = {
-    providers: [
-        provideBrowserGlobalErrorListeners(),
-        provideRouter(routes),
-        provideHttpClient(withInterceptors([authTokenInterceptor])),
-        provideStore(),
-        provideStoreDevtools({logOnly: !isDevMode()}),
-        provideAppTransloco(),
-        provideAppTheme(),
-        provideAuth(),
-
-    ],
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideRouter(routes),
+    provideHttpClient(withInterceptors([authTokenInterceptor])),
+    provideStore(),
+    provideStoreDevtools({ logOnly: !isDevMode() }),
+    provideAppTransloco(),
+    provideAppTheme(),
+    provideAuth(),
+    provideMovies(),
+  ],
 };
