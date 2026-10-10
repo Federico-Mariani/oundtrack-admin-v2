@@ -12,7 +12,7 @@ import type { ValidationError } from '@angular/forms/signals';
 export type ServerFieldErrors = Readonly<Record<string, readonly string[]>>;
 
 /** Error `kind` shared by every server-originated field error. */
-export const SERVER_VALIDATION_ERROR_KIND = 'server';
+const SERVER_VALIDATION_ERROR_KIND = 'server';
 
 /**
  * Reads the API error messages for a single field and turns them into

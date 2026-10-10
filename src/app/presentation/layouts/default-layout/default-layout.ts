@@ -7,8 +7,8 @@ import type { SelectItem } from '@shared/interfaces/select-item';
 import { IconButton } from '@shared/ui/icon-button/icon-button';
 import { provideIcons } from '@ng-icons/core';
 import { lucideMoon, lucideSunMedium } from '@ng-icons/lucide';
-import { LanguageService } from '@app/core/i18n/language.service';
-import { isSupportedLanguage } from '@app/core/i18n/supported-language';
+import { LanguageService } from '@app/core/i18n/language/language.service';
+import { isSupportedLanguage } from '@app/core/i18n/language/supported-language';
 import { ThemeService } from '@app/core/theme/theme.service';
 import { AuthFacade, AuthNavigationService } from '@features/auth';
 

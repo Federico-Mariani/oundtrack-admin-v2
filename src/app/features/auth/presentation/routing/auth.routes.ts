@@ -8,9 +8,6 @@ import { AUTH_I18N_SCOPE, authTranslationsLoader } from '../i18n/auth-translatio
 export const AUTH_ROUTES: Routes = [
   {
     path: '',
-    // Auth owns its translations: the `auth` scope (lazy inline loader) is
-    // provided once on the Auth route subtree, so every Auth page shares it
-    // and it is only fetched when the user actually enters Auth.
     providers: [provideTranslocoScope({ scope: AUTH_I18N_SCOPE, loader: authTranslationsLoader })],
     children: [
       {

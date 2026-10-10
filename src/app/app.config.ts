@@ -5,7 +5,7 @@ import {provideStore} from '@ngrx/store';
 import {provideStoreDevtools} from '@ngrx/store-devtools';
 import {routes} from './app.routes';
 import {authTokenInterceptor, provideAuth} from '@features/auth';
-import {provideAppTransloco} from '@app/core/i18n/transloco.providers';
+import {provideAppTransloco} from '@app/core/i18n/transloco/transloco.providers';
 import {provideAppTheme} from '@app/core/theme/theme.providers';
 
 export const appConfig: ApplicationConfig = {
