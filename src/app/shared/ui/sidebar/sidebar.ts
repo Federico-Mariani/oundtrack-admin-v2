@@ -39,6 +39,7 @@ import {
   HlmCollapsibleTrigger,
 } from '@spartan-ng/helm/collapsible';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { MOVIES_PATHS } from '@features/movies';
 
 @Component({
   selector: 'app-sidebar',
@@ -86,4 +87,6 @@ import { TranslocoDirective } from '@jsverse/transloco';
 export class Sidebar {
   readonly user = input<SidebarUser | null>(null);
   readonly logout = output();
+
+  protected readonly moviesPaths = MOVIES_PATHS;
 }
