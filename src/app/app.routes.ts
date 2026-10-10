@@ -19,12 +19,11 @@ export const routes: Routes = [
         path: '',
         loadChildren: () => import('@features/home').then(({ HOME_ROUTES }) => HOME_ROUTES),
       },
+      {
+        path: MOVIES_PATHS.root,
+        loadChildren: () => import('@features/movies').then(({ MOVIES_ROUTES }) => MOVIES_ROUTES),
+      },
     ],
-  },
-
-  {
-    path: MOVIES_PATHS.root,
-    loadChildren: () => import('@features/movies').then(({ MOVIES_ROUTES }) => MOVIES_ROUTES),
   },
 
   {
