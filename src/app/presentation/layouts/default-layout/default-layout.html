@@ -1,6 +1,6 @@
 <app-sidebar [user]="currentUser()" (logout)="logout()">
   <main hlmSidebarInset>
-    <header class="flex items-center justify-between p-2">
+    <header class="flex items-center justify-between p-2 px-4">
       <button hlmSidebarTrigger size="lg"><span class="sr-only"></span></button>
       <div class="flex gap-2">
         <app-icon-button [icon]="themeIcon()" (click)="toggleTheme()" />
@@ -11,8 +11,12 @@
         />
       </div>
     </header>
-    <section class="px-4 pb-4">
-      <router-outlet />
+    <section class="h-full px-4 pb-4">
+      <div
+        class="h-full bg-primary-foreground border rounded-md p-4 overflow-hidden overflow-y-scroll"
+      >
+        <router-outlet />
+      </div>
     </section>
   </main>
 </app-sidebar>
