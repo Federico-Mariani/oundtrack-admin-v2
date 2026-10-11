@@ -1,5 +1,5 @@
 import type { Routes } from '@angular/router';
-import { AUTH_PATHS } from '@features/auth';
+import { AUTH_PATHS, authGuard } from '@features/auth';
 import { MOVIES_PATHS } from '@features/movies';
 
 export const routes: Routes = [
@@ -10,6 +10,7 @@ export const routes: Routes = [
 
   {
     path: '',
+    canActivateChild: [authGuard],
     loadComponent: () =>
       import('./presentation/layouts/default-layout/default-layout').then(
         ({ DefaultLayout }) => DefaultLayout,

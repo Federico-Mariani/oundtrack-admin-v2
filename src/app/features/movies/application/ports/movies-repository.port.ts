@@ -1,5 +1,5 @@
 import type { Observable } from 'rxjs';
-import type { Movie } from '../../domain/models/movie';
+import type { Movie } from '../../domain/models/movie.model';
 
 /**
  * Port towards the authentication backend, consumed by the application

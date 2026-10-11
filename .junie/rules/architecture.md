@@ -210,7 +210,7 @@ import { AuthFacade } from '../../../application/state/facades/auth.facade';
 import { authGuard } from '@features/auth';
 
 // NOT ALLOWED
-// features/auth/domain/models/movie.ts
+// features/auth/domain/models/movie.model.ts
 import { Injectable } from '@angular/core'; // domain → Angular
 // features/auth/application/state/effects/movies-load.effects.ts
 import { HttpMoviesRepository } from '../../../infrastructure/...'; // state → implementation

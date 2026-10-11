@@ -73,7 +73,11 @@ const elements = [
   feature(TYPES.featurePresentation, 'presentation'),
   feature(TYPES.featureTesting, 'testing'),
   feature(TYPES.featureRoot),
-  folder(TYPES.sharedPure, ['src/app/shared/types', 'src/app/shared/state/request']),
+  folder(TYPES.sharedPure, [
+    'src/app/shared/types',
+    'src/app/shared/state/request',
+    'src/app/shared/localization',
+  ]),
   folder(TYPES.shared, 'src/app/shared'),
   folder(TYPES.core, 'src/app/core'),
   folder(TYPES.environments, 'src/environments'),

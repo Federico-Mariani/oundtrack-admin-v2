@@ -6,7 +6,7 @@ import type { ApiResponse } from '@app/core/http/api-response';
 import type { MoviesRepositoryPort } from '../../application/ports/movies-repository.port';
 import type { MovieResponseDto } from '../api/movie-response.dto';
 import { toMovie } from '../mappers/movie.mapper';
-import type { Movie } from '../../domain/models/movie';
+import type { Movie } from '../../domain/models/movie.model';
 import { toRequestError } from '../../../../core/http/http-error.mapper';
 
 @Injectable()

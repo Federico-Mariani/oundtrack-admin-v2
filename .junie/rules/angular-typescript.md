@@ -45,7 +45,7 @@ state. Business logic lives in domain / application.
   `movies-store-data.facade.ts`, `http-movies.repository.ts`, `local-storage-auth-session.storage.ts`,
   `auth-session.mapper.ts`, `tokens-response.dto.ts`, `movies-repository.token.ts`,
   `movies-page.ts`, `auth.guards.ts`, `movies.routes.ts`.
-- Domain models and ports are plain nouns without suffix: `movie.ts`, `auth-session.ts`,
+- Domain models and ports are plain nouns without suffix: `movie.model.ts`, `auth-session.ts`,
   `movies-repository.port.ts`, `auth-session-storage.ts`.
 - Spec files sit next to the code they test: `x.ts` → `x.spec.ts`.
 - Forbidden: generic catch-all files such as `utils.ts`, `helpers.ts`, `common.ts`, `types.ts`,

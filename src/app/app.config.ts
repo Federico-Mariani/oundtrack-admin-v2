@@ -12,12 +12,13 @@ import { authTokenInterceptor, provideAuth } from '@features/auth';
 import { provideAppTransloco } from '@app/core/i18n/transloco/transloco.providers';
 import { provideAppTheme } from '@app/core/theme/theme.providers';
 import { provideMovies } from '@features/movies';
+import { languageInterceptor } from './core/interceptors/language.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authTokenInterceptor])),
+    provideHttpClient(withInterceptors([authTokenInterceptor, languageInterceptor])),
     provideStore(),
     provideStoreDevtools({ logOnly: !isDevMode() }),
     provideAppTransloco(),
