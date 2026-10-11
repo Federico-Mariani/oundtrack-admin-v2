@@ -33,19 +33,19 @@ contain only `index.ts` and `<feature>.providers.ts`.
 
 ## Layer responsibilities
 
-| Layer                                  | Contains                                                                                                                           | Must NOT know                                                                             |
-| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `domain/`                              | models, errors, pure functions (`isAccessTokenExpired`)                                                                            | Angular, NgRx, RxJS, HttpClient, DTOs, env, any outer layer                               |
-| `application/ports                     | tokens`                                                                                                                            | interfaces (`MoviesRepositoryPort`, `AuthSessionStorage`, `AccessTokenProvider`) + their tokens | state, infrastructure, presentation |
-| `application/state/`                   | NgRx actions, micro-reducers, functional effects, feature, facades                                                                 | infrastructure implementations, presentation                                              |
-| `application/state/facades/`           | `XFacade` + micro facades: the ONLY API presentation may use                                                                       | infrastructure, presentation                                                              |
-| `infrastructure/`                      | HTTP repositories, storage adapters, DTOs, mappers, interceptors                                                                   | NgRx (state, actions, facades), presentation                                              |
-| `presentation/`                        | Angular pages/components and feature-owned routing (`routing/`: paths, navigation commands, navigation service, routes, guards)    | `@ngrx/*`, state internals, infrastructure, providers                                     |
-| `<feature>.providers.ts`               | `provideX()`: binds ports → implementations (incl. an application port → a presentation adapter), `provideState`, `provideEffects` | —                                                                                         |
-| `index.ts`                             | re-exports of what other features/app may use                                                                                      | —                                                                                         |
-| `shared/`                              | cross-feature, domain-agnostic abstractions                                                                                        | features, core, app, environments; NgRx anywhere                                          |
-| `shared/types`, `shared/state/request` | pure TypeScript primitives                                                                                                         | Angular, NgRx, RxJS as well                                                               |
-| `core/`                                | application-wide concerns                                                                                                          | feature internals, NgRx                                                                   |
+| Layer                                  | Contains                                                                                                                           | Must NOT know                                                                                           |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `domain/`                              | models, errors, pure functions (`isAccessTokenExpired`)                                                                            | Angular, NgRx, RxJS, HttpClient, DTOs, env, any outer layer                                             |
+| `application/ports                     | tokens`                                                                                                                            | interfaces (`MoviesRepositoryPort`, `AuthSessionStoragePort`, `AccessTokenProviderPort`) + their tokens | state, infrastructure, presentation |
+| `application/state/`                   | NgRx actions, micro-reducers, functional effects, feature, facades                                                                 | infrastructure implementations, presentation                                                            |
+| `application/state/facades/`           | `XFacade` + micro facades: the ONLY API presentation may use                                                                       | infrastructure, presentation                                                                            |
+| `infrastructure/`                      | HTTP repositories, storage adapters, DTOs, mappers, interceptors                                                                   | NgRx (state, actions, facades), presentation                                                            |
+| `presentation/`                        | Angular pages/components and feature-owned routing (`routing/`: paths, navigation commands, navigation service, routes, guards)    | `@ngrx/*`, state internals, infrastructure, providers                                                   |
+| `<feature>.providers.ts`               | `provideX()`: binds ports → implementations (incl. an application port → a presentation adapter), `provideState`, `provideEffects` | —                                                                                                       |
+| `index.ts`                             | re-exports of what other features/app may use                                                                                      | —                                                                                                       |
+| `shared/`                              | cross-feature, domain-agnostic abstractions                                                                                        | features, core, app, environments; NgRx anywhere                                                        |
+| `shared/types`, `shared/state/request` | pure TypeScript primitives                                                                                                         | Angular, NgRx, RxJS as well                                                                             |
+| `core/`                                | application-wide concerns                                                                                                          | feature internals, NgRx                                                                                 |
 
 Ports whose contract needs RxJS (`Observable`) live in `application/ports`, not in `domain`.
 
@@ -193,7 +193,7 @@ then add an exception just to make lint pass.
 `app.config.ts`, `app.routes.ts` and `<feature>.providers.ts` wire the application. They are the
 only places that may bind ports to infrastructure implementations and register NgRx state/effects.
 Infrastructure that needs application state (e.g. the HTTP interceptor needs the access token)
-consumes a **port** (`AccessTokenProvider`) bound in the providers file — never the facade or the
+consumes a **port** (`AccessTokenProviderPort`) bound in the providers file — never the facade or the
 store directly.
 
 ## Examples

@@ -5,9 +5,9 @@ import type { SupportedLanguage } from '../language/supported-language';
 
 @Injectable({ providedIn: 'root' })
 export class DocumentLanguage {
-    private readonly document = inject(DOCUMENT);
+  private readonly document = inject(DOCUMENT);
 
-    set(language: SupportedLanguage): void {
-        this.document.documentElement.lang = language;
-    }
+  set(language: SupportedLanguage): void {
+    this.document.documentElement.lang = language;
+  }
 }

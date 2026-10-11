@@ -1,5 +1,5 @@
 import type { Observable } from 'rxjs';
-import type { Movie } from '../../domain/models/movie.model';
+import type { MovieModel } from '../../domain/models/movie.model';
 
 /**
  * Port towards the authentication backend, consumed by the application
@@ -10,5 +10,5 @@ import type { Movie } from '../../domain/models/movie.model';
  * Implementations live in `infrastructure/` and must reject with an `AuthError`.
  */
 export interface MoviesRepositoryPort {
-  getAll(): Observable<Movie[]>;
+  getAll(): Observable<MovieModel[]>;
 }

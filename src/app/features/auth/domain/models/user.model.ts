@@ -1,6 +1,6 @@
 import type { Id } from '@shared/types/id';
 
-export interface User {
+export interface UserModel {
   readonly id: Id;
   readonly firstName: string;
   readonly lastName: string;

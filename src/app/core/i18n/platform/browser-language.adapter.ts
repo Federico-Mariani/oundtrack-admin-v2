@@ -6,12 +6,11 @@ import type { SupportedLanguage } from '../language/supported-language';
 
 @Injectable({ providedIn: 'root' })
 export class BrowserLanguage {
-    private readonly document = inject(DOCUMENT);
+  private readonly document = inject(DOCUMENT);
 
-    read(): SupportedLanguage | null {
-        const language =
-            this.document.defaultView?.navigator.language;
+  read(): SupportedLanguage | null {
+    const language = this.document.defaultView?.navigator.language;
 
-        return normalizeLanguage(language);
-    }
+    return normalizeLanguage(language);
+  }
 }

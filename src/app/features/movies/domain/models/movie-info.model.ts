@@ -1,6 +1,6 @@
 import type { Id } from '@shared/types/id';
 
-export interface MovieInfo {
+export interface MovieInfoModel {
   readonly id: Id;
   readonly title: string;
   readonly releaseDate: number;

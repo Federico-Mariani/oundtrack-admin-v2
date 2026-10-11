@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Sidebar } from '@shared/ui/sidebar/sidebar';
+import { Sidebar } from '../../ui/sidebar/sidebar';
 import { HlmSidebarInset, HlmSidebarTrigger } from '@spartan-ng/helm/sidebar';
 import { Select } from '@shared/ui/select/select';
 import type { SelectItem } from '@shared/interfaces/select-item';

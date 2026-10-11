@@ -1,4 +1,6 @@
 import { InjectionToken } from '@angular/core';
-import type { AuthSessionStorage } from '../ports/auth-session-storage';
+import type { AuthSessionStoragePort } from '../ports/auth-session-storage.port';
 
-export const AUTH_SESSION_STORAGE = new InjectionToken<AuthSessionStorage>('AUTH_SESSION_STORAGE');
+export const AUTH_SESSION_STORAGE = new InjectionToken<AuthSessionStoragePort>(
+  'AUTH_SESSION_STORAGE',
+);

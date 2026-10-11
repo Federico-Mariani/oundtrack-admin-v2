@@ -1,7 +1,7 @@
 import type { MovieInfoResponseDto } from '../api/movie-info-response.dto';
-import type { MovieInfo } from '../../domain/models/movie-info.model';
+import type { MovieInfoModel } from '../../domain/models/movie-info.model';
 
-export function toMovieInfo(dto: MovieInfoResponseDto): MovieInfo {
+export function toMovieInfo(dto: MovieInfoResponseDto): MovieInfoModel {
   return {
     id: dto.id,
     title: dto.title,

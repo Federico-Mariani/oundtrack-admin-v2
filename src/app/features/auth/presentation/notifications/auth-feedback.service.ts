@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { NotificationService } from '@app/core/notifications/notification.service';
-import type { AuthFeedback } from '../../application/ports/auth-feedback';
+import type { AuthFeedbackPort } from '../../application/ports/auth-feedback.port';
 import {
   type AuthErrorOperation,
   authErrorTranslationKey,
@@ -9,7 +9,7 @@ import {
 import type { RequestError } from '@shared/state/request/request-error';
 
 /**
- * Presentation adapter implementing {@link AuthFeedback}.
+ * Presentation adapter implementing {@link AuthFeedbackPort}.
  *
  * It owns the translation of auth outcomes (which is a presentation concern):
  * it maps the semantic {@link RequestError} code to a Transloco key, resolves the
@@ -17,7 +17,7 @@ import type { RequestError } from '@shared/state/request/request-error';
  * {@link NotificationService}. The application side only knows the port.
  */
 @Injectable({ providedIn: 'root' })
-export class AuthFeedbackService implements AuthFeedback {
+export class AuthFeedbackService implements AuthFeedbackPort {
   private readonly transloco = inject(TranslocoService);
   private readonly notifications = inject(NotificationService);
 

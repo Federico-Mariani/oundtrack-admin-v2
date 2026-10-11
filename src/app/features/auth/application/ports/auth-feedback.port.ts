@@ -1,4 +1,4 @@
-import type {RequestError} from "@shared/state/request/request-error";
+import type { RequestError } from '@shared/state/request/request-error';
 
 /**
  * Port towards user feedback for auth outcomes, consumed by the application
@@ -9,6 +9,6 @@ import type {RequestError} from "@shared/state/request/request-error";
  * semantic `RequestError` into a localized message and shows it through the
  * application-wide notification capability.
  */
-export interface AuthFeedback {
+export interface AuthFeedbackPort {
   loginFailed(error: RequestError): void;
 }

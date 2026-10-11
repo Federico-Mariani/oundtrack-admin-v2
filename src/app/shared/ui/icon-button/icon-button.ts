@@ -1,15 +1,15 @@
-import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import type {ButtonType} from '@shared/types/button-type';
-import {HlmButton} from '@spartan-ng/helm/button';
-import type {ButtonSize} from '@shared/types/button-size';
-import type {ButtonVariant} from '@shared/types/button-variant';
-import {NgIcon} from "@ng-icons/core";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import type { ButtonType } from '@shared/types/button-type';
+import { HlmButton } from '@spartan-ng/helm/button';
+import type { ButtonSize } from '@shared/types/button-size';
+import type { ButtonVariant } from '@shared/types/button-variant';
+import { NgIcon } from '@ng-icons/core';
 
 @Component({
   selector: 'app-icon-button',
   templateUrl: './icon-button.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [HlmButton, NgIcon],
+  imports: [HlmButton, NgIcon],
 })
 export class IconButton {
   readonly disabled = input<boolean>(false);

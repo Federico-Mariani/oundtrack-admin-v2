@@ -1,8 +1,8 @@
 import type { RequestState } from '@shared/state/request/request-state';
 import { idleRequest } from '@shared/state/request/request-state.transitions';
-import type { AuthSession } from '../../domain/models/auth-session';
-import type { User } from '../../domain/models/user';
-import type {RequestError} from "@shared/state/request/request-error";
+import type { AuthSessionModel } from '../../domain/models/auth-session.model';
+import type { UserModel } from '../../domain/models/user.model';
+import type { RequestError } from '@shared/state/request/request-error';
 
 /**
  * Source state of the Auth feature.
@@ -12,8 +12,8 @@ import type {RequestError} from "@shared/state/request/request-error";
  * flight) can be pending at the same time.
  */
 export interface AuthState {
-  readonly session: AuthSession | null;
-  readonly user: User | null;
+  readonly session: AuthSessionModel | null;
+  readonly user: UserModel | null;
   readonly loginRequest: RequestState<RequestError>;
   readonly registrationRequest: RequestState<RequestError>;
   readonly sessionRestoreRequest: RequestState<RequestError>;

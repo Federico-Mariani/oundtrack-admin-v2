@@ -1,5 +1,5 @@
 import { jwtDecode } from 'jwt-decode';
-import type { AuthSession } from '../../domain/models/auth-session';
+import type { AuthSessionModel } from '../../domain/models/auth-session.model';
 import type { TokensResponseDto } from '../api/dto/tokens-response.dto';
 
 const MILLISECONDS_PER_SECOND = 1000;
@@ -8,7 +8,7 @@ const MILLISECONDS_PER_SECOND = 1000;
  * The JWT `exp` claim is the authoritative expiration; `expiresIn` is used only
  * when the token cannot be decoded (e.g. opaque tokens).
  */
-export function toAuthSession(dto: TokensResponseDto, now: number = Date.now()): AuthSession {
+export function toAuthSession(dto: TokensResponseDto, now: number = Date.now()): AuthSessionModel {
   return {
     accessToken: dto.accessToken,
     accessTokenExpiresAt:

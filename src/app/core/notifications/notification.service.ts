@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {toast} from '@spartan-ng/brain/sonner';
+import { Injectable } from '@angular/core';
+import { toast } from '@spartan-ng/brain/sonner';
 
 /**
  * Application-wide capability to surface transient user feedback as toasts.

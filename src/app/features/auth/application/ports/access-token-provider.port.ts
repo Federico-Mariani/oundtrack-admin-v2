@@ -6,6 +6,6 @@
  * Signal satisfies this contract structurally: the store stays the single
  * source of truth.
  */
-export interface AccessTokenProvider {
+export interface AccessTokenProviderPort {
   accessToken(): string | null;
 }

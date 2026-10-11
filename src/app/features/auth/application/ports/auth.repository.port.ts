@@ -1,7 +1,7 @@
 import type { Observable } from 'rxjs';
-import type { AuthSession } from '../../domain/models/auth-session';
-import type { LoginCredentials } from '../../domain/models/login-credentials';
-import type { User } from '../../domain/models/user';
+import type { AuthSessionModel } from '../../domain/models/auth-session.model';
+import type { LoginCredentialsModel } from '../../domain/models/login-credentials.model';
+import type { UserModel } from '../../domain/models/user.model';
 
 /**
  * Port towards the authentication backend, consumed by the application
@@ -11,8 +11,8 @@ import type { User } from '../../domain/models/user';
  * is expressed with RxJS Observables; the domain stays plain TypeScript.
  * Implementations live in `infrastructure/` and must reject with an `AuthError`.
  */
-export interface AuthRepository {
-  login(credentials: LoginCredentials): Observable<AuthSession>;
+export interface AuthRepositoryPort {
+  login(credentials: LoginCredentialsModel): Observable<AuthSessionModel>;
 
-  getCurrentUser(): Observable<User>;
+  getCurrentUser(): Observable<UserModel>;
 }

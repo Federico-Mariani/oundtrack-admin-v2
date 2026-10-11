@@ -1,7 +1,7 @@
 import type { Routes } from '@angular/router';
 import { provideTranslocoScope } from '@jsverse/transloco';
 import { AUTH_PATHS } from './auth.paths';
-import { guestGuard } from './guards/guest.guards';
+import { guestGuard } from './guards/guest.guard';
 import { AUTH_I18N_SCOPE, authTranslationsLoader } from '../i18n/auth-translations.loader';
 
 /** Routes owned by the Auth feature. Pages are lazily loaded. */

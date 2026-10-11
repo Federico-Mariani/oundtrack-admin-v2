@@ -1,12 +1,12 @@
 <hlm-select [value]="value()" (valueChange)="onValueChange($event)">
-    <hlm-select-trigger>
-        <hlm-select-value [placeholder]="placeholder()" />
-    </hlm-select-trigger>
-    <hlm-select-content *hlmSelectPortal>
-        <hlm-select-group>
-            @for (item of items(); track item.value) {
-                <hlm-select-item [value]="item.value">{{ item.label }}</hlm-select-item>
-            }
-        </hlm-select-group>
-    </hlm-select-content>
+  <hlm-select-trigger>
+    <hlm-select-value [placeholder]="placeholder()" />
+  </hlm-select-trigger>
+  <hlm-select-content *hlmSelectPortal>
+    <hlm-select-group>
+      @for (item of items(); track item.value) {
+        <hlm-select-item [value]="item.value">{{ item.label }}</hlm-select-item>
+      }
+    </hlm-select-group>
+  </hlm-select-content>
 </hlm-select>

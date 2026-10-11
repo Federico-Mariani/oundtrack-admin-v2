@@ -1,4 +1,4 @@
 import { InjectionToken } from '@angular/core';
-import type { AuthRepository } from '../ports/auth.repository';
+import type { AuthRepositoryPort } from '../ports/auth.repository.port';
 
-export const AUTH_REPOSITORY = new InjectionToken<AuthRepository>('AUTH_REPOSITORY');
+export const AUTH_REPOSITORY = new InjectionToken<AuthRepositoryPort>('AUTH_REPOSITORY');

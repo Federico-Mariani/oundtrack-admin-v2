@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { filter, map, tap } from 'rxjs';
-import { isAccessTokenExpired } from '../../../domain/models/auth-session';
+import { isAccessTokenExpired } from '../../../domain/models/auth-session.model';
 import { AUTH_SESSION_STORAGE } from '../../tokens/auth-session-storage.token';
 import { AuthLogoutActions } from '../actions/auth-logout.actions';
 import { AuthSessionActions } from '../actions/auth-session.actions';

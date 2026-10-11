@@ -1,8 +1,8 @@
 import { computed, inject, Injectable, type Signal } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
-import { LanguageStorage } from '@app/core/i18n/platform/language-storage';
-import { BrowserLanguage } from '@app/core/i18n/platform/browser-language';
-import { DocumentLanguage } from '@app/core/i18n/platform/document-language';
+import { LanguageStorage } from '../platform/language-storage.adapter';
+import { BrowserLanguage } from '../platform/browser-language.adapter';
+import { DocumentLanguage } from '../platform/document-language.adapter';
 import {
   DEFAULT_LANGUAGE,
   isSupportedLanguage,

@@ -38,10 +38,12 @@
         <div hlmSidebarGroupLabel>{{ t('components.sidebar.entities') }}</div>
         <div hlmSidebarGroupContent>
           <ul hlmSidebarMenu>
-            <hlm-collapsible class="group/collapsible"
-                             routerLinkActive
-                             #moviesGroupActive="routerLinkActive"
-                             [expanded]="moviesGroupActive.isActive">
+            <hlm-collapsible
+              class="group/collapsible"
+              routerLinkActive
+              #moviesGroupActive="routerLinkActive"
+              [expanded]="moviesGroupActive.isActive"
+            >
               <li hlmSidebarMenuItem>
                 <button
                   hlmCollapsibleTrigger
@@ -58,15 +60,15 @@
                 <hlm-collapsible-content>
                   <ul hlmSidebarMenuSub>
                     <li hlmSidebarMenuSubItem>
-                        <a
-                                class="cursor-pointer"
-                                hlmSidebarMenuSubButton
-                                [routerLink]="moviesPaths.root"
-                                routerLinkActive
-                                #moviesLinkActive="routerLinkActive"
-                                [routerLinkActiveOptions]="{ exact: true }"
-                                [isActive]="moviesLinkActive.isActive"
-                        >
+                      <a
+                        class="cursor-pointer"
+                        hlmSidebarMenuSubButton
+                        [routerLink]="moviesPaths.root"
+                        routerLinkActive
+                        #moviesLinkActive="routerLinkActive"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        [isActive]="moviesLinkActive.isActive"
+                      >
                         <span>{{ t('components.sidebar.movies.all') }}</span>
                       </a>
                     </li>

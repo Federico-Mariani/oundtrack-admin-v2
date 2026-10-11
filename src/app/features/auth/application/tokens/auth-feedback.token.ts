@@ -1,4 +1,4 @@
 import { InjectionToken } from '@angular/core';
-import type { AuthFeedback } from '../ports/auth-feedback';
+import type { AuthFeedbackPort } from '../ports/auth-feedback.port';
 
-export const AUTH_FEEDBACK_PORT = new InjectionToken<AuthFeedback>('AUTH_FEEDBACK_PORT');
+export const AUTH_FEEDBACK_PORT = new InjectionToken<AuthFeedbackPort>('AUTH_FEEDBACK_PORT');

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import type { AuthSessionStorage } from '../../application/ports/auth-session-storage';
-import type { AuthSession } from '../../domain/models/auth-session';
+import type { AuthSessionStoragePort } from '../../application/ports/auth-session-storage.port';
+import type { AuthSessionModel } from '../../domain/models/auth-session.model';
 
 @Injectable()
-export class LocalStorageAuthSessionStorage implements AuthSessionStorage {
+export class LocalStorageAuthSessionStorage implements AuthSessionStoragePort {
   private readonly storageKey = environment.authStorageKey;
 
-  load(): AuthSession | null {
+  load(): AuthSessionModel | null {
     const raw = localStorage.getItem(this.storageKey);
 
     if (!raw) {
@@ -22,7 +22,7 @@ export class LocalStorageAuthSessionStorage implements AuthSessionStorage {
     }
   }
 
-  save(session: AuthSession): void {
+  save(session: AuthSessionModel): void {
     localStorage.setItem(this.storageKey, JSON.stringify(session));
   }
 
@@ -31,12 +31,12 @@ export class LocalStorageAuthSessionStorage implements AuthSessionStorage {
   }
 }
 
-function isAuthSession(value: unknown): value is AuthSession {
+function isAuthSession(value: unknown): value is AuthSessionModel {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
 
-  const candidate = value as Record<keyof AuthSession, unknown>;
+  const candidate = value as Record<keyof AuthSessionModel, unknown>;
 
   return (
     typeof candidate.accessToken === 'string' &&

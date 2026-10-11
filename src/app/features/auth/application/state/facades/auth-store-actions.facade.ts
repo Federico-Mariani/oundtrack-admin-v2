@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import type { LoginCredentials } from '../../../domain/models/login-credentials';
+import type { LoginCredentialsModel } from '../../../domain/models/login-credentials.model';
 import { AuthLoginActions } from '../actions/auth-login.actions';
 import { AuthLogoutActions } from '../actions/auth-logout.actions';
 import { AuthSessionActions } from '../actions/auth-session.actions';
@@ -11,7 +11,7 @@ import { AuthCurrentUserActions } from '../actions/auth-current-user.actions';
 export class AuthStoreActionsFacade {
   private readonly store = inject(Store);
 
-  login(credentials: LoginCredentials): void {
+  login(credentials: LoginCredentialsModel): void {
     this.store.dispatch(AuthLoginActions.loginSubmitted({ credentials }));
   }
 
