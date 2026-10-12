@@ -13,7 +13,7 @@
     "build:staging": "ng build --configuration staging",
     "build:production": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ng test --watch=false",
     "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --max-warnings=0 --fix",
     "format": "prettier --write .",
