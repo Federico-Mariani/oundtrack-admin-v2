@@ -1,0 +1,21 @@
+<div
+  class="overflow-hidden rounded-md bg-muted"
+  [style.width.px]="width()"
+  [style.height.px]="height()"
+>
+  @if (src() && !hasError()) {
+    <img
+      class="h-full w-full object-cover"
+      [src]="src()"
+      [alt]="alt()"
+      (error)="hasError.set(true)"
+    />
+  } @else {
+    <div
+      class="flex h-full w-full items-center justify-center text-xs text-muted-foreground"
+      aria-hidden="true"
+    >
+      —
+    </div>
+  }
+</div>

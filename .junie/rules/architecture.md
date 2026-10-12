@@ -204,7 +204,7 @@ store directly.
 import { AUTH_REPOSITORY } from '../../tokens/auth-repository.token';
 // features/auth/infrastructure/storage/local-storage-auth-session.storage.ts
 import type { AuthSessionStorage } from '../../application/ports/auth-session-storage';
-// features/auth/presentation/pages/login/movies-page.ts
+// features/auth/presentation/pages/login/create-one-movie-page.ts
 import { AuthFacade } from '../../../application/state/facades/auth.facade';
 // features/home/presentation/routing/home.routes.ts
 import { authGuard } from '@features/auth';
@@ -216,7 +216,7 @@ import { Injectable } from '@angular/core'; // domain → Angular
 import { HttpMoviesRepository } from '../../../infrastructure/...'; // state → implementation
 // features/auth/infrastructure/http/auth-token.interceptor.ts
 import { AuthFacade } from '../../application/state/facades/...'; // infrastructure → facade
-// features/auth/presentation/pages/login/movies-page.ts
+// features/auth/presentation/pages/login/create-one-movie-page.ts
 import { Store } from '@ngrx/store'; // presentation → NgRx
 // shared/state/store-facade.ts
 import { AuthFacade } from '@features/auth'; // shared → feature

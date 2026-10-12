@@ -44,7 +44,7 @@ state. Business logic lives in domain / application.
   `movies-load.actions.ts`, `movies-load.reducer.ts`, `movies-load.effects.ts`,
   `movies-store-data.facade.ts`, `http-movies.repository.ts`, `local-storage-auth-session.storage.ts`,
   `auth-session.mapper.ts`, `tokens-response.dto.ts`, `movies-repository.token.ts`,
-  `movies-page.ts`, `auth.guard.ts`, `movies.routes.ts`.
+  `create-one-movie-page.ts`, `auth.guard.ts`, `movies.routes.ts`.
 - Domain models and ports are plain nouns without suffix: `movie.model.ts`, `auth-session.model.ts`,
   `movies-repository.port.ts`, `auth-session-storage.port.ts`.
 - Spec files sit next to the code they test: `x.ts` → `x.spec.ts`.

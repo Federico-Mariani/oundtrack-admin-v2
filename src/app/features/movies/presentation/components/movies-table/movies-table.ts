@@ -10,7 +10,7 @@ import { toMovieTableRow } from '../../mappers/movie-table-row.mapper';
 @Component({
   selector: 'app-movies-table',
   imports: [DataTable],
-  template: ` <app-data-table [columns]="columns" [data]="rows()" /> `,
+  templateUrl: './movies-table.html',
 })
 export class MoviesTable {
   private readonly languageService = inject(LanguageService);

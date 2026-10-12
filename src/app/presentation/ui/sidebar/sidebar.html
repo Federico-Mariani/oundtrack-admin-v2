@@ -60,20 +60,26 @@
                 <hlm-collapsible-content>
                   <ul hlmSidebarMenuSub>
                     <li hlmSidebarMenuSubItem>
-                      <a
+                      <button
                         class="cursor-pointer"
                         hlmSidebarMenuSubButton
-                        [routerLink]="moviesPaths.root"
                         routerLinkActive
                         #moviesLinkActive="routerLinkActive"
                         [routerLinkActiveOptions]="{ exact: true }"
                         [isActive]="moviesLinkActive.isActive"
                       >
                         <span>{{ t('components.sidebar.movies.all') }}</span>
-                      </a>
+                      </button>
                     </li>
                     <li hlmSidebarMenuSubItem>
-                      <button hlmSidebarMenuSubButton class="w-full">
+                      <button
+                        class="cursor-pointer"
+                        hlmSidebarMenuSubButton
+                        routerLinkActive
+                        #moviesLinkActive="routerLinkActive"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        [isActive]="moviesLinkActive.isActive"
+                      >
                         <span>{{ t('components.sidebar.movies.createOne') }}</span>
                       </button>
                     </li>

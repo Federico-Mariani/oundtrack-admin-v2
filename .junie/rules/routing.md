@@ -98,7 +98,7 @@ export const AUTH_ROUTES: Routes = [
   {
     path: AUTH_PATHS.login,
     canActivate: [guestGuard],
-    loadComponent: () => import('../pages/login/login-page').then((m) => m.MoviesPage),
+    loadComponent: () => import('../pages/login/login-page').then((m) => m.CreateOneMoviePage),
   },
 ];
 ```

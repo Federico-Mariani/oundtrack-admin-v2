@@ -11,10 +11,10 @@
                     *flexRender="
                       header.column.columnDef.header;
                       props: header.getContext();
-                      let headerText
+                      let headerContent
                     "
                   >
-                    <div [innerHTML]="headerText"></div>
+                    {{ headerContent }}
                   </ng-container>
                 }
               </th>
@@ -29,9 +29,13 @@
             @for (cell of row.getVisibleCells(); track cell.id) {
               <td hlmTd>
                 <ng-container
-                  *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let cellText"
+                  *flexRender="
+                    cell.column.columnDef.cell;
+                    props: cell.getContext();
+                    let cellContent
+                  "
                 >
-                  <div [innerHTML]="cellText"></div>
+                  {{ cellContent }}
                 </ng-container>
               </td>
             }

@@ -12,7 +12,6 @@ import { AuthFacade } from '../../../application/state/facades/auth.facade';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { AUTH_I18N_SCOPE } from '../../i18n/auth-translations.loader';
 import { Button } from '@shared/ui/button/button';
-import { NotificationService } from '@app/core/notifications/notification.service';
 import type { LoginFormModel } from '../../models/login-form.model';
 
 @Component({
@@ -32,7 +31,6 @@ import type { LoginFormModel } from '../../models/login-form.model';
 })
 export class LoginForm {
   private readonly authFacade = inject(AuthFacade);
-  private readonly notificationService = inject(NotificationService);
 
   protected readonly i18nScope = AUTH_I18N_SCOPE;
 
