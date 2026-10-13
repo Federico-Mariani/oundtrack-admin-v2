@@ -1,0 +1,8 @@
+{
+  "title": "Film",
+  "description": "Consulta e cerca i film del tuo catalogo.",
+  "refresh": "Aggiorna",
+  "loadFailed": "Impossibile caricare i film. Riprova.",
+  "copied": "Identificativo copiato.",
+  "copyFailed": "Impossibile copiare l’identificativo."
+}

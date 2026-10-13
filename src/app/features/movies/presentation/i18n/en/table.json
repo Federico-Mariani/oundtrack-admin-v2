@@ -1,0 +1,9 @@
+{
+  "title": "Movie",
+  "genres": "Genres",
+  "releaseDate": "Release date",
+  "externalId": "External ID",
+  "actions": "Actions",
+  "copyId": "Copy movie ID",
+  "copyExternalId": "Copy external ID"
+}

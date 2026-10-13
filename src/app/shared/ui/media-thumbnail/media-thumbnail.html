@@ -5,6 +5,8 @@
 >
   @if (src() && !hasError()) {
     <img
+      loading="lazy"
+      decoding="async"
       class="h-full w-full object-cover"
       [src]="src()"
       [alt]="alt()"

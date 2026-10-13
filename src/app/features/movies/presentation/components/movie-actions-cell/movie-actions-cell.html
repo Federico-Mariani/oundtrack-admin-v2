@@ -1,0 +1,24 @@
+<div class="flex justify-end">
+  <button
+    hlmBtn
+    type="button"
+    variant="ghost"
+    size="icon"
+    class="size-8 rounded-lg text-muted-foreground hover:text-foreground"
+    [attr.aria-label]="label()"
+    [hlmDropdownMenuTrigger]="actionsMenu"
+    align="end"
+  >
+    <ng-icon name="lucideEllipsis" aria-hidden="true" />
+  </button>
+</div>
+<ng-template #actionsMenu>
+  <div hlmDropdownMenu class="w-56">
+    <button hlmDropdownMenuItem type="button" (triggered)="copyId.emit()">
+      <ng-icon name="lucideCopy" aria-hidden="true" />{{ copyIdLabel() }}
+    </button>
+    <button hlmDropdownMenuItem type="button" (triggered)="copyExternalId.emit()">
+      <ng-icon name="lucideCopy" aria-hidden="true" />{{ copyExternalIdLabel() }}
+    </button>
+  </div>
+</ng-template>

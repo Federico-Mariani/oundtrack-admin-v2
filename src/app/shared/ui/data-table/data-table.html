@@ -1,51 +1,183 @@
-<div class="overflow-hidden rounded-md border">
+<section
+  *transloco="let t; prefix: 'dataTable'"
+  class="overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm"
+  [attr.aria-busy]="loading()"
+  [attr.aria-label]="caption()"
+>
+  <app-data-table-toolbar [table]="table" [searchable]="searchable()" [(density)]="density" />
+  @if (errorMessage(); as message) {
+    <div
+      role="alert"
+      class="flex flex-wrap items-center justify-between gap-3 border-b bg-destructive/5 px-4 py-3 text-sm text-destructive"
+    >
+      <span>{{ message }}</span>
+      <button
+        hlmBtn
+        variant="outline"
+        size="sm"
+        type="button"
+        [disabled]="loading()"
+        (click)="retry.emit()"
+      >
+        {{ t('retry') }}
+      </button>
+    </div>
+  }
+  @if (loading() && data().length > 0) {
+    <div
+      role="status"
+      class="flex items-center gap-2 border-b px-4 py-2 text-sm text-muted-foreground"
+    >
+      <ng-icon
+        name="lucideLoaderCircle"
+        class="animate-spin motion-reduce:animate-none"
+        aria-hidden="true"
+      />{{ t('refreshing') }}
+    </div>
+  }
   <div hlmTableContainer>
-    <table hlmTable>
-      <thead hlmTHead>
+    <table hlmTable class="min-w-full table-fixed" [style.width.px]="table.getTotalSize()">
+      <caption class="sr-only">
+        {{
+          caption()
+        }}
+      </caption>
+      <colgroup>
+        @for (column of table.getVisibleLeafColumns(); track column.id) {
+          <col [style.width.px]="column.getSize()" />
+        }
+      </colgroup>
+      <thead hlmTHead class="bg-muted/60">
         @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-          <tr hlmTr>
+          <tr hlmTr class="hover:bg-transparent">
             @for (header of headerGroup.headers; track header.id) {
-              <th hlmTh [attr.colSpan]="header.colSpan">
+              <th
+                hlmTh
+                class="relative h-12 px-4 text-xs font-semibold tracking-wide"
+                [attr.colspan]="header.colSpan"
+                [attr.scope]="header.colSpan > 1 ? 'colgroup' : 'col'"
+                [attr.aria-sort]="
+                  header.column.getIsSorted() === 'asc'
+                    ? 'ascending'
+                    : header.column.getIsSorted() === 'desc'
+                      ? 'descending'
+                      : null
+                "
+              >
                 @if (!header.isPlaceholder) {
-                  <ng-container
-                    *flexRender="
-                      header.column.columnDef.header;
-                      props: header.getContext();
-                      let headerContent
-                    "
-                  >
-                    {{ headerContent }}
-                  </ng-container>
+                  @if (header.column.getCanSort()) {
+                    <button
+                      type="button"
+                      class="flex w-full items-center gap-2 rounded-sm py-2 text-start outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
+                      (click)="header.column.toggleSorting()"
+                      [attr.title]="t('sort')"
+                    >
+                      <span class="truncate"
+                        ><ng-container
+                          *flexRender="
+                            header.column.columnDef.header;
+                            props: header.getContext();
+                            let content
+                          "
+                          >{{ content }}</ng-container
+                        ></span
+                      >
+                      <ng-icon
+                        class="shrink-0 text-sm"
+                        [name]="
+                          header.column.getIsSorted() === 'asc'
+                            ? 'lucideArrowUp'
+                            : header.column.getIsSorted() === 'desc'
+                              ? 'lucideArrowDown'
+                              : 'lucideArrowUpDown'
+                        "
+                        aria-hidden="true"
+                      />
+                    </button>
+                  } @else {
+                    <div class="truncate">
+                      <ng-container
+                        *flexRender="
+                          header.column.columnDef.header;
+                          props: header.getContext();
+                          let content
+                        "
+                        >{{ content }}</ng-container
+                      >
+                    </div>
+                  }
+                  @if (header.column.getCanResize() && header.column.columns.length === 0) {
+                    <app-data-table-column-resize [header]="header" [table]="table" />
+                  }
                 }
               </th>
             }
           </tr>
         }
       </thead>
-
       <tbody hlmTBody>
         @for (row of table.getRowModel().rows; track row.id) {
-          <tr hlmTr>
+          <tr hlmTr class="group" [attr.data-row-id]="row.id">
             @for (cell of row.getVisibleCells(); track cell.id) {
-              <td hlmTd>
+              <td
+                hlmTd
+                class="overflow-hidden text-ellipsis px-4 tabular-nums"
+                [class.py-2]="density() === 'compact'"
+                [class.py-4]="density() === 'comfortable'"
+              >
                 <ng-container
-                  *flexRender="
-                    cell.column.columnDef.cell;
-                    props: cell.getContext();
-                    let cellContent
-                  "
+                  *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let content"
+                  >{{ content }}</ng-container
                 >
-                  {{ cellContent }}
-                </ng-container>
               </td>
             }
           </tr>
         } @empty {
-          <tr hlmTr>
-            <td hlmTd class="h-24 text-center" [attr.colspan]="columns().length">No results.</td>
+          <tr hlmTr class="hover:bg-transparent">
+            <td
+              hlmTd
+              class="h-56 text-center whitespace-normal"
+              [attr.colspan]="visibleColumnCount()"
+            >
+              @if (loading()) {
+                <div role="status" class="flex flex-col items-center gap-3 text-muted-foreground">
+                  <ng-icon
+                    name="lucideLoaderCircle"
+                    class="animate-spin text-2xl motion-reduce:animate-none"
+                    aria-hidden="true"
+                  />{{ t('loading') }}
+                </div>
+              } @else if (!errorMessage()) {
+                <div role="status" class="flex flex-col items-center gap-2 px-6">
+                  <span class="mb-2 rounded-full bg-muted p-3"
+                    ><ng-icon
+                      name="lucideSearchX"
+                      class="text-2xl text-muted-foreground"
+                      aria-hidden="true"
+                  /></span>
+                  <p class="font-medium">{{ t(hasFilters() ? 'noMatches' : 'empty') }}</p>
+                  <p class="text-sm text-muted-foreground">
+                    {{ t(hasFilters() ? 'noMatchesHint' : 'emptyHint') }}
+                  </p>
+                  @if (hasFilters()) {
+                    <button
+                      hlmBtn
+                      variant="outline"
+                      size="sm"
+                      type="button"
+                      class="mt-2"
+                      (click)="clearFilters()"
+                    >
+                      {{ t('clearSearch') }}
+                    </button>
+                  }
+                </div>
+              }
+            </td>
           </tr>
         }
       </tbody>
     </table>
   </div>
-</div>
+  <app-data-table-pagination [table]="table" />
+</section>

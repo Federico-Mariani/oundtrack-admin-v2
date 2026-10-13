@@ -1,27 +1,53 @@
-import { Component, computed, inject, input } from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslocoService } from '@jsverse/transloco';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { DataTable } from '@shared/ui/data-table/data-table';
-
-import { moviesTableColumns } from './movies-table.columns';
+import type { Id } from '@shared/types/id';
+import { createMoviesTableColumns } from './movies-table.columns';
+import type { MoviesTableLabels } from './movies-table-labels';
 import type { MovieModel } from '../../../domain/models/movie.model';
 import { toMovieTableRow } from '../../mappers/movie-table-row.mapper';
 
 @Component({
   selector: 'app-movies-table',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DataTable],
   templateUrl: './movies-table.html',
 })
 export class MoviesTable {
   private readonly languageService = inject(LanguageService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly movies = input.required<readonly MovieModel[]>();
+  readonly caption = input.required<string>();
+  readonly loading = input(false);
+  readonly errorMessage = input<string | null>(null);
+  readonly retry = output();
+  readonly copyId = output<Id>();
+  readonly copyExternalId = output<number>();
 
-  protected readonly columns = moviesTableColumns;
-
+  private readonly labels = toSignal(
+    this.transloco.selectTranslateObject<MoviesTableLabels>('table', {}, 'movies'),
+  );
+  protected readonly columns = computed(() => {
+    const labels = this.labels();
+    return labels
+      ? createMoviesTableColumns(
+          labels,
+          (id) => {
+            this.copyId.emit(id);
+          },
+          (id) => {
+            this.copyExternalId.emit(id);
+          },
+        )
+      : [];
+  });
   protected readonly rows = computed(() => {
     const locale = this.languageService.activeLocale();
-
-    return this.movies().map((movie) => toMovieTableRow(movie, locale));
+    const dateFormatter = new Intl.DateTimeFormat(locale);
+    return this.movies().map((movie) => toMovieTableRow(movie, locale, dateFormatter));
   });
+  protected readonly rowId = (row: { readonly id: Id }): string => row.id;
 }

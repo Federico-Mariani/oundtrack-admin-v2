@@ -1,0 +1,8 @@
+{
+  "title": "Movies",
+  "description": "Browse and search your movie catalog.",
+  "refresh": "Refresh",
+  "loadFailed": "Could not load movies. Please try again.",
+  "copied": "Identifier copied.",
+  "copyFailed": "Could not copy the identifier."
+}

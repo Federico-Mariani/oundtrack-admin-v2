@@ -1,0 +1,99 @@
+<div
+  *transloco="let t; prefix: 'dataTable'"
+  class="flex flex-wrap items-center justify-between gap-3 border-b p-4"
+>
+  @if (searchable()) {
+    <div class="relative w-full sm:max-w-sm">
+      <ng-icon
+        name="lucideSearch"
+        class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+        aria-hidden="true"
+      />
+      <input
+        #searchInput
+        hlmInput
+        type="search"
+        class="h-9 ps-9 pe-10"
+        [placeholder]="t('search')"
+        [attr.aria-label]="t('search')"
+        [value]="search()"
+        (input)="setSearch(searchInput.value)"
+      />
+      @if (search()) {
+        <button
+          hlmBtn
+          type="button"
+          variant="ghost"
+          size="icon"
+          class="absolute end-1 top-1/2 size-7 -translate-y-1/2"
+          [attr.aria-label]="t('clearSearch')"
+          (click)="setSearch('')"
+        >
+          <ng-icon name="lucideX" aria-hidden="true" />
+        </button>
+      }
+    </div>
+  }
+  <div class="ms-auto flex items-center gap-2">
+    <button
+      hlmBtn
+      type="button"
+      variant="outline"
+      size="sm"
+      [hlmDropdownMenuTrigger]="viewMenu"
+      align="end"
+    >
+      <ng-icon name="lucideSettings2" aria-hidden="true" />{{ t('view') }}
+    </button>
+    <button
+      hlmBtn
+      type="button"
+      variant="ghost"
+      size="icon"
+      class="size-9"
+      [attr.aria-label]="t('reset')"
+      [attr.title]="t('reset')"
+      (click)="resetView()"
+    >
+      <ng-icon name="lucideRotateCcw" aria-hidden="true" />
+    </button>
+  </div>
+  <ng-template #viewMenu>
+    <div hlmDropdownMenu class="w-60">
+      <div hlmDropdownMenuLabel>{{ t('columns') }}</div>
+      @for (column of table().getAllLeafColumns(); track column.id) {
+        @if (column.getCanHide()) {
+          <button
+            type="button"
+            hlmDropdownMenuCheckbox
+            [checked]="column.getIsVisible()"
+            [disabled]="column.getIsVisible() && table().getVisibleLeafColumns().length === 1"
+            (triggered)="column.toggleVisibility()"
+          >
+            {{ columnLabel(column) }}<hlm-dropdown-menu-checkbox-indicator />
+          </button>
+        }
+      }
+      <div hlmDropdownMenuSeparator></div>
+      <div hlmDropdownMenuLabel>{{ t('density') }}</div>
+      <div hlmDropdownMenuGroup [attr.aria-label]="t('density')">
+        <button
+          type="button"
+          hlmDropdownMenuRadio
+          [checked]="density() === 'compact'"
+          (triggered)="density.set('compact')"
+        >
+          {{ t('compact') }}<hlm-dropdown-menu-radio-indicator />
+        </button>
+        <button
+          type="button"
+          hlmDropdownMenuRadio
+          [checked]="density() === 'comfortable'"
+          (triggered)="density.set('comfortable')"
+        >
+          {{ t('comfortable') }}<hlm-dropdown-menu-radio-indicator />
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,74 @@
+<div
+  *transloco="let t; prefix: 'dataTable'"
+  class="flex flex-wrap items-center justify-between gap-4 border-t px-4 py-3 text-sm"
+>
+  <p class="text-muted-foreground" role="status">
+    {{ t('range', { start: start(), end: end(), total: total() }) }}
+  </p>
+  <div class="flex flex-wrap items-center gap-4">
+    <label class="flex items-center gap-2 text-muted-foreground">
+      {{ t('rowsPerPage') }}
+      <select
+        #pageSize
+        class="h-8 rounded-md border bg-background px-2 text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        [value]="pagination().pageSize"
+        (change)="setPageSize(pageSize.value)"
+      >
+        @for (size of pageSizes; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+    </label>
+    <span>{{ t('page', { current: page(), total: table().getPageCount() }) }}</span>
+    <div class="flex gap-1">
+      <button
+        hlmBtn
+        type="button"
+        variant="outline"
+        size="icon"
+        class="size-8"
+        [attr.aria-label]="t('firstPage')"
+        [disabled]="!table().getCanPreviousPage()"
+        (click)="table().firstPage()"
+      >
+        <ng-icon name="lucideChevronsLeft" aria-hidden="true" />
+      </button>
+      <button
+        hlmBtn
+        type="button"
+        variant="outline"
+        size="icon"
+        class="size-8"
+        [attr.aria-label]="t('previousPage')"
+        [disabled]="!table().getCanPreviousPage()"
+        (click)="table().previousPage()"
+      >
+        <ng-icon name="lucideChevronLeft" aria-hidden="true" />
+      </button>
+      <button
+        hlmBtn
+        type="button"
+        variant="outline"
+        size="icon"
+        class="size-8"
+        [attr.aria-label]="t('nextPage')"
+        [disabled]="!table().getCanNextPage()"
+        (click)="table().nextPage()"
+      >
+        <ng-icon name="lucideChevronRight" aria-hidden="true" />
+      </button>
+      <button
+        hlmBtn
+        type="button"
+        variant="outline"
+        size="icon"
+        class="size-8"
+        [attr.aria-label]="t('lastPage')"
+        [disabled]="!table().getCanLastPage()"
+        (click)="table().lastPage()"
+      >
+        <ng-icon name="lucideChevronsRight" aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+</div>
