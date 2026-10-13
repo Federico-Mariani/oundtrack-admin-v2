@@ -1,6 +1,6 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# Compiled output
+# Environments
 /src/environments/environment.development.ts
 /src/environments/environment.production.ts
 /src/environments/environment.staging.ts
