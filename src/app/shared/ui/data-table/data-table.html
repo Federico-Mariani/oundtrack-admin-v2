@@ -36,7 +36,7 @@
     class="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm"
   >
     <div #tableViewport hlmTableContainer>
-      <table hlmTable class="table-fixed" [style.width.px]="renderedWidth()">
+      <table hlmTable class="table-fixed" [style.width.px]="table.getTotalSize()">
         <caption class="sr-only">
           {{
             caption()
@@ -45,9 +45,6 @@
         <colgroup>
           @for (column of table.getVisibleLeafColumns(); track column.id) {
             <col [style.width.px]="column.getSize()" />
-          }
-          @if (spacerWidth() > 0) {
-            <col [style.width.px]="spacerWidth()" />
           }
         </colgroup>
         <thead hlmTHead class="bg-muted/90">
@@ -112,13 +109,14 @@
                       </div>
                     }
                     @if (header.column.getCanResize() && header.column.columns.length === 0) {
-                      <app-data-table-column-resize [header]="header" [table]="table" />
+                      <app-data-table-column-resize
+                        [header]="header"
+                        [table]="table"
+                        [viewportWidth]="viewportWidth()"
+                      />
                     }
                   }
                 </th>
-              }
-              @if (spacerWidth() > 0) {
-                <th aria-hidden="true" class="border-b-2 border-border p-0"></th>
               }
             </tr>
           }
@@ -138,9 +136,6 @@
                     >{{ content }}</ng-container
                   >
                 </td>
-              }
-              @if (spacerWidth() > 0) {
-                <td aria-hidden="true" class="p-0"></td>
               }
             </tr>
           } @empty {

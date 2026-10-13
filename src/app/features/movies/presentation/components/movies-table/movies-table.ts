@@ -47,7 +47,7 @@ export class MoviesTable {
   });
   protected readonly rows = computed(() => {
     const locale = this.languageService.activeLocale();
-    const dateFormatter = new Intl.DateTimeFormat(locale);
+    const dateFormatter = new Intl.DateTimeFormat(locale, { timeZone: 'UTC' });
     return this.movies().map((movie) => toMovieTableRow(movie, locale, dateFormatter));
   });
   protected readonly initialColumnVisibility = { releaseDate: false };

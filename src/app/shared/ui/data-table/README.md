@@ -38,8 +38,15 @@ per header personalizzati usa l'ID della colonna. Non usare ID tradotti: devono 
 
 Ricerca, menu e paginazione sono esterni al contenitore arrotondato dei dati e riusano
 i componenti condivisi `Button`, `IconButton` e `Select`. Le larghezze delle colonne
-sono esplicite: una colonna decorativa assorbe lo spazio libero del contenitore, senza
-ridistribuirlo alle colonne dei dati durante il ridimensionamento.
+sono esplicite: lo spazio libero viene distribuito alle colonne ridimensionabili, rispettando
+`maxSize`. Non vengono aggiunte colonne vuote dopo le azioni. Prevedere almeno una colonna
+con `maxSize` sufficiente per riempire i viewport supportati.
+
+Il trascinamento sposta il confine tra due colonne adiacenti ridimensionabili, mantenendo
+fermi gli altri confini e rispettando entrambi i limiti. Al confine finale la tabella può
+allargarsi con scroll orizzontale, ma non si restringe sotto la larghezza del contenitore.
+Le colonne fisse (come le azioni) mantengono la loro dimensione. Su schermi stretti
+le colonne conservano dimensioni leggibili e la tabella scorre orizzontalmente.
 
 ## Confini architetturali
 

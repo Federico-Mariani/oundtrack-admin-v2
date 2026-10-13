@@ -1,3 +1,5 @@
+import { fitTableColumns } from './sizing/fit-table-columns';
+import { readTableColumnSizes } from './sizing/read-table-column-sizes';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -93,15 +95,20 @@ export class DataTable<TData extends RowData> {
     autoResetPageIndex: true,
   }));
   private readonly viewport = viewChild<ElementRef<HTMLDivElement>>('tableViewport');
-  private readonly viewportWidth = signal(0);
-  // A real spacer column absorbs unused viewport space. The browser must never
-  // redistribute it across data columns (as min-width: 100% would do).
-  protected readonly spacerWidth = computed(() =>
-    Math.max(0, this.viewportWidth() - this.table.getTotalSize()),
-  );
-  protected readonly renderedWidth = computed(() => this.table.getTotalSize() + this.spacerWidth());
-
+  protected readonly viewportWidth = signal(0);
   constructor() {
+    let previousViewportWidth = 0;
+    effect(() => {
+      const columns = readTableColumnSizes(this.table);
+      const width = this.viewportWidth();
+      const resizedViewport = width > 0 && width !== previousViewportWidth;
+      previousViewportWidth = width;
+      const sizes = fitTableColumns(columns, width, resizedViewport);
+      if (columns.some((column) => Math.abs(sizes[column.id] - column.size) > 0.01)) {
+        this.table.setColumnSizing((current) => ({ ...current, ...sizes }));
+      }
+    });
+
     effect((onCleanup) => {
       const element = this.viewport()?.nativeElement;
       if (!element || typeof ResizeObserver === 'undefined') {
@@ -120,7 +127,7 @@ export class DataTable<TData extends RowData> {
   }
 
   protected readonly visibleColumnCount = computed(() =>
-    Math.max(1, this.table.getVisibleLeafColumns().length + (this.spacerWidth() > 0 ? 1 : 0)),
+    Math.max(1, this.table.getVisibleLeafColumns().length),
   );
   protected readonly hasFilters = computed(
     () =>

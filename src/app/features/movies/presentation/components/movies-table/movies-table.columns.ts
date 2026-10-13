@@ -19,6 +19,7 @@ export function createMoviesTableColumns(
       header: labels.title,
       size: 440,
       minSize: 260,
+      maxSize: 10000,
       enableHiding: false,
       sortFn: 'text',
       cell: (context) =>

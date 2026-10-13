@@ -1,3 +1,4 @@
+import { DEFAULT_SIDEBAR_GROUPS } from './default-sidebar.config';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Sidebar } from '../../ui/sidebar/sidebar';
@@ -6,7 +7,7 @@ import { Select } from '@shared/ui/select/select';
 import type { SelectItem } from '@shared/interfaces/select-item';
 import { IconButton } from '@shared/ui/icon-button/icon-button';
 import { provideIcons } from '@ng-icons/core';
-import { lucideMoon, lucideSunMedium } from '@ng-icons/lucide';
+import { lucideMoon, lucideSunMedium, lucideHome, lucideFilm } from '@ng-icons/lucide';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { isSupportedLanguage } from '@app/core/i18n/language/supported-language';
 import { ThemeService } from '@app/core/theme/theme.service';
@@ -16,7 +17,7 @@ import { AuthFacade, AuthNavigationService } from '@features/auth';
   selector: 'app-default-layout',
   templateUrl: './default-layout.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideIcons({ lucideSunMedium, lucideMoon })],
+  providers: [provideIcons({ lucideSunMedium, lucideMoon, lucideHome, lucideFilm })],
   imports: [RouterOutlet, Sidebar, HlmSidebarInset, HlmSidebarTrigger, Select, IconButton],
 })
 export class DefaultLayout {
@@ -24,6 +25,8 @@ export class DefaultLayout {
   private readonly theme = inject(ThemeService);
   private readonly authFacade = inject(AuthFacade);
   private readonly authNavigation = inject(AuthNavigationService);
+
+  protected readonly sidebarGroups = DEFAULT_SIDEBAR_GROUPS;
 
   protected readonly currentUser = this.authFacade.data.user;
 

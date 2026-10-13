@@ -3,7 +3,7 @@ import { provideTranslocoScope } from '@jsverse/transloco';
 import { MOVIES_I18N_SCOPE, moviesTranslationsLoader } from '../i18n/movies-translations.loader';
 import { MOVIES_PATHS } from './movies.paths';
 
-/** Routes owned by the Auth feature. Pages are lazily loaded. */
+/** Routes owned by the Movies feature. Pages are lazily loaded. */
 export const MOVIES_ROUTES: Routes = [
   {
     path: '',
@@ -13,6 +13,7 @@ export const MOVIES_ROUTES: Routes = [
     children: [
       {
         path: '',
+        pathMatch: 'full',
         loadComponent: () => import('../pages/movies-page/movies-page').then((m) => m.MoviesPage),
       },
       {

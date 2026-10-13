@@ -1,28 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import {
-  HlmSidebar,
-  HlmSidebarContent,
-  HlmSidebarFooter,
-  HlmSidebarGroup,
-  HlmSidebarGroupContent,
-  HlmSidebarGroupLabel,
-  HlmSidebarHeader,
-  HlmSidebarMenu,
-  HlmSidebarMenuButton,
-  HlmSidebarMenuItem,
-  HlmSidebarMenuSub,
-  HlmSidebarMenuSubButton,
-  HlmSidebarMenuSubItem,
-  HlmSidebarWrapper,
-} from '@spartan-ng/helm/sidebar';
+import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import {
-  lucideChevronRight,
-  lucideChevronsUpDown,
-  lucideFilm,
-  lucideHome,
-  lucideLogOut,
-} from '@ng-icons/lucide';
+import { lucideChevronsUpDown, lucideLogOut } from '@ng-icons/lucide';
 import {
   HlmDropdownMenu,
   HlmDropdownMenuGroup,
@@ -32,38 +11,25 @@ import {
 } from '@spartan-ng/helm/dropdown-menu';
 import { Avatar } from '@shared/ui/avatar/avatar';
 import type { SidebarUser } from '@shared/interfaces/sidebar-user';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import {
-  HlmCollapsible,
-  HlmCollapsibleContent,
-  HlmCollapsibleTrigger,
-} from '@spartan-ng/helm/collapsible';
-import { TranslocoDirective } from '@jsverse/transloco';
+import type { SidebarGroup } from './sidebar-group';
+import { SidebarNavigation } from './navigation/sidebar-navigation';
+import { provideTranslocoScope, TranslocoDirective } from '@jsverse/transloco';
+import { sidebarTranslationsLoader } from '../../i18n/sidebar-translations.loader';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // Scope is private to this view: projected routed pages keep their feature scope.
+  viewProviders: [provideTranslocoScope({ scope: 'sidebar', loader: sidebarTranslationsLoader })],
   providers: [
     provideIcons({
       lucideChevronsUpDown,
       lucideLogOut,
-      lucideHome,
-      lucideChevronRight,
-      lucideFilm,
     }),
   ],
   imports: [
-    HlmSidebarWrapper,
-    HlmSidebar,
-    HlmSidebarHeader,
-    HlmSidebarContent,
-    HlmSidebarGroup,
-    HlmSidebarGroupContent,
-    HlmSidebarFooter,
-    HlmSidebarMenu,
-    HlmSidebarMenuItem,
-    HlmSidebarMenuButton,
+    HlmSidebarImports,
     NgIcon,
     HlmDropdownMenuTrigger,
     HlmDropdownMenuItem,
@@ -71,19 +37,12 @@ import { TranslocoDirective } from '@jsverse/transloco';
     HlmDropdownMenuSeparator,
     HlmDropdownMenu,
     Avatar,
-    RouterLink,
-    HlmSidebarGroupLabel,
-    HlmCollapsibleTrigger,
-    HlmCollapsible,
-    HlmCollapsibleContent,
-    HlmSidebarMenuSub,
-    HlmSidebarMenuSubItem,
-    HlmSidebarMenuSubButton,
-    RouterLinkActive,
+    SidebarNavigation,
     TranslocoDirective,
   ],
 })
 export class Sidebar {
+  readonly groups = input.required<readonly SidebarGroup[]>();
   readonly user = input<SidebarUser | null>(null);
   readonly logout = output();
 }

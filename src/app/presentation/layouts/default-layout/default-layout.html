@@ -1,4 +1,4 @@
-<app-sidebar [user]="currentUser()" (logout)="logout()">
+<app-sidebar [groups]="sidebarGroups" [user]="currentUser()" (logout)="logout()">
   <main hlmSidebarInset>
     <header class="flex items-center justify-between p-2 px-4">
       <button hlmSidebarTrigger size="lg"><span class="sr-only"></span></button>
