@@ -25,9 +25,13 @@ import type { SelectItem } from '@shared/interfaces/select-item';
   ],
 })
 export class Select {
+  private static nextId = 0;
+
+  protected readonly triggerId = `app-select-${String(Select.nextId++)}`;
   readonly items = input.required<SelectItem[]>();
   readonly placeholder = input<string>('');
   readonly value = input<string>();
+  readonly ariaLabel = input<string>();
   readonly valueChange = output<string>();
 
   protected onValueChange(value: unknown): void {

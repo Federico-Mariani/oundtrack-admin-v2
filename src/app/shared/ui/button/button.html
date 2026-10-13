@@ -1,14 +1,22 @@
 <button
   hlmBtn
   class="w-full"
+  [class]="buttonClass()"
+  [attr.aria-label]="ariaLabel()"
+  [attr.title]="title()"
+  [hlmDropdownMenuTrigger]="menu()"
+  align="end"
   [variant]="variant()"
   [size]="size()"
-  [disabled]="disabled()"
+  [disabled]="disabled() || loading()"
   [type]="type()"
   [attr.form]="form()"
 >
   @if (loading()) {
     <hlm-spinner data-icon="inline-start" />
+  } @else if (icon(); as iconName) {
+    <ng-icon [name]="iconName" aria-hidden="true" />
   }
   {{ text() }}
+  <ng-content />
 </button>

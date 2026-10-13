@@ -11,6 +11,7 @@ import { toMovieTableRow } from '../../mappers/movie-table-row.mapper';
 
 @Component({
   selector: 'app-movies-table',
+  host: { class: 'block min-w-0' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DataTable],
   templateUrl: './movies-table.html',
@@ -49,5 +50,6 @@ export class MoviesTable {
     const dateFormatter = new Intl.DateTimeFormat(locale);
     return this.movies().map((movie) => toMovieTableRow(movie, locale, dateFormatter));
   });
+  protected readonly initialColumnVisibility = { releaseDate: false };
   protected readonly rowId = (row: { readonly id: Id }): string => row.id;
 }

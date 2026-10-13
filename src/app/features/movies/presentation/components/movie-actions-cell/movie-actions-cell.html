@@ -1,16 +1,11 @@
 <div class="flex justify-end">
-  <button
-    hlmBtn
-    type="button"
+  <app-icon-button
     variant="ghost"
-    size="icon"
-    class="size-8 rounded-lg text-muted-foreground hover:text-foreground"
-    [attr.aria-label]="label()"
-    [hlmDropdownMenuTrigger]="actionsMenu"
-    align="end"
-  >
-    <ng-icon name="lucideEllipsis" aria-hidden="true" />
-  </button>
+    size="icon-sm"
+    icon="lucideEllipsis"
+    [ariaLabel]="label()"
+    [menu]="actionsMenu"
+  />
 </div>
 <ng-template #actionsMenu>
   <div hlmDropdownMenu class="w-56">

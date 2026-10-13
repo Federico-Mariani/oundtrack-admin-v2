@@ -23,5 +23,9 @@
   "nextPage": "Next page",
   "lastPage": "Last page",
   "resize": "Resize column {{column}}",
-  "resizeHint": "Drag to resize. Arrow keys adjust width; Enter or double-click resets it."
+  "resizeHint": "Drag to resize. Arrow keys adjust width; Enter or double-click resets it.",
+  "sortBy": "Sort",
+  "clearSorting": "Default order",
+  "ascending": "Ascending",
+  "descending": "Descending"
 }

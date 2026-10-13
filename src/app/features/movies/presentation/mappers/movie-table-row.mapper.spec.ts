@@ -29,7 +29,7 @@ describe('toMovieTableRow', () => {
     expect(row.releaseDate).toBe(Date.UTC(2020, 1, 15));
     expect(row.releaseDateLabel).toBe(formatter.format(Date.UTC(2020, 1, 15)));
     expect(row.title).toBe('Example');
-    expect(row.genres).toBe('Drama');
+    expect(row.genres).toEqual(['Drama']);
   });
 
   it('handles invalid dates without preventing the table from rendering', () => {

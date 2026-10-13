@@ -1,20 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { NgIcon, provideIcons } from '@ng-icons/core';
+import { provideIcons } from '@ng-icons/core';
 import {
   lucideChevronLeft,
   lucideChevronRight,
   lucideChevronsLeft,
   lucideChevronsRight,
 } from '@ng-icons/lucide';
-import { HlmButton } from '@spartan-ng/helm/button';
+import { IconButton } from '../../icon-button/icon-button';
+import { Select } from '../../select/select';
 import type { RowData, Table } from '@tanstack/angular-table';
 import type { DataTableFeatures } from '../data-table-features';
 
 @Component({
   selector: 'app-data-table-pagination',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslocoDirective, NgIcon, HlmButton],
+  imports: [TranslocoDirective, IconButton, Select],
   providers: [
     provideIcons({
       lucideChevronLeft,
@@ -39,6 +40,11 @@ export class DataTablePagination<TData extends RowData> {
     this.total() === 0 ? 0 : this.pagination().pageIndex + 1,
   );
   protected readonly pageSizes = [10, 25, 50, 100];
+  protected readonly pageSizeItems = this.pageSizes.map((size) => ({
+    label: String(size),
+    value: String(size),
+  }));
+  protected readonly pageSizeValue = computed(() => String(this.pagination().pageSize));
 
   protected setPageSize(value: string): void {
     const size = Number(value);

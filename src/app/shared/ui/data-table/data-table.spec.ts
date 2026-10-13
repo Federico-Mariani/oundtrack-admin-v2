@@ -87,9 +87,12 @@ describe('DataTable interactions', () => {
     await fixture.whenStable();
     expect(rows()).toHaveLength(6);
     expect(button('Next page').disabled).toBe(true);
-    const select = element.querySelector('select')!;
-    select.value = '25';
-    select.dispatchEvent(new Event('change'));
+    element.querySelector<HTMLButtonElement>('app-select button')!.click();
+    await fixture.whenStable();
+    const option = Array.from(document.querySelectorAll<HTMLElement>('[role="option"]')).find(
+      (item) => item.textContent.trim() === '25',
+    )!;
+    option.click();
     await fixture.whenStable();
     expect(rows()).toHaveLength(25);
     expect(rows()[0]?.dataset['rowId']).toBe('record-0');
@@ -147,6 +150,22 @@ describe('DataTable interactions', () => {
     handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
     await fixture.whenStable();
     expect(element.querySelector('col')?.style.width).toBe('180px');
+  });
+
+  it('places controls outside the bordered table and preserves sibling column widths', async () => {
+    const surface = element.querySelector('table')!.parentElement!.parentElement!;
+    expect(surface.classList.contains('rounded-xl')).toBe(true);
+    expect(surface.querySelector('app-data-table-toolbar')).toBeNull();
+    expect(surface.querySelector('app-data-table-pagination')).toBeNull();
+    const widths = (): string[] =>
+      Array.from(element.querySelectorAll('col')).map((column) => column.style.width);
+    const before = widths();
+    button('Resize column year').dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }),
+    );
+    await fixture.whenStable();
+    expect(widths()).toEqual([before[0], '190px']);
+    expect(element.querySelector('table')?.classList.contains('min-w-full')).toBe(false);
   });
 
   it('keeps the empty-state colspan consistent with visible columns', async () => {

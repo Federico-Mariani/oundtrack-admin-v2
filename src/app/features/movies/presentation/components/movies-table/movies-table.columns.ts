@@ -2,6 +2,7 @@ import { type ColumnDef, createColumnHelper, flexRenderComponent } from '@tansta
 import type { DataTableFeatures } from '@shared/ui/data-table/data-table-features';
 import type { Id } from '@shared/types/id';
 import type { MovieTableRowModel } from '../../models/movie-table-row.model';
+import { MovieGenresCell } from '../movie-genres-cell/movie-genres-cell';
 import { MovieTitleCell } from '../movie-title-cell/movie-title-cell';
 import { MovieActionsCell } from '../movie-actions-cell/movie-actions-cell';
 import type { MoviesTableLabels } from './movies-table-labels';
@@ -16,23 +17,32 @@ export function createMoviesTableColumns(
   return columnHelper.columns([
     columnHelper.accessor('title', {
       header: labels.title,
-      size: 360,
-      minSize: 220,
+      size: 440,
+      minSize: 260,
       enableHiding: false,
       sortFn: 'text',
       cell: (context) =>
         flexRenderComponent(MovieTitleCell, {
-          inputs: { title: context.row.original.title, posterUrl: context.row.original.posterUrl },
+          inputs: {
+            title: context.row.original.title,
+            posterUrl: context.row.original.posterUrl,
+            releaseDate: context.row.original.releaseDateLabel,
+            releaseDateDescription: labels.releaseDate,
+          },
         }),
     }),
-    columnHelper.accessor('genres', {
+    columnHelper.accessor((row) => row.genres.join(', '), {
+      id: 'genres',
       header: labels.genres,
-      size: 240,
+      size: 280,
+      minSize: 180,
       sortFn: 'text',
-      cell: (context) => context.getValue() || '—',
+      cell: (context) =>
+        flexRenderComponent(MovieGenresCell, { inputs: { genres: context.row.original.genres } }),
     }),
     columnHelper.accessor('releaseDate', {
       header: labels.releaseDate,
+      enableHiding: false,
       size: 170,
       sortFn: 'basic',
       sortUndefined: 'last',
@@ -41,7 +51,7 @@ export function createMoviesTableColumns(
     }),
     columnHelper.accessor('externalMovieId', {
       header: labels.externalId,
-      size: 140,
+      size: 160,
       sortFn: 'basic',
     }),
     columnHelper.display({

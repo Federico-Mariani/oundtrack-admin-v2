@@ -9,5 +9,7 @@ import { MediaThumbnail } from '@shared/ui/media-thumbnail/media-thumbnail';
 })
 export class MovieTitleCell {
   readonly title = input.required<string>();
+  readonly releaseDate = input.required<string>();
+  readonly releaseDateDescription = input.required<string>();
   readonly posterUrl = input<string | null>(null);
 }

@@ -1,6 +1,6 @@
 <section
   *transloco="let t; prefix: 'dataTable'"
-  class="overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm"
+  class="flex min-w-0 flex-col gap-4"
   [attr.aria-busy]="loading()"
   [attr.aria-label]="caption()"
 >
@@ -11,16 +11,13 @@
       class="flex flex-wrap items-center justify-between gap-3 border-b bg-destructive/5 px-4 py-3 text-sm text-destructive"
     >
       <span>{{ message }}</span>
-      <button
-        hlmBtn
+      <app-button
         variant="outline"
         size="sm"
-        type="button"
         [disabled]="loading()"
         (click)="retry.emit()"
-      >
-        {{ t('retry') }}
-      </button>
+        [text]="t('retry')"
+      />
     </div>
   }
   @if (loading() && data().length > 0) {
@@ -35,149 +32,161 @@
       />{{ t('refreshing') }}
     </div>
   }
-  <div hlmTableContainer>
-    <table hlmTable class="min-w-full table-fixed" [style.width.px]="table.getTotalSize()">
-      <caption class="sr-only">
-        {{
-          caption()
-        }}
-      </caption>
-      <colgroup>
-        @for (column of table.getVisibleLeafColumns(); track column.id) {
-          <col [style.width.px]="column.getSize()" />
-        }
-      </colgroup>
-      <thead hlmTHead class="bg-muted/60">
-        @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-          <tr hlmTr class="hover:bg-transparent">
-            @for (header of headerGroup.headers; track header.id) {
-              <th
-                hlmTh
-                class="relative h-12 px-4 text-xs font-semibold tracking-wide"
-                [attr.colspan]="header.colSpan"
-                [attr.scope]="header.colSpan > 1 ? 'colgroup' : 'col'"
-                [attr.aria-sort]="
-                  header.column.getIsSorted() === 'asc'
-                    ? 'ascending'
-                    : header.column.getIsSorted() === 'desc'
-                      ? 'descending'
-                      : null
-                "
-              >
-                @if (!header.isPlaceholder) {
-                  @if (header.column.getCanSort()) {
-                    <button
-                      type="button"
-                      class="flex w-full items-center gap-2 rounded-sm py-2 text-start outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
-                      (click)="header.column.toggleSorting()"
-                      [attr.title]="t('sort')"
-                    >
-                      <span class="truncate"
-                        ><ng-container
+  <div
+    class="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm"
+  >
+    <div #tableViewport hlmTableContainer>
+      <table hlmTable class="table-fixed" [style.width.px]="renderedWidth()">
+        <caption class="sr-only">
+          {{
+            caption()
+          }}
+        </caption>
+        <colgroup>
+          @for (column of table.getVisibleLeafColumns(); track column.id) {
+            <col [style.width.px]="column.getSize()" />
+          }
+          @if (spacerWidth() > 0) {
+            <col [style.width.px]="spacerWidth()" />
+          }
+        </colgroup>
+        <thead hlmTHead class="bg-muted/90">
+          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+            <tr hlmTr class="hover:bg-transparent">
+              @for (header of headerGroup.headers; track header.id) {
+                <th
+                  hlmTh
+                  class="relative h-14 border-b-2 border-border px-5 text-sm font-bold tracking-wide text-foreground"
+                  [attr.colspan]="header.colSpan"
+                  [attr.scope]="header.colSpan > 1 ? 'colgroup' : 'col'"
+                  [attr.aria-sort]="
+                    header.column.getIsSorted() === 'asc'
+                      ? 'ascending'
+                      : header.column.getIsSorted() === 'desc'
+                        ? 'descending'
+                        : null
+                  "
+                >
+                  @if (!header.isPlaceholder) {
+                    @if (header.column.getCanSort()) {
+                      <app-button
+                        variant="ghost"
+                        size="sm"
+                        class="block min-w-0"
+                        buttonClass="h-10 justify-start gap-2 px-0 text-sm font-bold tracking-wide hover:bg-transparent hover:text-primary"
+                        (click)="header.column.toggleSorting()"
+                        [title]="t('sort')"
+                      >
+                        <span class="truncate"
+                          ><ng-container
+                            *flexRender="
+                              header.column.columnDef.header;
+                              props: header.getContext();
+                              let content
+                            "
+                            >{{ content }}</ng-container
+                          ></span
+                        >
+                        <ng-icon
+                          class="shrink-0 text-sm"
+                          [name]="
+                            header.column.getIsSorted() === 'asc'
+                              ? 'lucideArrowUp'
+                              : header.column.getIsSorted() === 'desc'
+                                ? 'lucideArrowDown'
+                                : 'lucideArrowUpDown'
+                          "
+                          aria-hidden="true"
+                        />
+                      </app-button>
+                    } @else {
+                      <div class="truncate">
+                        <ng-container
                           *flexRender="
                             header.column.columnDef.header;
                             props: header.getContext();
                             let content
                           "
                           >{{ content }}</ng-container
-                        ></span
-                      >
-                      <ng-icon
-                        class="shrink-0 text-sm"
-                        [name]="
-                          header.column.getIsSorted() === 'asc'
-                            ? 'lucideArrowUp'
-                            : header.column.getIsSorted() === 'desc'
-                              ? 'lucideArrowDown'
-                              : 'lucideArrowUpDown'
-                        "
-                        aria-hidden="true"
-                      />
-                    </button>
-                  } @else {
-                    <div class="truncate">
-                      <ng-container
-                        *flexRender="
-                          header.column.columnDef.header;
-                          props: header.getContext();
-                          let content
-                        "
-                        >{{ content }}</ng-container
-                      >
-                    </div>
+                        >
+                      </div>
+                    }
+                    @if (header.column.getCanResize() && header.column.columns.length === 0) {
+                      <app-data-table-column-resize [header]="header" [table]="table" />
+                    }
                   }
-                  @if (header.column.getCanResize() && header.column.columns.length === 0) {
-                    <app-data-table-column-resize [header]="header" [table]="table" />
-                  }
-                }
-              </th>
-            }
-          </tr>
-        }
-      </thead>
-      <tbody hlmTBody>
-        @for (row of table.getRowModel().rows; track row.id) {
-          <tr hlmTr class="group" [attr.data-row-id]="row.id">
-            @for (cell of row.getVisibleCells(); track cell.id) {
+                </th>
+              }
+              @if (spacerWidth() > 0) {
+                <th aria-hidden="true" class="border-b-2 border-border p-0"></th>
+              }
+            </tr>
+          }
+        </thead>
+        <tbody hlmTBody>
+          @for (row of table.getRowModel().rows; track row.id) {
+            <tr hlmTr class="group" [attr.data-row-id]="row.id">
+              @for (cell of row.getVisibleCells(); track cell.id) {
+                <td
+                  hlmTd
+                  class="overflow-hidden text-ellipsis px-5 tabular-nums"
+                  [class.py-2]="density() === 'compact'"
+                  [class.py-4]="density() === 'comfortable'"
+                >
+                  <ng-container
+                    *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let content"
+                    >{{ content }}</ng-container
+                  >
+                </td>
+              }
+              @if (spacerWidth() > 0) {
+                <td aria-hidden="true" class="p-0"></td>
+              }
+            </tr>
+          } @empty {
+            <tr hlmTr class="hover:bg-transparent">
               <td
                 hlmTd
-                class="overflow-hidden text-ellipsis px-4 tabular-nums"
-                [class.py-2]="density() === 'compact'"
-                [class.py-4]="density() === 'comfortable'"
+                class="h-56 text-center whitespace-normal"
+                [attr.colspan]="visibleColumnCount()"
               >
-                <ng-container
-                  *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let content"
-                  >{{ content }}</ng-container
-                >
-              </td>
-            }
-          </tr>
-        } @empty {
-          <tr hlmTr class="hover:bg-transparent">
-            <td
-              hlmTd
-              class="h-56 text-center whitespace-normal"
-              [attr.colspan]="visibleColumnCount()"
-            >
-              @if (loading()) {
-                <div role="status" class="flex flex-col items-center gap-3 text-muted-foreground">
-                  <ng-icon
-                    name="lucideLoaderCircle"
-                    class="animate-spin text-2xl motion-reduce:animate-none"
-                    aria-hidden="true"
-                  />{{ t('loading') }}
-                </div>
-              } @else if (!errorMessage()) {
-                <div role="status" class="flex flex-col items-center gap-2 px-6">
-                  <span class="mb-2 rounded-full bg-muted p-3"
-                    ><ng-icon
-                      name="lucideSearchX"
-                      class="text-2xl text-muted-foreground"
+                @if (loading()) {
+                  <div role="status" class="flex flex-col items-center gap-3 text-muted-foreground">
+                    <ng-icon
+                      name="lucideLoaderCircle"
+                      class="animate-spin text-2xl motion-reduce:animate-none"
                       aria-hidden="true"
-                  /></span>
-                  <p class="font-medium">{{ t(hasFilters() ? 'noMatches' : 'empty') }}</p>
-                  <p class="text-sm text-muted-foreground">
-                    {{ t(hasFilters() ? 'noMatchesHint' : 'emptyHint') }}
-                  </p>
-                  @if (hasFilters()) {
-                    <button
-                      hlmBtn
-                      variant="outline"
-                      size="sm"
-                      type="button"
-                      class="mt-2"
-                      (click)="clearFilters()"
-                    >
-                      {{ t('clearSearch') }}
-                    </button>
-                  }
-                </div>
-              }
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
+                    />{{ t('loading') }}
+                  </div>
+                } @else if (!errorMessage()) {
+                  <div role="status" class="flex flex-col items-center gap-2 px-6">
+                    <span class="mb-2 rounded-full bg-muted p-3"
+                      ><ng-icon
+                        name="lucideSearchX"
+                        class="text-2xl text-muted-foreground"
+                        aria-hidden="true"
+                    /></span>
+                    <p class="font-medium">{{ t(hasFilters() ? 'noMatches' : 'empty') }}</p>
+                    <p class="text-sm text-muted-foreground">
+                      {{ t(hasFilters() ? 'noMatchesHint' : 'emptyHint') }}
+                    </p>
+                    @if (hasFilters()) {
+                      <app-button
+                        variant="outline"
+                        size="sm"
+                        class="mt-2"
+                        (click)="clearFilters()"
+                        [text]="t('clearSearch')"
+                      />
+                    }
+                  </div>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
   <app-data-table-pagination [table]="table" />
 </section>

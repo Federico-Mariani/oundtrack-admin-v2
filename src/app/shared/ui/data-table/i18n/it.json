@@ -23,5 +23,9 @@
   "nextPage": "Pagina successiva",
   "lastPage": "Ultima pagina",
   "resize": "Ridimensiona colonna {{column}}",
-  "resizeHint": "Trascina per ridimensionare. Usa le frecce per la larghezza; Invio o doppio clic per ripristinarla."
+  "resizeHint": "Trascina per ridimensionare. Usa le frecce per la larghezza; Invio o doppio clic per ripristinarla.",
+  "sortBy": "Ordina",
+  "clearSorting": "Ordine predefinito",
+  "ascending": "Crescente",
+  "descending": "Decrescente"
 }

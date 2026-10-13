@@ -20,7 +20,7 @@ export function toMovieTableRow(
     id: movie.id,
     externalMovieId: movie.externalMovieId,
     title: info?.title ?? '—',
-    genres: genres.join(', '),
+    genres,
     releaseDate,
     releaseDateLabel: releaseDate === undefined ? '—' : dateFormatter.format(releaseDate),
     posterUrl: info?.posterUrl ?? null,

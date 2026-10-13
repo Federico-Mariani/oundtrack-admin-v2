@@ -80,15 +80,29 @@ describe('MoviesTable integration', () => {
       expect(element.querySelectorAll('tbody tr[data-row-id]')).toHaveLength(2);
     });
     expect(element.textContent).toContain('Release date');
-    const dateSort = Array.from(element.querySelectorAll<HTMLButtonElement>('thead button')).find(
-      (button) => button.textContent.includes('Release date'),
-    )!;
-    dateSort.click();
+    expect(element.querySelectorAll('thead th')).toHaveLength(4);
+    const cell = element.querySelector('app-movie-title-cell')!;
+    expect(cell.textContent).toContain('Alpha');
+    expect(cell.textContent).toContain('1/1/2020');
+    const sortButton = Array.from(
+      element.querySelectorAll<HTMLButtonElement>('app-button button'),
+    ).find((button) => button.textContent.includes('Sort'))!;
+    sortButton.click();
+    await fixture.whenStable();
+    const dateGroup = document.querySelector('[role="group"][aria-label="Release date"]')!;
+    expect(dateGroup).not.toBeNull();
+    const direction = (label: string): HTMLButtonElement =>
+      Array.from(dateGroup.querySelectorAll<HTMLButtonElement>('button')).find((button) =>
+        button.textContent.includes(label),
+      )!;
+    direction('Descending').click();
     await fixture.whenStable();
     expect(element.querySelector('tbody tr')?.getAttribute('data-row-id')).toBe('newer');
-    dateSort.click();
+    direction('Ascending').click();
     await fixture.whenStable();
     expect(element.querySelector('tbody tr')?.getAttribute('data-row-id')).toBe('older');
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await fixture.whenStable();
     element.querySelector<HTMLButtonElement>('button[aria-label="Actions: Beta"]')!.click();
     await fixture.whenStable();
     const copy = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')).find(

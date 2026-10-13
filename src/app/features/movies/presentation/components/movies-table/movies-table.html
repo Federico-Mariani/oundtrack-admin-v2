@@ -1,6 +1,7 @@
 @if (columns().length > 0) {
   <app-data-table
     [columns]="columns()"
+    [initialColumnVisibility]="initialColumnVisibility"
     [data]="rows()"
     [getRowId]="rowId"
     [caption]="caption()"

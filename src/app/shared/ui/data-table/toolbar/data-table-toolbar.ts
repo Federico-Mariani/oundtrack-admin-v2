@@ -1,8 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideSearch, lucideSettings2, lucideRotateCcw, lucideX } from '@ng-icons/lucide';
-import { HlmButton } from '@spartan-ng/helm/button';
+import {
+  lucideSearch,
+  lucideSettings2,
+  lucideRotateCcw,
+  lucideX,
+  lucideArrowUpDown,
+} from '@ng-icons/lucide';
+import { Button } from '../../button/button';
+import { IconButton } from '../../icon-button/icon-button';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import type { Column, RowData, Table } from '@tanstack/angular-table';
@@ -12,8 +19,10 @@ import type { DataTableDensity } from '../data-table-density';
 @Component({
   selector: 'app-data-table-toolbar',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslocoDirective, NgIcon, HlmButton, HlmInput, HlmDropdownMenuImports],
-  providers: [provideIcons({ lucideSearch, lucideSettings2, lucideRotateCcw, lucideX })],
+  imports: [TranslocoDirective, NgIcon, Button, IconButton, HlmInput, HlmDropdownMenuImports],
+  providers: [
+    provideIcons({ lucideSearch, lucideSettings2, lucideRotateCcw, lucideX, lucideArrowUpDown }),
+  ],
   templateUrl: './data-table-toolbar.html',
 })
 export class DataTableToolbar<TData extends RowData> {

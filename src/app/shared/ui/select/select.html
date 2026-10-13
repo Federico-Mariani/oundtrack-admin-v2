@@ -1,5 +1,8 @@
+@if (ariaLabel()) {
+  <label class="sr-only" [for]="triggerId">{{ ariaLabel() }}</label>
+}
 <hlm-select [value]="value()" (valueChange)="onValueChange($event)">
-  <hlm-select-trigger>
+  <hlm-select-trigger [buttonId]="triggerId">
     <hlm-select-value [placeholder]="placeholder()" />
   </hlm-select-trigger>
   <hlm-select-content *hlmSelectPortal>

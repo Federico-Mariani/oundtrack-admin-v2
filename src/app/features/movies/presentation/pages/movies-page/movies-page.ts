@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideFilm, lucideRefreshCw } from '@ng-icons/lucide';
-import { HlmButton } from '@spartan-ng/helm/button';
+import { Button } from '@shared/ui/button/button';
 import { NotificationService } from '@app/core/notifications/notification.service';
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
 import { MoviesTable } from '../../components/movies-table/movies-table';
@@ -12,7 +12,7 @@ import { MoviesTable } from '../../components/movies-table/movies-table';
   selector: 'app-movies-page',
   templateUrl: './movies-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MoviesTable, TranslocoDirective, HlmButton, NgIcon],
+  imports: [MoviesTable, TranslocoDirective, Button, NgIcon],
   providers: [provideIcons({ lucideFilm, lucideRefreshCw })],
 })
 export class MoviesPage {
