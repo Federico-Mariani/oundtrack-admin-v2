@@ -12,6 +12,7 @@ import type { RowData, Table } from '@tanstack/angular-table';
 import type { DataTableFeatures } from '../data-table-features';
 import type { DataTableDensity } from '../data-table-density';
 import { DataTableToolbar } from '../toolbar/data-table-toolbar';
+
 @Component({
   selector: 'app-data-table-controls',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -6,13 +6,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
+  type ElementRef,
   input,
   output,
   signal,
-  effect,
-  viewChild,
-  type ElementRef,
   type TemplateRef,
+  viewChild,
 } from '@angular/core';
 import { provideTranslocoScope, TranslocoDirective } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -21,13 +21,13 @@ import { Shimmer } from '../shimmer/shimmer';
 import { Button } from '../button/button';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import {
-  type PaginationState,
-  type Updater,
   type ColumnDef,
   type ColumnVisibilityState,
   FlexRender,
   injectTable,
+  type PaginationState,
   type RowData,
+  type Updater,
 } from '@tanstack/angular-table';
 import { dataTableFeatures, type DataTableFeatures } from './data-table-features';
 import type { DataTableDensity } from './data-table-density';

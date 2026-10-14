@@ -1,4 +1,4 @@
-<div *transloco="let t; prefix: 'listControls'" class="flex min-w-0 items-center gap-3 sm:gap-5">
+<div *transloco="let t; prefix: 'listControls'" class="flex min-w-0 items-center gap-3 sm:gap-4">
   <app-text-input
     class="min-w-0 max-w-64 flex-1"
     [formField]="search()"
@@ -8,7 +8,7 @@
     inputMode="search"
     [hideLabel]="true"
   />
-  <div class="hidden shrink-0 border-s ps-5 @[64rem]/table-controls:block">
+  <div class="hidden shrink-0 border-s ps-4 @[64rem]/table-controls:block">
     <app-list-filters [fields]="fields()" [compact]="true" />
   </div>
   <app-icon-button
@@ -21,7 +21,6 @@
     (click)="openFilters()"
   />
   <app-icon-button
-    variant="ghost"
     size="icon-sm"
     class="hidden @[64rem]/table-controls:block"
     icon="lucideFilterX"
