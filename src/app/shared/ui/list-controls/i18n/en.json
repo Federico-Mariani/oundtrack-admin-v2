@@ -1,0 +1,7 @@
+{
+  "search": "Search the catalog…",
+  "open": "Filters and sorting ({{count}} active)",
+  "title": "Filters and sorting",
+  "hint": "Results update automatically. Close this panel to view the table.",
+  "reset": "Clear all filters"
+}

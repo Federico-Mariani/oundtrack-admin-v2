@@ -27,5 +27,10 @@
   "sortBy": "Ordina",
   "clearSorting": "Ordine predefinito",
   "ascending": "Crescente",
-  "descending": "Decrescente"
+  "descending": "Decrescente",
+  "pagination": "Paginazione",
+  "paginationHint": "Scegli la pagina e il numero di righe da mostrare.",
+  "pageCompact": "{{current}} / {{total}}",
+  "resultCount": "{{total}} risultati",
+  "refresh": "Aggiorna dati"
 }

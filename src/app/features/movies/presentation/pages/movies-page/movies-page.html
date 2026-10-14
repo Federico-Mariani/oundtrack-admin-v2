@@ -10,24 +10,17 @@
         <p class="mt-1 text-sm text-muted-foreground">{{ t('description') }}</p>
       </div>
     </div>
-    <app-button
-      variant="outline"
-      size="sm"
-      icon="lucideRefreshCw"
-      [text]="t('refresh')"
-      [loading]="loading()"
-      (click)="reload()"
-    />
   </header>
-  <app-movies-filters
-    [query]="query()"
-    (applyFilters)="applyFilters($event)"
-    (resetFilters)="resetQuery()"
-  />
+  <ng-template #controls
+    ><app-movies-filters
+      [query]="query()"
+      (filtersChange)="applyFilters($event)"
+      (resetFilters)="resetQuery()"
+  /></ng-template>
   <app-movies-table
     [remote]="remote()"
     (pageChange)="changePage($event)"
-    (searchChange)="search($event)"
+    [controls]="controls"
     (resetQuery)="resetQuery()"
     [movies]="movies()"
     [caption]="t('title')"

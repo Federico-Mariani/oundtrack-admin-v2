@@ -1,14 +1,10 @@
 <fieldset
   [disabled]="disabled()"
   *transloco="let t; prefix: 'dataTable'"
-  class="flex flex-wrap items-center justify-between gap-4 px-1 text-sm"
+  class="flex flex-wrap items-center justify-between gap-2 px-1 text-sm"
 >
-  <p class="text-muted-foreground" role="status">
-    {{ t('range', { start: start(), end: end(), total: total() }) }}
-  </p>
-  <div class="flex flex-wrap items-center gap-4">
+  <div class="flex flex-wrap items-center gap-2">
     <div class="flex items-center gap-2 text-muted-foreground">
-      <span>{{ t('rowsPerPage') }}</span>
       <app-select
         [items]="pageSizeItems"
         [value]="pageSizeValue()"
@@ -16,7 +12,7 @@
         (valueChange)="setPageSize($event)"
       />
     </div>
-    <span>{{ t('page', { current: page(), total: table().getPageCount() }) }}</span>
+    <span>{{ t('pageCompact', { current: page(), total: table().getPageCount() }) }}</span>
     <div class="flex gap-1">
       <app-icon-button
         variant="outline"

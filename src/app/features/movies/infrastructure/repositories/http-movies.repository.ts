@@ -5,7 +5,6 @@ import { environment } from '@environments/environment';
 import type { PaginatedApiResponse } from '@app/core/http/paginated-api-response';
 import { mapPaginatedResponse } from '@app/core/http/paginated-response.mapper';
 import { listHttpParams } from '@app/core/http/list-http-params';
-import { toApiLocale } from '@app/core/http/api-locale.mapper';
 import type { PageResult } from '@shared/types/pagination/page-result';
 import type { MoviesListQuery } from '../../domain/models/movies-list-query.model';
 import type { MoviesRepositoryPort } from '../../application/ports/movies-repository.port';
@@ -20,12 +19,7 @@ export class HttpMoviesRepository implements MoviesRepositoryPort {
   private readonly baseUrl = environment.apiUrl + '/movies';
 
   getAll(query: MoviesListQuery): Observable<PageResult<MovieModel>> {
-    const params = listHttpParams(query, {
-      ...query.filters,
-      infoLanguage: query.filters.infoLanguage
-        ? toApiLocale(query.filters.infoLanguage)
-        : undefined,
-    });
+    const params = listHttpParams(query, { ...query.filters });
     return this.http.get<PaginatedApiResponse<MovieResponseDto>>(this.baseUrl, { params }).pipe(
       map((response) => mapPaginatedResponse(response, toMovie)),
       catchError((error: HttpErrorResponse) => throwError(() => toRequestError(error))),

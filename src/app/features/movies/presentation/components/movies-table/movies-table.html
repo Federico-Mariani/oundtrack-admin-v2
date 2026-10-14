@@ -3,7 +3,7 @@
     [columns]="columns()"
     [remote]="remote()"
     (pageChange)="pageChange.emit($event)"
-    (searchChange)="searchChange.emit($event)"
+    [controls]="controls()"
     (resetQuery)="resetQuery.emit()"
     [initialColumnVisibility]="initialColumnVisibility"
     [data]="rows()"

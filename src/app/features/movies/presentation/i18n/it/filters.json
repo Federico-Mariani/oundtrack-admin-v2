@@ -1,10 +1,6 @@
 {
-  "language": "Lingua dei metadati",
-  "anyLanguage": "Tutte le lingue",
-  "italian": "Italiano",
-  "english": "Inglese",
-  "yearFrom": "Anno di uscita da",
-  "yearTo": "Anno di uscita a",
+  "yearFrom": "Anno da",
+  "yearTo": "Anno a",
   "externalId": "ID esterno",
   "sort": "Ordina per",
   "newest": "Aggiunti più di recente",

@@ -23,7 +23,6 @@ describe('Movies paginated HTTP contract', () => {
         page: 3,
         search: '  Matrix  ',
         filters: {
-          infoLanguage: 'en-US',
           releaseYearFrom: 1990,
           releaseYearTo: 2005,
           externalMovieId: 42,
@@ -36,7 +35,7 @@ describe('Movies paginated HTTP contract', () => {
     expect(request.request.params.get('page')).toBe('3');
     expect(request.request.params.get('limit')).toBe('20');
     expect(request.request.params.get('search')).toBe('Matrix');
-    expect(request.request.params.get('infoLanguage')).toBe('en-EN');
+    expect(request.request.params.has('infoLanguage')).toBe(false);
     expect(request.request.params.get('releaseYearFrom')).toBe('1990');
     expect(request.request.params.get('releaseYearTo')).toBe('2005');
     expect(request.request.params.get('externalMovieId')).toBe('42');

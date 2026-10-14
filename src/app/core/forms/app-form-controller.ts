@@ -7,7 +7,7 @@ export class AppFormController<MODEL> {
   private readonly _model: WritableSignal<MODEL>;
   private readonly _form: FieldTree<MODEL>;
   private readonly _fields: AppFormField[];
-  private readonly _onSubmission: () => void;
+  private readonly _onSubmission: (() => void) | undefined;
   private readonly _serverErrors?: Signal<ServerFieldErrors | null | undefined>;
 
   /**
@@ -21,7 +21,7 @@ export class AppFormController<MODEL> {
 
   constructor(
     fields: AppFormField[],
-    onSubmission: () => void,
+    onSubmission?: () => void,
     serverErrors?: Signal<ServerFieldErrors | null | undefined>,
   ) {
     this._fields = fields;
@@ -59,7 +59,7 @@ export class AppFormController<MODEL> {
           const fieldPath = fieldPaths[field.name];
 
           for (const rule of field.rules) {
-            rule.apply(field.name, fieldPath);
+            rule.apply(field.name, fieldPath, fieldPaths);
           }
 
           this._applyServerErrors(field.name, fieldPath);
@@ -69,7 +69,7 @@ export class AppFormController<MODEL> {
         submission: {
           action: () => {
             this._captureSubmittedValues();
-            this._onSubmission();
+            this._onSubmission?.();
 
             return Promise.resolve();
           },

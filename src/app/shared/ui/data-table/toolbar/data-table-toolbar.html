@@ -1,96 +1,18 @@
-<div
-  *transloco="let t; prefix: 'dataTable'"
-  class="flex flex-wrap items-center justify-between gap-3"
->
-  @if (searchable()) {
-    <div class="relative w-full sm:max-w-sm">
-      <ng-icon
-        name="lucideSearch"
-        class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-        aria-hidden="true"
-      />
-      <input
-        #searchInput
-        hlmInput
-        type="search"
-        [attr.maxlength]="remoteSearch() !== null ? 200 : null"
-        class="h-9 ps-9 pe-10"
-        [placeholder]="t('search')"
-        [attr.aria-label]="t('search')"
-        [value]="search()"
-        (input)="setSearch(searchInput.value)"
-      />
-      @if (search()) {
-        <app-icon-button
-          variant="ghost"
-          size="icon-xs"
-          icon="lucideX"
-          class="absolute end-1.5 top-1/2 -translate-y-1/2"
-          [ariaLabel]="t('clearSearch')"
-          (click)="setSearch('')"
-        />
-      }
-    </div>
-  }
-  <div class="ms-auto flex items-center gap-2">
-    @if (canSort()) {
-      <app-button
-        variant="outline"
-        size="sm"
-        icon="lucideArrowUpDown"
-        [text]="t('sortBy')"
-        [menu]="sortMenu"
-      />
-    }
-    <app-button
-      variant="outline"
-      size="sm"
-      icon="lucideSettings2"
-      [text]="t('view')"
-      [menu]="viewMenu"
-    />
-    <app-icon-button
-      variant="ghost"
-      size="icon-sm"
-      icon="lucideRotateCcw"
-      [ariaLabel]="t('reset')"
-      [title]="t('reset')"
-      (click)="resetView()"
-    />
-  </div>
-  <ng-template #sortMenu>
-    <div hlmDropdownMenu class="max-h-96 w-64 overflow-y-auto">
-      <button hlmDropdownMenuItem type="button" (triggered)="table().resetSorting(true)">
-        {{ t('clearSorting') }}
-      </button>
-      <div hlmDropdownMenuSeparator></div>
-      @for (column of table().getAllLeafColumns(); track column.id) {
-        @if (column.getCanSort()) {
-          <div hlmDropdownMenuLabel>{{ columnLabel(column) }}</div>
-          <div hlmDropdownMenuGroup [attr.aria-label]="columnLabel(column)">
-            <button
-              hlmDropdownMenuRadio
-              type="button"
-              [checked]="column.getIsSorted() === 'asc'"
-              (triggered)="column.toggleSorting(false)"
-            >
-              {{ t('ascending') }}<hlm-dropdown-menu-radio-indicator />
-            </button>
-            <button
-              hlmDropdownMenuRadio
-              type="button"
-              [checked]="column.getIsSorted() === 'desc'"
-              (triggered)="column.toggleSorting(true)"
-            >
-              {{ t('descending') }}<hlm-dropdown-menu-radio-indicator />
-            </button>
-          </div>
-        }
-      }
-    </div>
-  </ng-template>
+<ng-container *transloco="let t; prefix: 'dataTable'">
+  <app-icon-button
+    variant="outline"
+    size="icon-sm"
+    icon="lucideSettings2"
+    [ariaLabel]="t('view')"
+    [title]="t('view')"
+    [menu]="viewMenu"
+  />
   <ng-template #viewMenu>
     <div hlmDropdownMenu class="w-60">
+      <button hlmDropdownMenuItem type="button" [disabled]="loading()" (triggered)="refresh.emit()">
+        {{ t('refresh') }}
+      </button>
+      <div hlmDropdownMenuSeparator></div>
       <div hlmDropdownMenuLabel>{{ t('columns') }}</div>
       @for (column of table().getAllLeafColumns(); track column.id) {
         @if (column.getCanHide()) {
@@ -125,6 +47,8 @@
           {{ t('comfortable') }}<hlm-dropdown-menu-radio-indicator />
         </button>
       </div>
+      <div hlmDropdownMenuSeparator></div>
+      <button hlmDropdownMenuItem type="button" (triggered)="resetView()">{{ t('reset') }}</button>
     </div>
   </ng-template>
-</div>
+</ng-container>

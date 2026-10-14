@@ -4,12 +4,11 @@
   [attr.aria-busy]="loading()"
   [attr.aria-label]="caption()"
 >
-  <app-data-table-toolbar
+  <app-data-table-controls
     [table]="table"
-    [searchable]="searchable()"
-    [remoteSearch]="remote()?.search ?? null"
-    (searchChange)="searchChange.emit($event)"
-    (resetQuery)="resetQuery.emit()"
+    [controls]="controls()"
+    (refresh)="retry.emit()"
+    [loading]="loading()"
     [(density)]="density"
   />
   @if (errorMessage(); as message) {
@@ -63,58 +62,18 @@
                   class="relative h-14 border-b-2 border-border px-5 text-sm font-bold tracking-wide text-foreground"
                   [attr.colspan]="header.colSpan"
                   [attr.scope]="header.colSpan > 1 ? 'colgroup' : 'col'"
-                  [attr.aria-sort]="
-                    header.column.getIsSorted() === 'asc'
-                      ? 'ascending'
-                      : header.column.getIsSorted() === 'desc'
-                        ? 'descending'
-                        : null
-                  "
                 >
                   @if (!header.isPlaceholder) {
-                    @if (header.column.getCanSort()) {
-                      <app-button
-                        variant="ghost"
-                        size="sm"
-                        class="block min-w-0"
-                        buttonClass="h-10 justify-start gap-2 px-0 text-sm font-bold tracking-wide hover:bg-transparent hover:text-primary"
-                        (click)="header.column.toggleSorting()"
-                        [title]="t('sort')"
+                    <div class="truncate">
+                      <ng-container
+                        *flexRender="
+                          header.column.columnDef.header;
+                          props: header.getContext();
+                          let content
+                        "
+                        >{{ content }}</ng-container
                       >
-                        <span class="truncate"
-                          ><ng-container
-                            *flexRender="
-                              header.column.columnDef.header;
-                              props: header.getContext();
-                              let content
-                            "
-                            >{{ content }}</ng-container
-                          ></span
-                        >
-                        <ng-icon
-                          class="shrink-0 text-sm"
-                          [name]="
-                            header.column.getIsSorted() === 'asc'
-                              ? 'lucideArrowUp'
-                              : header.column.getIsSorted() === 'desc'
-                                ? 'lucideArrowDown'
-                                : 'lucideArrowUpDown'
-                          "
-                          aria-hidden="true"
-                        />
-                      </app-button>
-                    } @else {
-                      <div class="truncate">
-                        <ng-container
-                          *flexRender="
-                            header.column.columnDef.header;
-                            props: header.getContext();
-                            let content
-                          "
-                          >{{ content }}</ng-container
-                        >
-                      </div>
-                    }
+                    </div>
                     @if (header.column.getCanResize() && header.column.columns.length === 0) {
                       <app-data-table-column-resize
                         [header]="header"
@@ -190,5 +149,7 @@
       </table>
     </div>
   </div>
-  <app-data-table-pagination [table]="table" [disabled]="remote() !== null && loading()" />
+  <p class="px-1 text-xs text-muted-foreground" role="status">
+    {{ t('resultCount', { total: remote().total }) }}
+  </p>
 </section>
