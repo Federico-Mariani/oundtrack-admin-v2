@@ -22,14 +22,17 @@ Gli adattatori HTTP sono in `core/http`.
 ## Barra dei controlli
 
 `DataTableControls` compone ricerca/filtri della feature, menu vista e paginazione
-su una riga fuori dal box dei dati. Il menu vista contiene aggiornamento, colonne,
+nella barra superiore fuori dal box dei dati. La paginazione rimane sotto la tabella. Il menu vista contiene aggiornamento, colonne,
 densità e ripristino delle preferenze. Le preferenze non cambiano la query.
 
-La larghezza del contenitore determina il layout: sotto 64rem i filtri e la
-paginazione si aprono in dialog. Lo spazio viene quindi misurato rispetto alla
-barra, anche con sidebar aperta. Il conteggio risultati è uno stato informativo,
-non un secondo gruppo di controlli. La tabella conserva lo scroll orizzontale
-quando le colonne raggiungono la loro larghezza minima.
+La larghezza del contenitore determina il layout: sotto 64rem i filtri si aprono
+in un dialog. La paginazione resta sempre sotto, con precedente/successiva e
+selettore del limite; prima/ultima pagina vengono nascoste sui contenitori stretti. Lo spazio viene quindi misurato rispetto alla
+barra, anche con sidebar aperta. Il riepilogo dei risultati accompagna la paginazione. La ricerca è limitata a 16rem; i campi usano placeholder con label accessibili
+visivamente nascoste. La tabella conserva lo scroll orizzontale
+quando le colonne raggiungono la loro larghezza minima o vengono allargate.
+Il main della shell deve avere min-width: 0: il contenuto largo non deve
+aumentare la dimensione minima del flex item accanto alla sidebar.
 
 ## Form reattivi riutilizzabili
 

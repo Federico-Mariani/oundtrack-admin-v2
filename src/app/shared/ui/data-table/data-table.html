@@ -39,9 +39,9 @@
     </div>
   }
   <div
-    class="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm"
+    class="min-w-0 max-w-full overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm"
   >
-    <div #tableViewport hlmTableContainer>
+    <div #tableViewport hlmTableContainer class="min-w-0 max-w-full overscroll-x-contain">
       <table hlmTable class="table-fixed" [style.width.px]="table.getTotalSize()">
         <caption class="sr-only">
           {{
@@ -149,7 +149,5 @@
       </table>
     </div>
   </div>
-  <p class="px-1 text-xs text-muted-foreground" role="status">
-    {{ t('resultCount', { total: remote().total }) }}
-  </p>
+  <app-data-table-pagination [table]="table" [disabled]="loading()" />
 </section>

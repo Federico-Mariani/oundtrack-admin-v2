@@ -1,10 +1,14 @@
 <fieldset
   [disabled]="disabled()"
   *transloco="let t; prefix: 'dataTable'"
-  class="flex flex-wrap items-center justify-between gap-2 px-1 text-sm"
+  class="@container/pagination min-w-0 flex flex-wrap items-center justify-between gap-3 px-1 text-sm"
 >
-  <div class="flex flex-wrap items-center gap-2">
+  <p class="text-muted-foreground" role="status">
+    {{ t('range', { start: start(), end: end(), total: total() }) }}
+  </p>
+  <div class="flex flex-wrap items-center gap-3 sm:gap-5">
     <div class="flex items-center gap-2 text-muted-foreground">
+      <span class="hidden @sm/pagination:inline">{{ t('rowsPerPage') }}</span>
       <app-select
         [items]="pageSizeItems"
         [value]="pageSizeValue()"
@@ -12,11 +16,17 @@
         (valueChange)="setPageSize($event)"
       />
     </div>
-    <span>{{ t('pageCompact', { current: page(), total: table().getPageCount() }) }}</span>
+    <span class="hidden @sm/pagination:inline">{{
+      t('page', { current: page(), total: table().getPageCount() })
+    }}</span>
+    <span class="@sm/pagination:hidden">{{
+      t('pageCompact', { current: page(), total: table().getPageCount() })
+    }}</span>
     <div class="flex gap-1">
       <app-icon-button
         variant="outline"
         size="icon-sm"
+        class="hidden @sm/pagination:block"
         icon="lucideChevronsLeft"
         [ariaLabel]="t('firstPage')"
         [disabled]="!table().getCanPreviousPage()"
@@ -41,6 +51,7 @@
       <app-icon-button
         variant="outline"
         size="icon-sm"
+        class="hidden @sm/pagination:block"
         icon="lucideChevronsRight"
         [ariaLabel]="t('lastPage')"
         [disabled]="!table().getCanLastPage()"

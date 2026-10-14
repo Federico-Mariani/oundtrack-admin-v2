@@ -99,7 +99,7 @@ describe('DataTable interactions', () => {
     expect(rows()).toHaveLength(1);
     expect(element.querySelector('thead button[title="Change sort order"]')).toBeNull();
     expect(element.querySelector('input[type="search"]')).toBeNull();
-    expect(element.textContent).toContain('100 results');
+    expect(element.textContent).toContain('of 100 records');
   });
   it('emits one page-size change resetting the page and disables navigation while loading', async () => {
     const changed = vi.fn();
@@ -152,6 +152,11 @@ describe('DataTable interactions', () => {
     expect(surface.classList.contains('rounded-xl')).toBe(true);
     expect(surface.querySelector('app-data-table-toolbar')).toBeNull();
     expect(surface.querySelector('app-data-table-pagination')).toBeNull();
+    expect(element.querySelector('app-data-table-controls app-data-table-pagination')).toBeNull();
+    const pagination = element.querySelector('app-data-table-pagination')!;
+    expect(
+      pagination.compareDocumentPosition(surface) & Node.DOCUMENT_POSITION_PRECEDING,
+    ).toBeTruthy();
     const widths = (): string[] =>
       Array.from(element.querySelectorAll('col')).map((column) => column.style.width);
     const before = widths();

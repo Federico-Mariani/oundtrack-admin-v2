@@ -12,6 +12,7 @@ import { Select } from '../select/select';
 export class SelectField {
   readonly formField = input.required<Field<string>>();
   readonly label = input.required<string>();
+  readonly hideLabel = input(false);
   readonly items = input.required<SelectItem[]>();
   protected change(value: string): void {
     const field = this.formField()();

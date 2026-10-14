@@ -1,6 +1,6 @@
-<div *transloco="let t; prefix: 'listControls'" class="flex min-w-0 items-end gap-2">
+<div *transloco="let t; prefix: 'listControls'" class="flex min-w-0 items-center gap-3 sm:gap-5">
   <app-text-input
-    class="min-w-0 flex-1"
+    class="min-w-0 max-w-64 flex-1"
     [formField]="search()"
     [label]="t('search')"
     [placeholder]="t('search')"
@@ -8,7 +8,7 @@
     inputMode="search"
     [hideLabel]="true"
   />
-  <div class="hidden shrink-0 border-s ps-2 @[64rem]/table-controls:block">
+  <div class="hidden shrink-0 border-s ps-5 @[64rem]/table-controls:block">
     <app-list-filters [fields]="fields()" [compact]="true" />
   </div>
   <app-icon-button
@@ -23,7 +23,7 @@
   <app-icon-button
     variant="ghost"
     size="icon-sm"
-    class="hidden @[64rem]/table-controls:block"
+    class="hidden ms-auto @[64rem]/table-controls:block"
     icon="lucideFilterX"
     [ariaLabel]="t('reset')"
     [title]="t('reset')"

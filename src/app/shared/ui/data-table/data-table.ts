@@ -36,6 +36,7 @@ import {
 } from '@tanstack/angular-table';
 import { dataTableFeatures, type DataTableFeatures } from './data-table-features';
 import type { DataTableDensity } from './data-table-density';
+import { DataTablePagination } from './pagination/data-table-pagination';
 import { DataTableControls } from './controls/data-table-controls';
 import { DataTableColumnResize } from './column-resize/data-table-column-resize';
 import { dataTableTranslationsLoader } from './i18n/data-table-translations.loader';
@@ -52,6 +53,7 @@ import { dataTableTranslationsLoader } from './i18n/data-table-translations.load
     TranslocoDirective,
     NgIcon,
     DataTableControls,
+    DataTablePagination,
     DataTableColumnResize,
   ],
   providers: [
