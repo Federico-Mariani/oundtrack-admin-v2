@@ -54,7 +54,6 @@ export class MovieTrackPlayer {
   protected readonly playPending = signal(false);
   protected readonly currentTime = signal(0);
   protected readonly duration = signal(0);
-  protected readonly volume = signal(1);
   protected readonly muted = signal(false);
   protected readonly showInfo = signal(false);
   constructor() {
@@ -117,14 +116,6 @@ export class MovieTrackPlayer {
       this.updateTime(audio);
     }
   }
-  protected changeVolume(event: Event): void {
-    const audio = this.audio()?.nativeElement;
-    if (audio && event.target instanceof HTMLInputElement) {
-      audio.volume = Math.max(0, Math.min(1, event.target.valueAsNumber));
-      audio.muted = audio.volume === 0;
-      this.updateVolume(audio);
-    }
-  }
   protected toggleMute(): void {
     const audio = this.audio()?.nativeElement;
     if (!audio) {
@@ -139,7 +130,6 @@ export class MovieTrackPlayer {
     this.updateVolume(audio);
   }
   protected updateVolume(audio: HTMLAudioElement): void {
-    this.volume.set(audio.volume);
     this.muted.set(audio.muted || audio.volume === 0);
   }
   protected mediaError(): void {

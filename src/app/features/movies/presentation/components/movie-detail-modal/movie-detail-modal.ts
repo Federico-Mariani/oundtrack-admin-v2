@@ -14,6 +14,8 @@ import type { Localized } from '@shared/localization/localized';
 import type { SupportedLocale } from '@shared/localization/supported-locale';
 import { ModalFrame } from '@shared/ui/modal/modal-frame';
 import type { ModalContent } from '@shared/ui/modal/modal-content';
+import { Select } from '@shared/ui/select/select';
+import { HlmTooltip } from '@spartan-ng/helm/tooltip';
 import { Button } from '@shared/ui/button/button';
 import { MovieDetailSkeleton } from '../movie-detail-skeleton/movie-detail-skeleton';
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
@@ -28,6 +30,8 @@ import type { MovieDetailModalParams } from './movie-detail-modal-params';
     TranslocoDirective,
     ModalFrame,
     Button,
+    Select,
+    HlmTooltip,
     MovieDetailSkeleton,
     MovieDetailImage,
     MovieTrackPlayer,
@@ -52,6 +56,9 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
     const info = this.movie()?.info;
     return (['it-IT', 'en-US'] as const).filter((locale) => info?.[locale]);
   });
+  protected readonly languageItems = computed(() =>
+    this.locales().map((value) => ({ value, label: value === 'it-IT' ? 'Italiano' : 'English' })),
+  );
   protected readonly locale = computed(() => {
     const preferred = this.selectedLocale() ?? this.language.activeLocale();
     return this.locales().includes(preferred) ? preferred : (this.locales()[0] ?? preferred);
@@ -71,8 +78,7 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
     this.playingAudio?.pause();
     this.facade.actions.loadDetail(this.params.id);
   }
-  protected changeLocale(event: Event): void {
-    const value = event.target instanceof HTMLSelectElement ? event.target.value : '';
+  protected changeLocale(value: string): void {
     if (value === 'it-IT' || value === 'en-US') {
       this.playingAudio?.pause();
       this.selectedLocale.set(value);

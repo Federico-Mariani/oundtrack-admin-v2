@@ -1,5 +1,5 @@
 .track-card {
-  padding: 1.25rem;
+  padding: 0.875rem 1rem;
   border: 1px solid var(--border);
   border-radius: 1rem;
   background: var(--card);

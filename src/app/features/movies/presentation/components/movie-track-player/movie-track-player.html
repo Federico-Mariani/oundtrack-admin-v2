@@ -3,13 +3,13 @@
   class="track-card"
   [class.track-card-playing]="playing()"
 >
-  <div class="flex items-center gap-4">
+  <div class="flex items-center gap-3">
     @if (track().path && !failed()) {
       <button
         hlmBtn
         type="button"
         size="icon"
-        class="play-control size-12 shrink-0 rounded-full"
+        class="play-control size-10 shrink-0 rounded-full"
         [disabled]="playPending()"
         [attr.aria-label]="t(playing() ? 'pause' : 'play') + ': ' + track().name"
         (click)="togglePlayback()"
@@ -29,7 +29,7 @@
         }
       </button>
     } @else {
-      <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-muted"
+      <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted"
         ><ng-icon name="lucideMusic2" class="text-xl text-muted-foreground" aria-hidden="true"
       /></span>
     }
@@ -71,10 +71,13 @@
     ></audio>
   }
   @if (track().path && !failed()) {
-    <div class="mt-4 sm:ml-16">
+    <div class="mt-1 flex items-center gap-2 sm:ml-13">
+      <span class="shrink-0 text-xs tabular-nums text-muted-foreground">{{
+        formatTime(currentTime())
+      }}</span>
       <input
         type="range"
-        class="audio-range progress-range w-full"
+        class="audio-range progress-range min-w-0 flex-1"
         min="0"
         [max]="duration() || 1"
         step="0.1"
@@ -85,38 +88,21 @@
         [attr.aria-valuetext]="formatTime(currentTime()) + ' / ' + formatTime(duration())"
         (input)="seek($event)"
       />
-      <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
-        <p class="text-xs tabular-nums text-muted-foreground">
-          <span class="font-medium text-foreground">{{ formatTime(currentTime()) }}</span
-          ><span class="mx-1.5 opacity-50" aria-hidden="true">/</span
-          >{{ duration() ? formatTime(duration()) : '—:—' }}
-        </p>
-        <div class="flex items-center gap-2">
-          <button
-            hlmBtn
-            variant="ghost"
-            size="icon"
-            type="button"
-            class="rounded-full text-muted-foreground"
-            [attr.aria-label]="t(muted() ? 'unmute' : 'mute') + ': ' + track().name"
-            [attr.aria-pressed]="muted()"
-            (click)="toggleMute()"
-          >
-            <ng-icon [name]="muted() ? 'lucideVolumeX' : 'lucideVolume2'" aria-hidden="true" />
-          </button>
-          <input
-            type="range"
-            class="audio-range volume-range w-20"
-            min="0"
-            max="1"
-            step="0.05"
-            [value]="muted() ? 0 : volume()"
-            [style.--progress]="(muted() ? 0 : volume() * 100) + '%'"
-            [attr.aria-label]="t('volume') + ': ' + track().name"
-            (input)="changeVolume($event)"
-          />
-        </div>
-      </div>
+      <span class="shrink-0 text-xs tabular-nums text-muted-foreground">{{
+        duration() ? formatTime(duration()) : '—:—'
+      }}</span>
+      <button
+        hlmBtn
+        variant="ghost"
+        size="icon-sm"
+        type="button"
+        class="rounded-full text-muted-foreground"
+        [attr.aria-label]="t(muted() ? 'unmute' : 'mute') + ': ' + track().name"
+        [attr.aria-pressed]="muted()"
+        (click)="toggleMute()"
+      >
+        <ng-icon [name]="muted() ? 'lucideVolumeX' : 'lucideVolume2'" aria-hidden="true" />
+      </button>
     </div>
     @if (buffering() || playPending()) {
       <span role="status" class="sr-only">{{ t('buffering') }}</span>
@@ -130,7 +116,7 @@
   @if (showInfo()) {
     <dl
       [id]="'track-info-' + soundtrackId() + '-' + track().id"
-      class="mt-4 grid gap-3 border-t pt-4 text-xs sm:grid-cols-2"
+      class="mt-3 grid gap-3 text-xs sm:grid-cols-2"
     >
       <div class="space-y-1">
         <dt class="text-muted-foreground">{{ t('trackId') }}</dt>

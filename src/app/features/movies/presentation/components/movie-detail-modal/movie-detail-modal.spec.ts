@@ -184,7 +184,7 @@ describe('Movie detail modal', () => {
     ref.forceClose();
     fixture.destroy();
   });
-  it('provides custom playback, seek, volume and technical information controls', async () => {
+  it('provides compact playback, seek, mute and technical information controls', async () => {
     const { fixture, ref, detail, loading } = setup();
     const first = movie();
     const track = first.soundtracks[0].tracks[0];
@@ -234,12 +234,7 @@ describe('Movie detail modal', () => {
     seek.value = '65';
     seek.dispatchEvent(new Event('input'));
     expect(audio.currentTime).toBe(65);
-    const volume = document.querySelector<HTMLInputElement>(
-      'input[aria-label="Volume: S.T.A.Y."]',
-    )!;
-    volume.value = '0.4';
-    volume.dispatchEvent(new Event('input'));
-    expect(audio.volume).toBe(0.4);
+    expect(document.querySelector('input[aria-label="Volume: S.T.A.Y."]')).toBeNull();
     button('Mute').click();
     await fixture.whenStable();
     expect(audio.muted).toBe(true);
@@ -318,16 +313,20 @@ describe('Movie detail modal', () => {
     await vi.waitFor(() => {
       expect(document.body.textContent).toContain('English track');
     });
-    const select = document.querySelector<HTMLSelectElement>('#movie-detail-language')!;
-    expect(select.value).toBe('en-US');
+    const select = document.querySelector<HTMLButtonElement>('app-select button')!;
+    expect(select.textContent).toContain('English');
     expect(select.disabled).toBe(false);
     expect(document.body.textContent).toContain('English title');
     expect(document.body.textContent).toContain('Adventure');
     expect(document.querySelectorAll('audio')).toHaveLength(1);
     const audio = document.querySelector('audio')!;
     audio.dispatchEvent(new Event('play'));
-    select.value = 'it-IT';
-    select.dispatchEvent(new Event('change'));
+    select.click();
+    await fixture.whenStable();
+    const option = Array.from(document.querySelectorAll<HTMLElement>('hlm-select-item')).find(
+      (item) => item.textContent.includes('Italiano'),
+    )!;
+    option.click();
     await fixture.whenStable();
     await vi.waitFor(() => {
       expect(document.body.textContent).toContain('S.T.A.Y.');
@@ -338,6 +337,51 @@ describe('Movie detail modal', () => {
     expect(document.body.textContent).not.toContain('English title');
     expect(document.body.textContent).not.toContain('English track');
     expect(document.querySelector('[aria-label="Game categories"]')?.textContent).toContain('Film');
+    ref.forceClose();
+    fixture.destroy();
+  });
+  it('opens a single-language select and shows classification IDs only in tooltips', async () => {
+    const { fixture, ref, detail, loading } = setup();
+    detail.set({
+      ...movie(),
+      genres: [
+        { id: 'genre-tooltip-id', info: { 'it-IT': { id: 'genre-info', name: 'Avventura' } } },
+      ],
+    });
+    loading.set(false);
+    await fixture.whenStable();
+    await vi.waitFor(() => {
+      expect(document.querySelector('app-select button')).not.toBeNull();
+    });
+    const select = document.querySelector<HTMLButtonElement>('app-select button')!;
+    expect(select.disabled).toBe(false);
+    expect(select.textContent).toContain('Italiano');
+    select.click();
+    await fixture.whenStable();
+    expect(document.querySelectorAll('hlm-select-item')).toHaveLength(1);
+    document.querySelector<HTMLElement>('hlm-select-item')!.click();
+    await fixture.whenStable();
+    const values = Array.from(document.querySelectorAll('.metadata-list dd'), (element) =>
+      element.textContent.trim(),
+    );
+    expect(values).not.toContain('info');
+    expect(values).not.toContain('it-IT');
+    expect(values).not.toContain('category');
+    expect(values).not.toContain('genre-tooltip-id');
+    const genre = document.querySelector<HTMLElement>('[aria-label="Genres"] [tabindex="0"]')!;
+    genre.focus();
+    await vi.waitFor(() => {
+      expect(document.body.textContent).toContain('ID: genre-tooltip-id');
+    });
+    genre.blur();
+    const category = document.querySelector<HTMLElement>(
+      '[aria-label="Game categories"] [tabindex="0"]',
+    )!;
+    category.focus();
+    await vi.waitFor(() => {
+      expect(document.body.textContent).toContain('ID: category');
+    });
+    category.blur();
     ref.forceClose();
     fixture.destroy();
   });
