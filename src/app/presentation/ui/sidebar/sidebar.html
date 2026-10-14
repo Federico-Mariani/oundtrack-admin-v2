@@ -3,93 +3,18 @@
     <div hlmSidebarHeader>
       <ul hlmSidebarMenu>
         <li hlmSidebarMenuItem>
-          <button hlmSidebarMenuButton size="lg">
+          <div class="flex items-center gap-2 overflow-hidden rounded-md p-2">
             <img class="w-8 h-8" src="assets/images/logo.png" alt="Oundtrack logo" />
             <div class="grid flex-1 text-start text-sm leading-tight">
-              <span class="truncate font-medium">{{ t('components.sidebar.title') }}</span>
-              <span class="truncate text-xs">{{ t('components.sidebar.subTitle') }}</span>
+              <span class="truncate font-medium">{{ t('sidebar.menu.title') }}</span>
+              <span class="truncate text-xs">{{ t('sidebar.menu.subTitle') }}</span>
             </div>
-          </button>
+          </div>
         </li>
       </ul>
     </div>
     <div hlmSidebarContent>
-      <div hlmSidebarGroup>
-        <div hlmSidebarGroupContent>
-          <ul hlmSidebarMenu>
-            <li hlmSidebarMenuItem>
-              <a
-                class="cursor-pointer"
-                hlmSidebarMenuButton
-                routerLink=""
-                routerLinkActive
-                #homeLinkActive="routerLinkActive"
-                [routerLinkActiveOptions]="{ exact: true }"
-                [isActive]="homeLinkActive.isActive"
-              >
-                <ng-icon name="lucideHome" />
-                <span>{{ t('components.sidebar.home') }}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div hlmSidebarGroup>
-        <div hlmSidebarGroupLabel>{{ t('components.sidebar.entities') }}</div>
-        <div hlmSidebarGroupContent>
-          <ul hlmSidebarMenu>
-            <hlm-collapsible
-              class="group/collapsible"
-              routerLinkActive
-              #moviesGroupActive="routerLinkActive"
-              [expanded]="moviesGroupActive.isActive"
-            >
-              <li hlmSidebarMenuItem>
-                <button
-                  hlmCollapsibleTrigger
-                  hlmSidebarMenuButton
-                  class="flex w-full items-center justify-between"
-                >
-                  <ng-icon name="lucideFilm" />
-                  <span>{{ t('components.sidebar.movies.label') }}</span>
-                  <ng-icon
-                    name="lucideChevronRight"
-                    class="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90"
-                  />
-                </button>
-                <hlm-collapsible-content>
-                  <ul hlmSidebarMenuSub>
-                    <li hlmSidebarMenuSubItem>
-                      <button
-                        class="cursor-pointer"
-                        hlmSidebarMenuSubButton
-                        routerLinkActive
-                        #moviesLinkActive="routerLinkActive"
-                        [routerLinkActiveOptions]="{ exact: true }"
-                        [isActive]="moviesLinkActive.isActive"
-                      >
-                        <span>{{ t('components.sidebar.movies.all') }}</span>
-                      </button>
-                    </li>
-                    <li hlmSidebarMenuSubItem>
-                      <button
-                        class="cursor-pointer"
-                        hlmSidebarMenuSubButton
-                        routerLinkActive
-                        #moviesLinkActive="routerLinkActive"
-                        [routerLinkActiveOptions]="{ exact: true }"
-                        [isActive]="moviesLinkActive.isActive"
-                      >
-                        <span>{{ t('components.sidebar.movies.createOne') }}</span>
-                      </button>
-                    </li>
-                  </ul>
-                </hlm-collapsible-content>
-              </li>
-            </hlm-collapsible>
-          </ul>
-        </div>
-      </div>
+      <app-sidebar-navigation [groups]="groups()" />
     </div>
     <div hlmSidebarFooter>
       <ul hlmSidebarMenu>
@@ -133,7 +58,7 @@
               <hlm-dropdown-menu-group>
                 <button (click)="logout.emit()" hlmDropdownMenuItem variant="destructive">
                   <ng-icon name="lucideLogOut" />
-                  {{ t('components.sidebar.logout') }}
+                  {{ t('sidebar.menu.logout') }}
                 </button>
               </hlm-dropdown-menu-group>
             </hlm-dropdown-menu>

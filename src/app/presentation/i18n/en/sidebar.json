@@ -8,5 +8,7 @@
     "all": "All",
     "createOne": "Create one"
   },
-  "logout": "Log out"
+  "logout": "Log out",
+  "navigation": "Main navigation",
+  "toggleSection": "Toggle {{section}} menu"
 }

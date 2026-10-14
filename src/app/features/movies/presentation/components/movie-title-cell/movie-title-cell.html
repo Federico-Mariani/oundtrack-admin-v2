@@ -1,0 +1,20 @@
+<div class="flex min-w-0 items-center gap-4">
+  <app-media-thumbnail
+    class="shrink-0 overflow-hidden rounded-lg ring-1 ring-border/60"
+    [src]="posterUrl()"
+    alt=""
+    [width]="48"
+    [height]="72"
+  />
+  <div class="min-w-0 space-y-1.5">
+    <p
+      class="line-clamp-2 whitespace-normal text-sm font-semibold leading-5 text-foreground"
+      [title]="title()"
+    >
+      {{ title() }}
+    </p>
+    <p class="text-xs font-medium tabular-nums text-muted-foreground">
+      <span class="sr-only">{{ releaseDateDescription() }}: </span>{{ releaseDate() }}
+    </p>
+  </div>
+</div>

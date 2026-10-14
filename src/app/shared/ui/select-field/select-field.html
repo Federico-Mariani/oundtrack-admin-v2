@@ -1,0 +1,11 @@
+<div class="min-w-0 space-y-1">
+  <span class="block text-xs font-medium text-muted-foreground" [class.sr-only]="hideLabel()">{{
+    label()
+  }}</span
+  ><app-select
+    [items]="items()"
+    [value]="formField()().value()"
+    [ariaLabel]="label()"
+    (valueChange)="change($event)"
+  />
+</div>

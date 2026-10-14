@@ -1,0 +1,78 @@
+<nav *transloco="let t" [attr.aria-label]="t('sidebar.menu.navigation')">
+  @for (group of groups(); track group.id) {
+    <div hlmSidebarGroup>
+      @if (group.labelKey; as label) {
+        <div hlmSidebarGroupLabel class="group-data-[collapsible=icon]:pointer-events-none">
+          {{ t(label) }}
+        </div>
+      }
+      <div hlmSidebarGroupContent>
+        <ul hlmSidebarMenu>
+          @for (item of group.items; track item.id) {
+            <li hlmSidebarMenuItem>
+              <div hlmCollapsible class="group/collapsible" [expanded]="active.isActive">
+                <a
+                  hlmSidebarMenuButton
+                  [closeMobileSidebarOnClick]="false"
+                  [routerLink]="item.commands"
+                  routerLinkActive
+                  #active="routerLinkActive"
+                  [routerLinkActiveOptions]="{ exact: item.exact ?? true }"
+                  [isActive]="active.isActive"
+                  [ariaCurrentWhenActive]="item.children?.length ? false : 'page'"
+                  [attr.title]="t(item.labelKey)"
+                  (click)="closeMobile($event)"
+                >
+                  @if (item.icon; as icon) {
+                    <ng-icon [name]="icon" aria-hidden="true" />
+                  }
+                  <span>{{ t(item.labelKey) }}</span>
+                </a>
+                @if (item.children?.length) {
+                  <button
+                    type="button"
+                    hlmSidebarMenuAction
+                    hlmCollapsibleTrigger
+                    [attr.aria-label]="
+                      t('sidebar.menu.toggleSection', { section: t(item.labelKey) })
+                    "
+                  >
+                    <ng-icon
+                      name="lucideChevronRight"
+                      aria-hidden="true"
+                      class="transition-transform group-data-[state=open]/collapsible:rotate-90"
+                    />
+                  </button>
+                  <hlm-collapsible-content>
+                    <ul hlmSidebarMenuSub>
+                      @for (child of item.children; track child.id) {
+                        <li hlmSidebarMenuSubItem>
+                          <a
+                            hlmSidebarMenuSubButton
+                            [closeMobileSidebarOnClick]="false"
+                            [routerLink]="child.commands"
+                            routerLinkActive
+                            #childActive="routerLinkActive"
+                            [routerLinkActiveOptions]="{ exact: child.exact ?? true }"
+                            [isActive]="childActive.isActive"
+                            ariaCurrentWhenActive="page"
+                            (click)="closeMobile($event)"
+                          >
+                            @if (child.icon; as icon) {
+                              <ng-icon [name]="icon" aria-hidden="true" />
+                            }
+                            <span>{{ t(child.labelKey) }}</span>
+                          </a>
+                        </li>
+                      }
+                    </ul>
+                  </hlm-collapsible-content>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+</nav>

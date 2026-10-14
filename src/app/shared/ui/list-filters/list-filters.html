@@ -1,0 +1,27 @@
+<div
+  [class.grid]="!compact()"
+  [class.flex]="compact()"
+  [class.items-start]="compact()"
+  class="gap-2"
+>
+  @for (field of fields(); track field.key) {
+    @if (field.kind === 'select') {
+      <app-select-field
+        [class.w-48]="compact()"
+        [formField]="field.field"
+        [label]="field.label"
+        [hideLabel]="true"
+        [items]="field.options ?? []"
+      />
+    } @else {
+      <app-text-input
+        [class.w-24]="compact()"
+        [formField]="field.field"
+        [label]="field.label"
+        [hideLabel]="true"
+        [placeholder]="field.label"
+        inputMode="numeric"
+      />
+    }
+  }
+</div>

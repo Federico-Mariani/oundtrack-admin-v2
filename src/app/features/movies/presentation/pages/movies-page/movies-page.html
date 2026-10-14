@@ -1,4 +1,33 @@
-<div class="flex flex-col gap-4">
-  <app-heading-3 text="All movies" />
-  <app-movies-table [movies]="movies()" />
+<div *transloco="let t; prefix: 'movies.catalog'" class="flex flex-col gap-6">
+  <header class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <span
+        class="flex size-11 items-center justify-center rounded-xl border bg-card text-primary shadow-sm"
+        ><ng-icon name="lucideFilm" class="text-xl" aria-hidden="true"
+      /></span>
+      <div>
+        <h1 class="text-2xl font-semibold tracking-tight">{{ t('title') }}</h1>
+        <p class="mt-1 text-sm text-muted-foreground">{{ t('description') }}</p>
+      </div>
+    </div>
+  </header>
+  <ng-template #controls
+    ><app-movies-filters
+      [query]="query()"
+      (filtersChange)="applyFilters($event)"
+      (resetFilters)="resetQuery()"
+  /></ng-template>
+  <app-movies-table
+    [remote]="remote()"
+    (pageChange)="changePage($event)"
+    [controls]="controls"
+    (resetQuery)="resetQuery()"
+    [movies]="movies()"
+    [caption]="t('title')"
+    [loading]="loading()"
+    [errorMessage]="loadError() ? t('loadFailed') : null"
+    (retry)="reload()"
+    (copyId)="copyIdentifier($event)"
+    (copyExternalId)="copyIdentifier($event)"
+  />
 </div>

@@ -1,0 +1,15 @@
+<button
+  *transloco="let t; prefix: 'dataTable'"
+  type="button"
+  class="absolute inset-y-2 end-0 z-10 w-2 touch-none cursor-col-resize rounded-sm border-e-2 border-border/70 outline-none hover:border-primary focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring"
+  [class.border-primary]="resizing()"
+  [attr.aria-label]="t('resize', { column: header().column.id })"
+  [attr.title]="t('resizeHint')"
+  (pointerdown)="startResize($event)"
+  (pointermove)="moveResize($event)"
+  (pointerup)="endResize($event)"
+  (pointercancel)="endResize($event)"
+  (lostpointercapture)="endResize($event)"
+  (dblclick)="resetSize()"
+  (keydown)="resizeWithKeyboard($event)"
+></button>

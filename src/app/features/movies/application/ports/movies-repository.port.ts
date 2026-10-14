@@ -1,14 +1,7 @@
 import type { Observable } from 'rxjs';
 import type { MovieModel } from '../../domain/models/movie.model';
-
-/**
- * Port towards the authentication backend, consumed by the application
- * effects and bound to its HTTP implementation in `auth.providers.ts`.
- *
- * It lives in the application layer (not in the domain) because its contract
- * is expressed with RxJS Observables; the domain stays plain TypeScript.
- * Implementations live in `infrastructure/` and must reject with an `AuthError`.
- */
+import type { MoviesListQuery } from '../../domain/models/movies-list-query.model';
+import type { PageResult } from '@shared/types/pagination/page-result';
 export interface MoviesRepositoryPort {
-  getAll(): Observable<MovieModel[]>;
+  getAll(query: MoviesListQuery): Observable<PageResult<MovieModel>>;
 }

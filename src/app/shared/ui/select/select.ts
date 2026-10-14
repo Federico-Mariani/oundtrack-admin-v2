@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import {
   HlmSelect,
   HlmSelectContent,
@@ -25,10 +25,23 @@ import type { SelectItem } from '@shared/interfaces/select-item';
   ],
 })
 export class Select {
+  private static nextId = 0;
+
+  protected readonly triggerId = `app-select-${String(Select.nextId++)}`;
   readonly items = input.required<SelectItem[]>();
   readonly placeholder = input<string>('');
   readonly value = input<string>();
+  readonly ariaLabel = input<string>();
   readonly valueChange = output<string>();
+
+  protected readonly itemLabel = computed(() => {
+    const items = this.items();
+    return (value: unknown): string =>
+      items.find((item) => item.value === value)?.label ?? (typeof value === 'string' ? value : '');
+  });
+  protected readonly displayPlaceholder = computed(
+    () => this.items().find((item) => item.value === this.value())?.label ?? this.placeholder(),
+  );
 
   protected onValueChange(value: unknown): void {
     if (typeof value === 'string') {

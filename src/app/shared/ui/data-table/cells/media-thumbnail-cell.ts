@@ -5,15 +5,10 @@ import {
   type RowData,
 } from '@tanstack/angular-table';
 
-import type { DataTableFeatures } from '../ui/data-table/data-table-features';
-import { MediaThumbnail } from '../ui/media-thumbnail/media-thumbnail';
+import type { DataTableFeatures } from '../data-table-features';
+import { MediaThumbnail } from '../../media-thumbnail/media-thumbnail';
 
-export interface MediaThumbnailCellOptions<TData> {
-  readonly src: (data: TData) => string | null | undefined;
-  readonly alt?: (data: TData) => string;
-  readonly width?: number;
-  readonly height?: number;
-}
+import type { MediaThumbnailCellOptions } from './media-thumbnail-cell-options';
 
 export function mediaThumbnailCell<TData extends RowData>(
   options: MediaThumbnailCellOptions<TData>,
