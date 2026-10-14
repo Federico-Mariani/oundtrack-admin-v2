@@ -15,7 +15,7 @@ import type { SupportedLocale } from '@shared/localization/supported-locale';
 import { ModalFrame } from '@shared/ui/modal/modal-frame';
 import type { ModalContent } from '@shared/ui/modal/modal-content';
 import { Button } from '@shared/ui/button/button';
-import { HlmSpinner } from '@spartan-ng/helm/spinner';
+import { MovieDetailSkeleton } from '../movie-detail-skeleton/movie-detail-skeleton';
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
 import { MovieDetailImage } from '../movie-detail-image/movie-detail-image';
 import { MovieTrackPlayer } from '../movie-track-player/movie-track-player';
@@ -23,7 +23,14 @@ import type { MovieDetailModalParams } from './movie-detail-modal-params';
 @Component({
   selector: 'app-movie-detail-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslocoDirective, ModalFrame, Button, HlmSpinner, MovieDetailImage, MovieTrackPlayer],
+  imports: [
+    TranslocoDirective,
+    ModalFrame,
+    Button,
+    MovieDetailSkeleton,
+    MovieDetailImage,
+    MovieTrackPlayer,
+  ],
   templateUrl: './movie-detail-modal.html',
 })
 export class MovieDetailModal implements ModalContent<MovieDetailModalParams, void> {

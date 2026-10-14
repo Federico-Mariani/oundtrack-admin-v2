@@ -9,9 +9,8 @@
     [attr.aria-busy]="loading()"
   >
     @if (loading()) {
-      <div role="status" class="flex min-h-96 items-center justify-center gap-3 p-8">
-        <hlm-spinner /><span>{{ t('loading') }}</span>
-      </div>
+      <span role="status" class="sr-only">{{ t('loading') }}</span>
+      <app-movie-detail-skeleton />
     } @else if (error()) {
       <div class="flex min-h-96 flex-col items-center justify-center gap-4 p-8 text-center">
         <p role="alert">{{ t(error()?.status === 404 ? 'notFound' : 'failed') }}</p>

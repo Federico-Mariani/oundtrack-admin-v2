@@ -122,12 +122,17 @@ describe('Movie detail modal', () => {
     await vi.waitFor(() => {
       expect(document.body.textContent).toContain('Loading movie');
     });
+    expect(document.querySelector('app-movie-detail-skeleton')).not.toBeNull();
+    expect(document.querySelector('hlm-spinner')).toBeNull();
     detail.set(movie());
     loading.set(false);
     await fixture.whenStable();
+    expect(document.querySelector('app-movie-detail-skeleton')).toBeNull();
     expect(document.body.textContent).toContain('Interstellar');
     expect(document.body.textContent).toContain('Film');
-    expect(document.body.textContent).toContain('Hans Zimmer');
+    await vi.waitFor(() => {
+      expect(document.body.textContent).toContain('Hans Zimmer');
+    });
     const audio = document.querySelector('audio')!;
     expect(audio.preload).toBe('none');
     expect(audio.autoplay).toBe(false);
