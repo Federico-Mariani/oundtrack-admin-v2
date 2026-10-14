@@ -1,4 +1,7 @@
 {
   "required": "This field is required.",
-  "email": "Email must be a valid email address."
+  "email": "Email must be a valid email address.",
+  "integerRange": "Enter a whole number between {{min}} and {{max}}.",
+  "rangeEnd": "The end value must be greater than or equal to the start value.",
+  "maxLength": "The text is too long."
 }

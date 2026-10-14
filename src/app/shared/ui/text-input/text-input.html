@@ -1,0 +1,22 @@
+<div class="relative min-w-0 space-y-1">
+  <label
+    class="block text-xs font-medium text-muted-foreground"
+    [class.sr-only]="hideLabel()"
+    [for]="id"
+    >{{ label() }}</label
+  >
+  <input
+    hlmInput
+    class="h-9 min-w-0 w-full text-sm"
+    [id]="id"
+    [formField]="formField()"
+    [type]="type()"
+    [attr.inputmode]="inputMode()"
+    [placeholder]="placeholder()"
+    [attr.aria-invalid]="errors().length > 0"
+    [attr.aria-describedby]="errors().length ? id + '-errors' : null"
+  />
+  @if (errors().length) {
+    <app-field-error [id]="id + '-errors'" [errors]="errors()" />
+  }
+</div>

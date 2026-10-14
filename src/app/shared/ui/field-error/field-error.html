@@ -1,7 +1,7 @@
 <ng-container *transloco="let translate">
   @for (error of errors(); track $index) {
     <hlm-field-error [validator]="error.kind">
-      {{ error.message || translate('validation.' + error.kind) }}
+      {{ error.message || translate('validation.' + error.kind, error) }}
     </hlm-field-error>
   }
 </ng-container>

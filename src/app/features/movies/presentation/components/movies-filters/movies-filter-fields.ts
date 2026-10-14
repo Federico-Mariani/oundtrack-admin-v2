@@ -1,29 +1,28 @@
+import type { FieldTree } from '@angular/forms/signals';
+import type { MoviesFilterFormModel } from '../../models/movies-filter-form.model';
 import type { ListFilterField } from '@shared/ui/list-filters/list-filter-field';
 import type { MoviesFilterLabels } from './movies-filter-labels';
-export function moviesFilterFields(labels: MoviesFilterLabels): readonly ListFilterField[] {
+export function moviesFilterFields(
+  labels: MoviesFilterLabels,
+  form: FieldTree<MoviesFilterFormModel>,
+): readonly ListFilterField[] {
   return [
-    {
-      key: 'infoLanguage',
-      label: labels.language,
-      kind: 'select',
-      options: [
-        { value: '', label: labels.anyLanguage },
-        { value: 'it-IT', label: labels.italian },
-        { value: 'en-US', label: labels.english },
-      ],
-    },
-    { key: 'releaseYearFrom', label: labels.yearFrom, kind: 'number', min: 1, max: 9998 },
+    { key: 'releaseYearFrom', label: labels.yearFrom, kind: 'number', field: form.releaseYearFrom },
     {
       key: 'releaseYearTo',
       label: labels.yearTo,
       kind: 'number',
-      min: 1,
-      max: 9998,
-      rangeStartKey: 'releaseYearFrom',
+      field: form.releaseYearTo,
     },
-    { key: 'externalMovieId', label: labels.externalId, kind: 'number', min: 1, max: 2147483647 },
+    {
+      key: 'externalMovieId',
+      label: labels.externalId,
+      kind: 'number',
+      field: form.externalMovieId,
+    },
     {
       key: 'sort',
+      field: form.sort,
       label: labels.sort,
       kind: 'select',
       options: [

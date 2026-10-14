@@ -1,0 +1,20 @@
+<ng-container *transloco="let t; prefix: 'dialog'">
+  <hlm-dialog
+    [state]="open() ? 'open' : 'closed'"
+    (stateChanged)="open.set($event === 'open')"
+    [restoreFocus]="true"
+    autoFocus="first-tabbable"
+  >
+    <hlm-dialog-content
+      *hlmDialogPortal
+      [closeLabel]="t('close')"
+      class="max-h-[85dvh] overflow-y-auto"
+    >
+      <header class="space-y-2 pe-8">
+        <h2 hlmDialogTitle>{{ title() }}</h2>
+        <p hlmDialogDescription>{{ description() }}</p>
+      </header>
+      <ng-container [ngTemplateOutlet]="content()" />
+    </hlm-dialog-content>
+  </hlm-dialog>
+</ng-container>

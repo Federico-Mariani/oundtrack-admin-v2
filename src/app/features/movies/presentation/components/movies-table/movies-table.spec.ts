@@ -39,7 +39,12 @@ function movie(id: string, title: string, releaseDate: number): MovieModel {
   imports: [MoviesTable, TranslocoDirective],
   providers: [provideTranslocoScope({ scope: 'movies', loader: moviesTranslationsLoader })],
   template: `<ng-container *transloco="let t; prefix: 'movies.catalog'">
-    <app-movies-table [movies]="movies()" [caption]="t('title')" (copyId)="copied = $event" />
+    <app-movies-table
+      [remote]="{ page: 1, limit: 20, total: 2, search: '', filtered: false }"
+      [movies]="movies()"
+      [caption]="t('title')"
+      (copyId)="copied = $event"
+    />
   </ng-container>`,
 })
 class MoviesTableTestHost {
@@ -57,7 +62,7 @@ class EmptyTranslationLoader {
 }
 
 describe('MoviesTable integration', () => {
-  it('loads translated columns, sorts dates and forwards the current row action', async () => {
+  it('loads translated columns, preserves server order and forwards the current row action', async () => {
     TestBed.configureTestingModule({
       imports: [MoviesTableTestHost],
       providers: [
@@ -84,25 +89,7 @@ describe('MoviesTable integration', () => {
     const cell = element.querySelector('app-movie-title-cell')!;
     expect(cell.textContent).toContain('Alpha');
     expect(cell.textContent).toContain('1/1/2020');
-    const sortButton = Array.from(
-      element.querySelectorAll<HTMLButtonElement>('app-button button'),
-    ).find((button) => button.textContent.includes('Sort'))!;
-    sortButton.click();
-    await fixture.whenStable();
-    const dateGroup = document.querySelector('[role="group"][aria-label="Release date"]')!;
-    expect(dateGroup).not.toBeNull();
-    const direction = (label: string): HTMLButtonElement =>
-      Array.from(dateGroup.querySelectorAll<HTMLButtonElement>('button')).find((button) =>
-        button.textContent.includes(label),
-      )!;
-    direction('Descending').click();
-    await fixture.whenStable();
     expect(element.querySelector('tbody tr')?.getAttribute('data-row-id')).toBe('newer');
-    direction('Ascending').click();
-    await fixture.whenStable();
-    expect(element.querySelector('tbody tr')?.getAttribute('data-row-id')).toBe('older');
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-    await fixture.whenStable();
     element.querySelector<HTMLButtonElement>('button[aria-label="Actions: Beta"]')!.click();
     await fixture.whenStable();
     const copy = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')).find(
@@ -115,6 +102,6 @@ describe('MoviesTable integration', () => {
     await vi.waitFor(() => {
       expect(element.textContent).toContain('Data di uscita');
     });
-    expect(element.querySelector('tbody tr')?.getAttribute('data-row-id')).toBe('older');
+    expect(element.querySelector('tbody tr')?.getAttribute('data-row-id')).toBe('newer');
   });
 });

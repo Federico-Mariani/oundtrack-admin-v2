@@ -12,6 +12,7 @@ import {
   effect,
   viewChild,
   type ElementRef,
+  type TemplateRef,
 } from '@angular/core';
 import { provideTranslocoScope, TranslocoDirective } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -35,12 +36,11 @@ import {
 } from '@tanstack/angular-table';
 import { dataTableFeatures, type DataTableFeatures } from './data-table-features';
 import type { DataTableDensity } from './data-table-density';
-import { DataTableToolbar } from './toolbar/data-table-toolbar';
-import { DataTablePagination } from './pagination/data-table-pagination';
+import { DataTableControls } from './controls/data-table-controls';
 import { DataTableColumnResize } from './column-resize/data-table-column-resize';
 import { dataTableTranslationsLoader } from './i18n/data-table-translations.loader';
 
-/** Client or controlled server table. HTTP and business actions belong to the consuming feature. */
+/** Controlled server table. HTTP and business actions belong to the consuming feature. */
 @Component({
   selector: 'app-data-table',
   host: { class: 'block min-w-0' },
@@ -51,8 +51,7 @@ import { dataTableTranslationsLoader } from './i18n/data-table-translations.load
     Button,
     TranslocoDirective,
     NgIcon,
-    DataTableToolbar,
-    DataTablePagination,
+    DataTableControls,
     DataTableColumnResize,
   ],
   providers: [
@@ -78,12 +77,11 @@ export class DataTable<TData extends RowData> {
   readonly caption = input.required<string>();
   readonly loading = input(false);
   readonly errorMessage = input<string | null>(null);
-  readonly searchable = input(true);
+  readonly controls = input<TemplateRef<unknown> | null>(null);
   readonly initialColumnVisibility = input<ColumnVisibilityState>({});
   readonly retry = output();
-  readonly remote = input<DataTableRemoteState | null>(null);
+  readonly remote = input.required<DataTableRemoteState>();
   readonly pageChange = output<PageRequest>();
-  readonly searchChange = output<string>();
   readonly resetQuery = output();
 
   protected readonly density = signal<DataTableDensity>('comfortable');
@@ -97,36 +95,19 @@ export class DataTable<TData extends RowData> {
       pagination: { pageIndex: 0, pageSize: 10 },
       columnVisibility: this.initialColumnVisibility(),
     },
-    globalFilterFn: 'includesString',
     columnResizeMode: 'onChange',
-    enableMultiSort: false,
-    autoResetPageIndex: !this.remote(),
-    manualPagination: Boolean(this.remote()),
-    manualFiltering: Boolean(this.remote()),
-    manualSorting: Boolean(this.remote()),
-    enableSorting: !this.remote(),
-    ...(this.remote()
-      ? {
-          rowCount: this.remote()?.total ?? 0,
-          state: {
-            pagination: {
-              pageIndex: (this.remote()?.page ?? 1) - 1,
-              pageSize: this.remote()?.limit ?? 20,
-            },
-          },
-          onPaginationChange: (updater: Updater<PaginationState>): void => {
-            const remote = this.remote();
-            if (!remote) {
-              return;
-            }
-            const current = { pageIndex: remote.page - 1, pageSize: remote.limit };
-            const next = typeof updater === 'function' ? updater(current) : updater;
-            if (next.pageIndex !== current.pageIndex || next.pageSize !== current.pageSize) {
-              this.pageChange.emit({ page: next.pageIndex + 1, limit: next.pageSize });
-            }
-          },
-        }
-      : {}),
+    autoResetPageIndex: false,
+    manualPagination: true,
+    rowCount: this.remote().total,
+    state: { pagination: { pageIndex: this.remote().page - 1, pageSize: this.remote().limit } },
+    onPaginationChange: (updater: Updater<PaginationState>): void => {
+      const remote = this.remote();
+      const current = { pageIndex: remote.page - 1, pageSize: remote.limit };
+      const next = typeof updater === 'function' ? updater(current) : updater;
+      if (next.pageIndex !== current.pageIndex || next.pageSize !== current.pageSize) {
+        this.pageChange.emit({ page: next.pageIndex + 1, limit: next.pageSize });
+      }
+    },
   }));
   private readonly viewport = viewChild<ElementRef<HTMLDivElement>>('tableViewport');
   protected readonly viewportWidth = signal(0);
@@ -163,19 +144,8 @@ export class DataTable<TData extends RowData> {
   protected readonly visibleColumnCount = computed(() =>
     Math.max(1, this.table.getVisibleLeafColumns().length),
   );
-  protected readonly hasFilters = computed(
-    () =>
-      (this.remote()?.filtered ?? Boolean(this.table.atoms.globalFilter.get())) ||
-      this.table.atoms.columnFilters.get().length > 0,
-  );
-
+  protected readonly hasFilters = computed(() => this.remote().filtered);
   protected clearFilters(): void {
-    if (this.remote()) {
-      this.resetQuery.emit();
-      return;
-    }
-    this.table.resetGlobalFilter(true);
-    this.table.resetColumnFilters(true);
-    this.table.firstPage();
+    this.resetQuery.emit();
   }
 }

@@ -1,45 +1,25 @@
-<form
-  *transloco="let t; prefix: 'listFilters'"
-  (submit)="submit($event)"
-  class="space-y-3"
-  [attr.aria-label]="t('title')"
+<div
+  [class.grid]="!compact()"
+  [class.gap-4]="!compact()"
+  [class.flex]="compact()"
+  [class.items-start]="compact()"
+  [class.gap-2]="compact()"
 >
-  <div class="flex flex-wrap items-end gap-3">
-    @for (field of fields(); track field.key) {
-      <div class="flex min-w-32 flex-col gap-1.5">
-        @if (field.kind === 'number') {
-          <label class="text-sm font-medium" [for]="prefix + '-' + field.key">{{
-            field.label
-          }}</label>
-          <input
-            #value
-            hlmInput
-            type="number"
-            step="1"
-            class="w-36"
-            [id]="prefix + '-' + field.key"
-            [min]="field.min ?? null"
-            [max]="field.max ?? null"
-            [value]="draft()[field.key] ?? ''"
-            [attr.aria-invalid]="invalid(field)"
-            [attr.aria-describedby]="invalid(field) ? prefix + '-error' : null"
-            (input)="change(field.key, value.value)"
-          />
-        } @else {
-          <span class="text-sm font-medium">{{ field.label }}</span>
-          <app-select
-            [ariaLabel]="field.label"
-            [items]="field.options ?? []"
-            [value]="draft()[field.key] ?? ''"
-            (valueChange)="change(field.key, $event)"
-          />
-        }
-      </div>
+  @for (field of fields(); track field.key) {
+    @if (field.kind === 'select') {
+      <app-select-field
+        [class.w-40]="compact()"
+        [formField]="field.field"
+        [label]="field.label"
+        [items]="field.options ?? []"
+      />
+    } @else {
+      <app-text-input
+        [class.w-20]="compact()"
+        [formField]="field.field"
+        [label]="field.label"
+        inputMode="numeric"
+      />
     }
-    <app-button type="submit" [text]="t('apply')" [disabled]="!valid()" />
-    <app-button type="button" variant="ghost" [text]="t('reset')" (click)="reset()" />
-  </div>
-  @if (!valid()) {
-    <p [id]="prefix + '-error'" role="alert" class="text-sm text-destructive">{{ t('invalid') }}</p>
   }
-</form>
+</div>

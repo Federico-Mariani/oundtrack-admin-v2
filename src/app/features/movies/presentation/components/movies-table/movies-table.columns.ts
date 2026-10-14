@@ -21,7 +21,6 @@ export function createMoviesTableColumns(
       minSize: 260,
       maxSize: 10000,
       enableHiding: false,
-      sortFn: 'text',
       cell: (context) =>
         flexRenderComponent(MovieTitleCell, {
           inputs: {
@@ -37,7 +36,6 @@ export function createMoviesTableColumns(
       header: labels.genres,
       size: 280,
       minSize: 180,
-      sortFn: 'text',
       cell: (context) =>
         flexRenderComponent(MovieGenresCell, { inputs: { genres: context.row.original.genres } }),
     }),
@@ -45,15 +43,11 @@ export function createMoviesTableColumns(
       header: labels.releaseDate,
       enableHiding: false,
       size: 170,
-      sortFn: 'basic',
-      sortUndefined: 'last',
-      enableGlobalFilter: false,
       cell: (context) => context.row.original.releaseDateLabel,
     }),
     columnHelper.accessor('externalMovieId', {
       header: labels.externalId,
       size: 160,
-      sortFn: 'basic',
     }),
     columnHelper.display({
       id: 'actions',
@@ -63,8 +57,6 @@ export function createMoviesTableColumns(
       maxSize: 100,
       enableHiding: false,
       enableResizing: false,
-      enableSorting: false,
-      enableGlobalFilter: false,
       cell: (context) =>
         flexRenderComponent(MovieActionsCell, {
           inputs: {

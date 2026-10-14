@@ -31,12 +31,6 @@ export class DataTablePagination<TData extends RowData> {
   readonly table = input.required<Table<DataTableFeatures, TData>>();
   protected readonly pagination = computed(() => this.table().atoms.pagination.get());
   protected readonly total = computed(() => this.table().getRowCount());
-  protected readonly start = computed(() =>
-    this.total() === 0 ? 0 : this.pagination().pageIndex * this.pagination().pageSize + 1,
-  );
-  protected readonly end = computed(() =>
-    Math.min(this.total(), (this.pagination().pageIndex + 1) * this.pagination().pageSize),
-  );
   protected readonly page = computed(() =>
     this.total() === 0 ? 0 : this.pagination().pageIndex + 1,
   );

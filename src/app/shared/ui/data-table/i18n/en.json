@@ -27,5 +27,10 @@
   "sortBy": "Sort",
   "clearSorting": "Default order",
   "ascending": "Ascending",
-  "descending": "Descending"
+  "descending": "Descending",
+  "pagination": "Pagination",
+  "paginationHint": "Choose a page and how many rows to display.",
+  "pageCompact": "{{current}} / {{total}}",
+  "resultCount": "{{total}} results",
+  "refresh": "Refresh records"
 }

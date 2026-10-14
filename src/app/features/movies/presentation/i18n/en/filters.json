@@ -1,10 +1,6 @@
 {
-  "language": "Metadata language",
-  "anyLanguage": "All languages",
-  "italian": "Italian",
-  "english": "English",
-  "yearFrom": "Release year from",
-  "yearTo": "Release year to",
+  "yearFrom": "Year from",
+  "yearTo": "Year to",
   "externalId": "External ID",
   "sort": "Sort by",
   "newest": "Newest additions",

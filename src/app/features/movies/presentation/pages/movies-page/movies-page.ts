@@ -1,3 +1,4 @@
+import type { MoviesFilterFormModel } from '../../models/movies-filter-form.model';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { MoviesFilters } from '../../components/movies-filters/movies-filters';
 import type { DataTableRemoteState } from '@shared/ui/data-table/data-table-remote-state';
@@ -15,8 +16,7 @@ import {
 } from '@angular/core';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideFilm, lucideRefreshCw } from '@ng-icons/lucide';
-import { Button } from '@shared/ui/button/button';
+import { lucideFilm } from '@ng-icons/lucide';
 import { NotificationService } from '@app/core/notifications/notification.service';
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
 import { MoviesTable } from '../../components/movies-table/movies-table';
@@ -25,8 +25,8 @@ import { MoviesTable } from '../../components/movies-table/movies-table';
   selector: 'app-movies-page',
   templateUrl: './movies-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MoviesFilters, MoviesTable, TranslocoDirective, Button, NgIcon],
-  providers: [provideIcons({ lucideFilm, lucideRefreshCw })],
+  imports: [MoviesFilters, MoviesTable, TranslocoDirective, NgIcon],
+  providers: [provideIcons({ lucideFilm })],
 })
 export class MoviesPage {
   private readonly moviesFacade = inject(MoviesFacade);
@@ -65,14 +65,8 @@ export class MoviesPage {
   protected changePage(page: PageRequest): void {
     this.moviesFacade.actions.loadMovies({ ...this.query(), ...page });
   }
-  protected search(value: string): void {
-    this.moviesFacade.actions.loadMovies(
-      { ...this.query(), page: 1, search: value.slice(0, 200) },
-      true,
-    );
-  }
-  protected applyFilters(values: Readonly<Record<string, string>>): void {
-    this.moviesFacade.actions.loadMovies(applyMovieFilterValues(this.query(), values));
+  protected applyFilters(values: MoviesFilterFormModel): void {
+    this.moviesFacade.actions.loadMovies(applyMovieFilterValues(this.query(), values), true);
   }
   protected resetQuery(): void {
     this.moviesFacade.actions.loadMovies({

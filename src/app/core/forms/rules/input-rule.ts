@@ -8,5 +8,6 @@ export interface InputRule {
   apply<TPathKind extends PathKind>(
     name: string,
     path: SchemaPath<string, SchemaPathRules.Supported, TPathKind>,
+    fields: Readonly<Record<string, SchemaPath<string>>>,
   ): void;
 }
