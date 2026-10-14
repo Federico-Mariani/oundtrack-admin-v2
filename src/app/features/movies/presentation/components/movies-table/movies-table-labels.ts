@@ -1,4 +1,5 @@
 export interface MoviesTableLabels {
+  readonly viewDetail: string;
   readonly title: string;
   readonly genres: string;
   readonly releaseDate: string;

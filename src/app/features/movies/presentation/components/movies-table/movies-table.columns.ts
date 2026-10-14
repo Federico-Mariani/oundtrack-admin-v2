@@ -13,6 +13,7 @@ export function createMoviesTableColumns(
   labels: MoviesTableLabels,
   copyId: (id: Id) => void,
   copyExternalId: (id: number) => void,
+  viewDetail: (id: Id) => void,
 ): ColumnDef<DataTableFeatures, MovieTableRowModel>[] {
   return columnHelper.columns([
     columnHelper.accessor('title', {
@@ -62,9 +63,13 @@ export function createMoviesTableColumns(
           inputs: {
             label: `${labels.actions}: ${context.row.original.title}`,
             copyIdLabel: labels.copyId,
+            viewDetailLabel: labels.viewDetail,
             copyExternalIdLabel: labels.copyExternalId,
           },
           outputs: {
+            viewDetail: () => {
+              viewDetail(context.row.original.id);
+            },
             copyId: () => {
               copyId(context.row.original.id);
             },

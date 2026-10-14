@@ -7,7 +7,13 @@ import { idleRequest } from '@shared/state/request/request-state.transitions';
 import type { MovieModel } from '../../domain/models/movie.model';
 import type { RequestError } from '@shared/state/request/request-error';
 
+import type { MovieDetailModel } from '../../domain/models/movie-detail.model';
+import type { Id } from '@shared/types/id';
+
 export interface MoviesState {
+  readonly detailId: Id | null;
+  readonly detail: MovieDetailModel | null;
+  readonly detailRequest: RequestState<RequestError>;
   readonly movies: readonly MovieModel[];
   readonly query: MoviesListQuery;
   readonly total: number;
@@ -16,6 +22,9 @@ export interface MoviesState {
 }
 
 export const initialMoviesState: MoviesState = {
+  detailId: null,
+  detail: null,
+  detailRequest: idleRequest(),
   movies: [],
   query: DEFAULT_MOVIES_LIST_QUERY,
   total: 0,

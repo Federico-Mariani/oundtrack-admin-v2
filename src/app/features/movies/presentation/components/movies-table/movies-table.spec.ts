@@ -44,6 +44,7 @@ function movie(id: string, title: string, releaseDate: number): MovieModel {
       [movies]="movies()"
       [caption]="t('title')"
       (copyId)="copied = $event"
+      (viewDetail)="detailId = $event"
     />
   </ng-container>`,
 })
@@ -53,6 +54,7 @@ class MoviesTableTestHost {
     movie('older', 'Beta', Date.UTC(2019, 11, 31)),
   ]);
   copied = '';
+  detailId = '';
 }
 
 class EmptyTranslationLoader {
@@ -98,6 +100,14 @@ describe('MoviesTable integration', () => {
     expect(copy).toBeDefined();
     copy.click();
     expect(fixture.componentInstance.copied).toBe('older');
+    await fixture.whenStable();
+    element.querySelector<HTMLButtonElement>('button[aria-label="Actions: Alpha"]')!.click();
+    await fixture.whenStable();
+    const detail = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('[role="menuitem"]'),
+    ).find((button) => button.textContent.includes('View details'))!;
+    detail.click();
+    expect(fixture.componentInstance.detailId).toBe('newer');
     TestBed.inject(TranslocoService).setActiveLang('it');
     await vi.waitFor(() => {
       expect(element.textContent).toContain('Data di uscita');

@@ -23,8 +23,15 @@ import { IconButton } from '../icon-button/icon-button';
   ],
   host: { class: 'block' },
   template: `
-    <div *transloco="let t; prefix: 'modal'" class="mb-5 flex items-start justify-between gap-4">
-      <div>
+    <div
+      *transloco="let t; prefix: 'modal'"
+      [class]="
+        overlayHeader()
+          ? 'absolute right-3 top-3 z-20 rounded-full bg-background/90 p-1 shadow-sm'
+          : 'mb-5 flex items-start justify-between gap-4'
+      "
+    >
+      <div [class.sr-only]="overlayHeader()">
         <h2 hlmDialogTitle class="text-lg font-semibold">{{ title() }}</h2>
         <p hlmDialogDescription class="mt-1 text-sm text-muted-foreground">
           {{ description() }}
@@ -43,6 +50,7 @@ import { IconButton } from '../icon-button/icon-button';
 })
 export class ModalFrame {
   protected readonly ref = inject<BrnDialogRef>(BrnDialogRef);
+  readonly overlayHeader = input(false);
   readonly title = input.required<string>();
   readonly description = input.required<string>();
 }

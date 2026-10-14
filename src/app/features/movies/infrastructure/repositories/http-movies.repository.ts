@@ -1,6 +1,10 @@
 import type { CreateMovieModel } from '../../domain/models/create-movie.model';
 import type { ApiResponse } from '@app/core/http/api-response';
 import { toCreateMovieRequest } from '../mappers/create-movie-request.mapper';
+import type { Id } from '@shared/types/id';
+import type { MovieDetailModel } from '../../domain/models/movie-detail.model';
+import type { MovieDetailResponseDto } from '../api/movie-detail-response.dto';
+import { toMovieDetail } from '../mappers/movie-detail.mapper';
 import { HttpClient, type HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, type Observable, throwError } from 'rxjs';
@@ -20,6 +24,15 @@ import { toRequestError } from '../../../../core/http/http-error.mapper';
 export class HttpMoviesRepository implements MoviesRepositoryPort {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl + '/movies';
+
+  getOne(id: Id): Observable<MovieDetailModel> {
+    return this.http
+      .get<ApiResponse<MovieDetailResponseDto>>(`${this.baseUrl}/${encodeURIComponent(id)}`)
+      .pipe(
+        map(({ data }) => toMovieDetail(data)),
+        catchError((error: HttpErrorResponse) => throwError(() => toRequestError(error))),
+      );
+  }
 
   create(movie: CreateMovieModel): Observable<MovieModel> {
     return this.http

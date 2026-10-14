@@ -1,3 +1,5 @@
+import type { Id } from '@shared/types/id';
+import { MoviesDetailActions } from '../actions/movies-detail.actions';
 import type { CreateMovieModel } from '../../../domain/models/create-movie.model';
 import { MoviesCreateActions } from '../actions/movies-create.actions';
 import type { MoviesListQuery } from '../../../domain/models/movies-list-query.model';
@@ -9,6 +11,12 @@ import { MoviesLoadActions } from '../actions/movies-load.actions';
 export class MoviesStoreActionsFacade {
   private readonly store = inject(Store);
 
+  loadDetail(id: Id): void {
+    this.store.dispatch(MoviesDetailActions.requested({ id }));
+  }
+  closeDetail(id: Id): void {
+    this.store.dispatch(MoviesDetailActions.closed({ id }));
+  }
   createMovie(movie: CreateMovieModel): void {
     this.store.dispatch(MoviesCreateActions.submitted({ movie }));
   }
