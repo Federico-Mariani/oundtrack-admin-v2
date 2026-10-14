@@ -1,5 +1,5 @@
 <div *transloco="let t; prefix: 'dataTable'" class="flex min-w-0 items-center gap-4 sm:gap-6">
-  <div class="min-w-0 flex-1"><ng-container [ngTemplateOutlet]="controls()" /></div>
+  <ng-container [ngTemplateOutlet]="controls()" />
   <div class="flex shrink-0 items-center border-s ps-4" role="group" [attr.aria-label]="t('view')">
     <app-data-table-toolbar
       [table]="table()"

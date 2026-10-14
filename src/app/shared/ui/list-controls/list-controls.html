@@ -21,7 +21,6 @@
     (click)="filtersOpen.set(true)"
   />
   <app-icon-button
-    variant="ghost"
     size="icon-sm"
     class="hidden @[64rem]/table-controls:block"
     icon="lucideFilterX"
@@ -35,10 +34,8 @@
     [description]="t('hint')"
     [content]="filters"
   />
-  <ng-template #filters
-    ><app-list-filters [fields]="fields()" /><app-button
-      variant="outline"
-      [text]="t('reset')"
-      (click)="resetFilters.emit()"
-  /></ng-template>
+  <ng-template #filters>
+    <app-list-filters [fields]="fields()" />
+    <app-button variant="outline" [text]="t('reset')" (click)="resetFilters.emit()" />
+  </ng-template>
 </div>
