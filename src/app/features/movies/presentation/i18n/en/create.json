@@ -1,4 +1,25 @@
 {
   "title": "Create movie",
-  "description": "Add a movie to the catalog."
+  "pageDescription": "Add a movie to the catalog.",
+  "description": "Enter the title, year and language to add a movie to the catalog.",
+  "fields": {
+    "title": "Title",
+    "year": "Year",
+    "language": "Language"
+  },
+  "submit": "Create movie",
+  "reset": "Reset",
+  "backToMovies": "Back to movies",
+  "success": "Movie created successfully.",
+  "errors": {
+    "network": "Unable to connect to the server. Please try again.",
+    "bad-request": "Invalid request. Check the form.",
+    "unauthorized": "Your session has expired. Please sign in again.",
+    "forbidden": "You do not have permission to create movies.",
+    "not-found": "No matching movie was found. Check the title and year.",
+    "conflict": "This movie already exists in the catalog.",
+    "validation": "Check the highlighted fields.",
+    "server": "The server could not create the movie. Please try again later.",
+    "unknown": "Unable to create the movie. Please try again."
+  }
 }

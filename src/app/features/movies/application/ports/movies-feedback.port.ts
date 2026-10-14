@@ -10,5 +10,7 @@ import type { RequestError } from '@shared/state/request/request-error';
  * application-wide notification capability.
  */
 export interface MoviesFeedbackPort {
+  createMovieSucceeded(): void;
+  createMovieFailed(error: RequestError): void;
   loadMoviesFailed(error: RequestError): void;
 }

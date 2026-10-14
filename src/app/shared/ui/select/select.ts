@@ -29,6 +29,10 @@ export class Select {
 
   protected readonly triggerId = `app-select-${String(Select.nextId++)}`;
   readonly items = input.required<SelectItem[]>();
+  readonly disabled = input(false);
+  readonly invalid = input(false);
+  readonly describedBy = input<string>();
+  readonly blurred = output();
   readonly placeholder = input<string>('');
   readonly value = input<string>();
   readonly ariaLabel = input<string>();

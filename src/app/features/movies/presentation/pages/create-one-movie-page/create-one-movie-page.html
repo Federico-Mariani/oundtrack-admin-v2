@@ -1,17 +1,61 @@
 <section *transloco="let t; prefix: 'movies.create'" class="space-y-4">
-  <header class="flex flex-wrap items-center justify-between gap-4">
-    <div class="flex flex-col gap-1">
-      <div class="flex items-center gap-3">
+    <header class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-3">
         <span
-          class="flex size-8 items-center justify-center rounded-md border bg-card text-primary shadow-sm"
-          ><ng-icon name="lucideFilm" class="text-md" aria-hidden="true"
+                class="flex size-8 items-center justify-center rounded-md border bg-card text-primary shadow-sm"
+        ><ng-icon name="lucideFilm" class="text-md" aria-hidden="true"
         /></span>
-        <h1 class="text-2xl font-semibold tracking-tight">{{ t('title') }}</h1>
-      </div>
-      <p class="mt-1 text-sm text-muted-foreground">{{ t('description') }}</p>
+                <h1 class="text-2xl font-semibold tracking-tight">{{ t('title') }}</h1>
+            </div>
+            <p class="mt-1 text-sm text-muted-foreground">{{ t('description') }}</p>
+        </div>
+    </header>
+    <div class="w-full h-full flex items-center justify-center">
+        <hlm-card class="w-full max-w-lg">
+            <hlm-card-header>
+                <h1 hlmCardTitle>{{ t('title') }}</h1>
+                <p hlmCardDescription>{{ t('description') }}</p>
+            </hlm-card-header>
+            <div hlmCardContent>
+                <form [formRoot]="controller.form" id="create-movie-form" [attr.aria-busy]="busy()">
+                    <fieldset [disabled]="busy()" class="space-y-5">
+                        <app-text-input [formField]="controller.form.title" [label]="t('fields.title')" />
+                        <app-number-input
+                                [formField]="controller.form.year"
+                                [label]="t('fields.year')"
+                                [min]="1"
+                                [max]="9998"
+                        />
+                        <app-select-field
+                                [formField]="controller.form.language"
+                                [label]="t('fields.language')"
+                                [items]="languages"
+                                [disabled]="busy()"
+                        />
+                    </fieldset>
+                </form>
+                @if (created()) {
+                    <p role="status" class="mt-4 text-sm text-primary">{{ t('success') }}</p>
+                }
+            </div>
+            <hlm-card-footer class="flex flex-col items-stretch gap-3">
+                <app-button
+                        type="submit"
+                        form="create-movie-form"
+                        [text]="t('submit')"
+                        [loading]="busy()"
+                        [disabled]="busy() || !controller.form().valid()"
+                />
+                <app-button variant="outline" [text]="t('reset')" [disabled]="busy()" (click)="reset()" />
+                <a
+                        hlmBtn
+                        variant="ghost"
+                        [routerLink]="busy() ? null : moviesLink"
+                        [attr.aria-disabled]="busy()"
+                >{{ t('backToMovies') }}</a
+                >
+            </hlm-card-footer>
+        </hlm-card>
     </div>
-  </header>
-  <div class="w-full h-full flex items-center justify-center">
-    <form></form>
-  </div>
 </section>

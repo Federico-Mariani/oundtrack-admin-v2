@@ -1,4 +1,25 @@
 {
   "title": "Crea film",
-  "description": "Aggiungi un film al catalogo."
+  "pageDescription": "Aggiungi un film al catalogo."
+  "description": "Inserisci titolo, anno e lingua per aggiungere un film al catalogo.",
+  "fields": {
+    "title": "Titolo",
+    "year": "Anno",
+    "language": "Lingua"
+  },
+  "submit": "Crea film",
+  "reset": "Reimposta",
+  "backToMovies": "Torna ai film",
+  "success": "Film creato con successo.",
+  "errors": {
+    "network": "Impossibile connettersi al server. Riprova.",
+    "bad-request": "Richiesta non valida. Controlla il modulo.",
+    "unauthorized": "La sessione è scaduta. Accedi nuovamente.",
+    "forbidden": "Non hai i permessi per creare film.",
+    "not-found": "Nessun film trovato. Controlla titolo e anno.",
+    "conflict": "Il film è già presente nel catalogo.",
+    "validation": "Controlla i campi evidenziati.",
+    "server": "Il server non è riuscito a creare il film. Riprova più tardi.",
+    "unknown": "Impossibile creare il film. Riprova."
+  }
 }
