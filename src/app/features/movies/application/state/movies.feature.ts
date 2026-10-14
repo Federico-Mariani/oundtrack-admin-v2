@@ -7,7 +7,13 @@ export const MOVIES_FEATURE_KEY = 'movies';
 export const moviesFeature = createFeature({
   name: MOVIES_FEATURE_KEY,
   reducer: moviesReducer,
-  extraSelectors: ({ selectLoadRequest }) => ({
+  extraSelectors: ({ selectLoadRequest, selectCreateRequest }) => ({
+    selectIsCreatingMovie: createSelector(selectCreateRequest, isRequestPending),
+    selectMovieCreateError: createSelector(selectCreateRequest, requestError),
+    selectMovieCreated: createSelector(
+      selectCreateRequest,
+      (request) => request.status === 'success',
+    ),
     selectIsLoadingMovies: createSelector(selectLoadRequest, isRequestPending),
 
     selectMoviesLoadError: createSelector(selectLoadRequest, requestError),

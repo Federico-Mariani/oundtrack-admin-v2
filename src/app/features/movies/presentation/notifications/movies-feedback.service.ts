@@ -21,6 +21,12 @@ export class MoviesFeedbackService implements MoviesFeedbackPort {
   private readonly transloco = inject(TranslocoService);
   private readonly notifications = inject(NotificationService);
 
+  createMovieSucceeded(): void {
+    this.notifications.success(this.transloco.translate('movies.create.success'));
+  }
+  createMovieFailed(error: RequestError): void {
+    this.notifications.error(this.transloco.translate(`movies.create.errors.${error.code}`));
+  }
   loadMoviesFailed(error: RequestError): void {
     this.showError('get-all', error);
   }

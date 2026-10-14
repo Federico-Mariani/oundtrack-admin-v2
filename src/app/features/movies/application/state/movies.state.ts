@@ -11,6 +11,7 @@ export interface MoviesState {
   readonly movies: readonly MovieModel[];
   readonly query: MoviesListQuery;
   readonly total: number;
+  readonly createRequest: RequestState<RequestError>;
   readonly loadRequest: RequestState<RequestError>;
 }
 
@@ -19,4 +20,5 @@ export const initialMoviesState: MoviesState = {
   query: DEFAULT_MOVIES_LIST_QUERY,
   total: 0,
   loadRequest: idleRequest(),
+  createRequest: idleRequest(),
 };

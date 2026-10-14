@@ -4,8 +4,15 @@
   }}</span
   ><app-select
     [items]="items()"
+    [disabled]="disabled() || formField()().disabled()"
+    [invalid]="errors().length > 0"
+    [describedBy]="errors().length ? errorId : undefined"
+    (blurred)="formField()().markAsTouched()"
     [value]="formField()().value()"
     [ariaLabel]="label()"
     (valueChange)="change($event)"
   />
+  @if (errors().length) {
+    <app-field-error [id]="errorId" [errors]="errors()" />
+  }
 </div>

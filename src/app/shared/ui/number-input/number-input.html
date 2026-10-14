@@ -1,0 +1,23 @@
+<div class="space-y-1">
+  <label class="block text-xs font-medium text-muted-foreground" [for]="id">{{ label() }}</label>
+  <input
+    hlmInput
+    class="h-9 w-full"
+    type="number"
+    inputmode="numeric"
+    step="1"
+    [id]="id"
+    [min]="min()"
+    [max]="max()"
+    [value]="formField()().value()"
+    [disabled]="formField()().disabled()"
+    [required]="formField()().required()"
+    (input)="change($event)"
+    (blur)="formField()().markAsTouched()"
+    [attr.aria-invalid]="errors().length > 0"
+    [attr.aria-describedby]="errors().length ? id + '-errors' : null"
+  />
+  @if (errors().length) {
+    <app-field-error [id]="id + '-errors'" [errors]="errors()" />
+  }
+</div>

@@ -24,6 +24,7 @@ import type { ClassValue } from 'clsx';
       brnFieldControlDescribedBy
       [forceInvalid]="forceInvalid()"
       [id]="buttonId()"
+      [attr.aria-describedby]="describedBy()"
       [class]="_computedClass()"
       [aria-invalid]="ariaInvalidInput()"
       [attr.data-size]="size()"
@@ -49,6 +50,8 @@ export class HlmSelectTrigger {
   );
 
   public readonly buttonId = input<string>(`hlm-select-trigger-${HlmSelectTrigger._id++}`);
+
+  public readonly describedBy = input<string>();
 
   public readonly size = input<'default' | 'sm'>('default');
 

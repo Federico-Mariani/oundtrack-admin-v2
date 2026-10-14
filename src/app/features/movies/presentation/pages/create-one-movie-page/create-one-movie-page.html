@@ -1,4 +1,4 @@
-<section *transloco="let t; prefix: 'movies.create'" class="space-y-4">
+<section *transloco="let t; prefix: 'movies.create'" class="flex flex-col w-full h-full space-y-4">
   <header class="flex flex-wrap items-center justify-between gap-4">
     <div class="flex flex-col gap-1">
       <div class="flex items-center gap-3">
@@ -12,6 +12,43 @@
     </div>
   </header>
   <div class="w-full h-full flex items-center justify-center">
-    <form></form>
+    <hlm-card class="w-full max-w-lg">
+      <div hlmCardContent>
+        <form [formRoot]="controller.form" id="create-movie-form" [attr.aria-busy]="busy()">
+          <fieldset [disabled]="busy()" class="space-y-5">
+            <app-text-input [formField]="controller.form.title" [label]="t('fields.title')" />
+            <app-number-input
+              [formField]="controller.form.year"
+              [label]="t('fields.year')"
+              [min]="1"
+              [max]="9998"
+            />
+            <app-select-field
+              [formField]="controller.form.language"
+              [label]="t('fields.language')"
+              [items]="languages"
+              [disabled]="busy()"
+            />
+          </fieldset>
+        </form>
+      </div>
+      <hlm-card-footer class="flex flex-col items-stretch gap-3">
+        <app-button
+          type="submit"
+          form="create-movie-form"
+          [text]="t('submit')"
+          [loading]="busy()"
+          [disabled]="busy() || !controller.form().valid()"
+        />
+        <app-button variant="outline" [text]="t('reset')" [disabled]="busy()" (click)="reset()" />
+        <a
+          hlmBtn
+          variant="ghost"
+          [routerLink]="busy() ? null : moviesLink"
+          [attr.aria-disabled]="busy()"
+          >{{ t('backToMovies') }}</a
+        >
+      </hlm-card-footer>
+    </hlm-card>
   </div>
 </section>
