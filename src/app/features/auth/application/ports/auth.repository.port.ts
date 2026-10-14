@@ -14,5 +14,7 @@ import type { UserModel } from '../../domain/models/user.model';
 export interface AuthRepositoryPort {
   login(credentials: LoginCredentialsModel): Observable<AuthSessionModel>;
 
+  refreshSession(refreshToken: string): Observable<AuthSessionModel>;
+
   getCurrentUser(): Observable<UserModel>;
 }

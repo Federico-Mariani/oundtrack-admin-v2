@@ -1,3 +1,4 @@
+import { authRefreshReducers } from './reducers/auth-refresh.reducer';
 import { createReducer } from '@ngrx/store';
 import { initialAuthState } from './auth.state';
 import { authLoginReducers } from './reducers/auth-login.reducer';
@@ -15,4 +16,5 @@ export const authReducer = createReducer(
   ...authLoginReducers,
   ...authUserReducers,
   ...authLogoutReducers,
+  ...authRefreshReducers,
 );

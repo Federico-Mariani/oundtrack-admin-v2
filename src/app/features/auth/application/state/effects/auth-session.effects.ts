@@ -1,14 +1,16 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { authFeature } from '../auth.feature';
+import { AuthRefreshActions } from '../actions/auth-refresh.actions';
 import { filter, map, tap } from 'rxjs';
-import { isAccessTokenExpired } from '../../../domain/models/auth-session.model';
+import { isRefreshTokenExpired } from '../../../domain/models/auth-session.model';
 import { AUTH_SESSION_STORAGE } from '../../tokens/auth-session-storage.token';
 import { AuthLogoutActions } from '../actions/auth-logout.actions';
 import { AuthSessionActions } from '../actions/auth-session.actions';
 import { AuthCurrentUserActions } from '../actions/auth-current-user.actions';
 import { AuthSessionStorageActions } from '../actions/auth-session-storage.actions';
 import { AuthLoginApiActions } from '../actions/api/auth-login-api.actions';
-import { AuthCurrentUserApiActions } from '../actions/api/auth-current-user-api.actions';
 
 export const restoreSession$ = createEffect(
   (actions$ = inject(Actions), sessionStorage = inject(AUTH_SESSION_STORAGE)) =>
@@ -17,7 +19,7 @@ export const restoreSession$ = createEffect(
       map(() => {
         const session = sessionStorage.load();
 
-        return session && !isAccessTokenExpired(session)
+        return session && !isRefreshTokenExpired(session)
           ? AuthSessionStorageActions.sessionRestored({ session })
           : AuthSessionStorageActions.sessionNotFound();
       }),
@@ -26,9 +28,14 @@ export const restoreSession$ = createEffect(
 );
 
 export const persistSession$ = createEffect(
-  (actions$ = inject(Actions), sessionStorage = inject(AUTH_SESSION_STORAGE)) =>
+  (
+    actions$ = inject(Actions),
+    sessionStorage = inject(AUTH_SESSION_STORAGE),
+    store = inject(Store),
+  ) =>
     actions$.pipe(
-      ofType(AuthLoginApiActions.loginSucceeded),
+      ofType(AuthLoginApiActions.loginSucceeded, AuthRefreshActions.succeeded),
+      filter(({ session }) => store.selectSignal(authFeature.selectSession)() === session),
       tap(({ session }) => {
         sessionStorage.save(session);
       }),
@@ -56,16 +63,6 @@ export const loadUserAfterSessionEstablished$ = createEffect(
     actions$.pipe(
       ofType(AuthLoginApiActions.loginSucceeded, AuthSessionStorageActions.sessionRestored),
       map(() => AuthCurrentUserActions.currentUserLoadRequested()),
-    ),
-  { functional: true },
-);
-
-export const expireSessionOnUnauthorized$ = createEffect(
-  (actions$ = inject(Actions)) =>
-    actions$.pipe(
-      ofType(AuthCurrentUserApiActions.currentUserLoadFailed),
-      filter(({ error }) => error.code === 'unauthorized'),
-      map(() => AuthSessionActions.sessionExpired()),
     ),
   { functional: true },
 );

@@ -4,5 +4,8 @@ import { type AuthState, initialAuthState } from '../auth.state';
 
 /** Logout wipes the whole auth slice: session, user and any stale request outcome. */
 export const authLogoutReducers: ReducerTypes<AuthState, readonly ActionCreator[]>[] = [
-  on(AuthLogoutActions.logoutSubmitted, (): AuthState => initialAuthState),
+  on(AuthLogoutActions.logoutSubmitted, (state): AuthState => ({
+    ...initialAuthState,
+    generation: state.generation,
+  })),
 ];

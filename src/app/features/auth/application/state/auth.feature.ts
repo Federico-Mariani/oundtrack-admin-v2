@@ -20,11 +20,19 @@ export const authFeature = createFeature({
   reducer: authReducer,
   extraSelectors: ({
     selectSession,
+    selectGeneration,
+    selectRefreshRequest,
     selectLoginRequest,
     selectRegistrationRequest,
     selectSessionRestoreRequest,
     selectCurrentUserRequest,
   }) => ({
+    selectRefreshSnapshot: createSelector(
+      selectSession,
+      selectGeneration,
+      selectRefreshRequest,
+      (session, generation, request) => ({ session, generation, request }),
+    ),
     selectIsAuthenticated: createSelector(selectSession, (session) => session !== null),
     selectAccessToken: createSelector(selectSession, (session) => session?.accessToken ?? null),
 

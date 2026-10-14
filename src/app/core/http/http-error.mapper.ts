@@ -24,6 +24,7 @@ export function toRequestError(response: HttpErrorResponse): RequestError {
   const body = parseApiErrorBody(response.error);
 
   return {
+    status: response.status,
     code: resolveRequestErrorCode(response.status),
     message: body?.message,
     fieldErrors: body?.fields,

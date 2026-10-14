@@ -244,3 +244,15 @@ Dentro una feature usare import **relativi**; gli alias servono solo per attrave
 > Progetto generato inizialmente con [Angular CLI](https://github.com/angular/angular-cli) 22.2.1.
 > Per il riferimento completo ai comandi CLI vedi la
 > [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli).
+
+## Rinnovo automatico della sessione
+
+L'interceptor di autenticazione applica il bearer token solo alle richieste verso l'API configurata. Gli endpoint `auth/sign-in`, `auth/sign-up` e `auth/refresh` sono esclusi. Un errore HTTP 401 su una richiesta autenticata attiva il rinnovo; il testo localizzato dell'errore non viene interpretato.
+
+Il coordinatore HTTP condivide un solo rinnovo tra le richieste concorrenti. L'operazione attraversa una porta applicativa: un effect NgRx chiama il repository con `POST /auth/refresh` e body `{ "refreshToken": "..." }`. La risposta aggiorna access token e refresh token nello store e nella persistenza. Ogni richiesta viene ripetuta al massimo una volta, conservando metodo, body, query e header.
+
+La generazione della sessione cambia durante login, logout, ripristino e scadenza. Le risposte di una generazione precedente non possono ripristinare la sessione o ripetere richieste con le credenziali di un altro utente. Un 401 arrivato dopo un rinnovo già completato riutilizza la sessione aggiornata.
+
+Un refresh token scaduto, un rinnovo rifiutato con 401/403 o un secondo 401 sul token aggiornato fanno scadere la sessione. Il layout protetto rimanda al login. Errori di rete e del server propagano l'errore senza cancellare la sessione; una richiesta successiva può tentare nuovamente. Al riavvio, una sessione con refresh token ancora valido viene ripristinata anche se l'access token è scaduto.
+
+I test di integrazione usano store ed effect reali con backend HTTP simulato e coprono concorrenza, rotazione, persistenza, replay, errori e logout durante il rinnovo. Il coordinamento riguarda la singola istanza dell'applicazione, non schede browser diverse.

@@ -10,6 +10,17 @@ export interface AuthSessionModel {
   readonly refreshTokenExpiresAt: number;
 }
 
+export function isRefreshTokenExpired(
+  session: AuthSessionModel,
+  now: number = Date.now(),
+): boolean {
+  return (
+    !session.refreshToken ||
+    !Number.isFinite(session.refreshTokenExpiresAt) ||
+    session.refreshTokenExpiresAt <= now
+  );
+}
+
 export function isAccessTokenExpired(session: AuthSessionModel, now: number = Date.now()): boolean {
   return session.accessTokenExpiresAt <= now;
 }
