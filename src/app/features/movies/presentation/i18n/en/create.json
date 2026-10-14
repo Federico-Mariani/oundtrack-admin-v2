@@ -1,7 +1,6 @@
 {
   "title": "Create movie",
-  "pageDescription": "Add a movie to the catalog.",
-  "description": "Enter the title, year and language to add a movie to the catalog.",
+  "description": "Add a movie to the catalog.",
   "fields": {
     "title": "Title",
     "year": "Year",

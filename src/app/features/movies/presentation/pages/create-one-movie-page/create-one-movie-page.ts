@@ -42,7 +42,7 @@ import { NgIcon } from '@ng-icons/core';
     TextInput,
     NumberInput,
     SelectField,
-    NgIcon
+    NgIcon,
   ],
 })
 export class CreateOneMoviePage {
