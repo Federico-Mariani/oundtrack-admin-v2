@@ -14,16 +14,16 @@
   <hlm-card-footer>
     <hlm-field>
       <app-button
-        [loading]="isLoggingIn() || isLoadingCurrentUser()"
+        [loading]="busy()"
         [text]="translator('components.loginForm.actions.submit')"
-        [disabled]="!canSubmit()"
+        [disabled]="!canSubmit() || busy()"
         type="submit"
         form="login-form"
       />
       <app-button
         (click)="reset()"
         [text]="translator('components.loginForm.actions.reset')"
-        [disabled]="!canSubmit()"
+        [disabled]="!canSubmit() || busy()"
         variant="outline"
       />
     </hlm-field>

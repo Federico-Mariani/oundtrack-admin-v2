@@ -10,37 +10,30 @@
         <ul hlmSidebarMenu>
           @for (item of group.items; track item.id) {
             <li hlmSidebarMenuItem>
-              <div hlmCollapsible class="group/collapsible" [expanded]="active.isActive">
-                <a
-                  hlmSidebarMenuButton
-                  [closeMobileSidebarOnClick]="false"
-                  [routerLink]="item.commands"
+              @if (item.children?.length) {
+                <div
+                  hlmCollapsible
+                  class="group/collapsible"
                   routerLinkActive
-                  #active="routerLinkActive"
-                  [routerLinkActiveOptions]="{ exact: item.exact ?? true }"
-                  [isActive]="active.isActive"
-                  [ariaCurrentWhenActive]="item.children?.length ? false : 'page'"
-                  [attr.title]="t(item.labelKey)"
-                  (click)="closeMobile($event)"
+                  #sectionActive="routerLinkActive"
+                  [routerLinkActiveOptions]="{ exact: false }"
+                  [expanded]="sectionActive.isActive"
                 >
-                  @if (item.icon; as icon) {
-                    <ng-icon [name]="icon" aria-hidden="true" />
-                  }
-                  <span>{{ t(item.labelKey) }}</span>
-                </a>
-                @if (item.children?.length) {
                   <button
                     type="button"
-                    hlmSidebarMenuAction
+                    hlmSidebarMenuButton
                     hlmCollapsibleTrigger
-                    [attr.aria-label]="
-                      t('sidebar.menu.toggleSection', { section: t(item.labelKey) })
-                    "
+                    [closeMobileSidebarOnClick]="false"
+                    [attr.title]="t(item.labelKey)"
                   >
+                    @if (item.icon; as icon) {
+                      <ng-icon [name]="icon" aria-hidden="true" />
+                    }
+                    <span>{{ t(item.labelKey) }}</span>
                     <ng-icon
                       name="lucideChevronRight"
                       aria-hidden="true"
-                      class="transition-transform group-data-[state=open]/collapsible:rotate-90"
+                      class="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90"
                     />
                   </button>
                   <hlm-collapsible-content>
@@ -67,8 +60,26 @@
                       }
                     </ul>
                   </hlm-collapsible-content>
-                }
-              </div>
+                </div>
+              } @else {
+                <a
+                  hlmSidebarMenuButton
+                  [closeMobileSidebarOnClick]="false"
+                  [routerLink]="item.commands"
+                  routerLinkActive
+                  #active="routerLinkActive"
+                  [routerLinkActiveOptions]="{ exact: item.exact ?? true }"
+                  [isActive]="active.isActive"
+                  ariaCurrentWhenActive="page"
+                  [attr.title]="t(item.labelKey)"
+                  (click)="closeMobile($event)"
+                >
+                  @if (item.icon; as icon) {
+                    <ng-icon [name]="icon" aria-hidden="true" />
+                  }
+                  <span>{{ t(item.labelKey) }}</span>
+                </a>
+              }
             </li>
           }
         </ul>

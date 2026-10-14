@@ -1,6 +1,11 @@
-<app-sidebar [groups]="sidebarGroups" [user]="currentUser()" (logout)="logout()">
-  <main hlmSidebarInset class="min-w-0">
-    <header class="flex items-center justify-between p-2 px-4">
+<app-sidebar
+  [groups]="sidebarGroups"
+  [user]="currentUser()"
+  [loggingOut]="loggingOut()"
+  (logout)="logout()"
+>
+  <main hlmSidebarInset class="min-h-0 min-w-0 overflow-hidden">
+    <header class="flex shrink-0 items-center justify-between p-2 px-4">
       <button hlmSidebarTrigger size="lg"><span class="sr-only"></span></button>
       <div class="flex gap-2">
         <app-icon-button [icon]="themeIcon()" (click)="toggleTheme()" />
@@ -11,10 +16,8 @@
         />
       </div>
     </header>
-    <section class="h-full min-w-0 max-w-full px-4 pb-4">
-      <div
-        class="h-full bg-primary-foreground border rounded-md p-4 overflow-hidden overflow-y-scroll"
-      >
+    <section class="flex min-h-0 flex-1 min-w-0 max-w-full px-4 pb-4">
+      <div class="min-h-0 min-w-0 flex-1 bg-primary-foreground border rounded-md p-4 overflow-auto">
         <router-outlet />
       </div>
     </section>

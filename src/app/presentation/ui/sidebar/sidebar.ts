@@ -9,6 +9,7 @@ import {
   HlmDropdownMenuSeparator,
   HlmDropdownMenuTrigger,
 } from '@spartan-ng/helm/dropdown-menu';
+import { HlmSpinner } from '@spartan-ng/helm/spinner';
 import { Avatar } from '@shared/ui/avatar/avatar';
 import type { SidebarUser } from '@shared/interfaces/sidebar-user';
 import type { SidebarGroup } from './sidebar-group';
@@ -37,6 +38,7 @@ import { sidebarTranslationsLoader } from '../../i18n/sidebar-translations.loade
     HlmDropdownMenuSeparator,
     HlmDropdownMenu,
     Avatar,
+    HlmSpinner,
     SidebarNavigation,
     TranslocoDirective,
   ],
@@ -44,5 +46,6 @@ import { sidebarTranslationsLoader } from '../../i18n/sidebar-translations.loade
 export class Sidebar {
   readonly groups = input.required<readonly SidebarGroup[]>();
   readonly user = input<SidebarUser | null>(null);
+  readonly loggingOut = input(false);
   readonly logout = output();
 }

@@ -1,4 +1,4 @@
-import { Component, computed, inject, type Signal } from '@angular/core';
+import { Component, computed, inject, input, type Signal } from '@angular/core';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmFieldImports } from '@spartan-ng/helm/field';
@@ -32,6 +32,12 @@ import type { LoginFormModel } from '../../models/login-form.model';
 export class LoginForm {
   private readonly authFacade = inject(AuthFacade);
 
+  readonly navigating = input(false);
+
+  protected readonly busy = computed(
+    () => this.isLoggingIn() || this.isLoadingCurrentUser() || this.navigating(),
+  );
+
   protected readonly i18nScope = AUTH_I18N_SCOPE;
 
   protected readonly isLoggingIn = computed(() => this.authFacade.loadingStatuses.isLoggingIn());
@@ -57,6 +63,9 @@ export class LoginForm {
   );
 
   protected onSubmit(): void {
+    if (this.busy()) {
+      return;
+    }
     const model = this.loginFormController.model();
 
     this.authFacade.actions.login({

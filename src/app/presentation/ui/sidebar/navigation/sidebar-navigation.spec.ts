@@ -59,6 +59,11 @@ describe('Configured sidebar navigation', () => {
 
   it('navigates to Movies and Create with real anchors and correct active children', async () => {
     const { fixture, element, router } = await setup();
+    const toggle = element.querySelector<HTMLButtonElement>('button[data-sidebar="menu-button"]')!;
+    toggle.click();
+    await fixture.whenStable();
+    expect(router.url).toBe('/');
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
     const movies = element.querySelector<HTMLAnchorElement>('a[href="/movies"]')!;
     movies.click();
     await fixture.whenStable();
@@ -68,6 +73,12 @@ describe('Configured sidebar navigation', () => {
     await fixture.whenStable();
     expect(router.url).toBe('/movies/create');
     expect(create.getAttribute('aria-current')).toBe('page');
+    expect(toggle.hasAttribute('data-active')).toBe(false);
+    expect(create.getAttribute('data-active')).toBe('true');
+    toggle.click();
+    await fixture.whenStable();
+    expect(router.url).toBe('/movies/create');
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
     expect(
       element
         .querySelector('a[data-sidebar="menu-sub-button"][href="/movies"]')
