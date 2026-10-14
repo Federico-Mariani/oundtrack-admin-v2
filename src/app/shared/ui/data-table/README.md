@@ -55,7 +55,7 @@ o uno Store globale per tutte le liste.
 
 ## Dialog
 
-`ModalService.open(ListFiltersModal, params, { injector })` apre un componente dedicato.
+`ModalService.open(ListFiltersModal, params, { viewContainerRef })` apre un componente dedicato.
 Il chiamante non include template o elementi dialog nel proprio HTML. I parametri mantengono
 il riferimento ai campi reattivi e il reset; chiudere la finestra non annulla i filtri applicati.
 Vedere `shared/ui/modal/README.md` per parametri, risultati e gestione del ciclo di vita.

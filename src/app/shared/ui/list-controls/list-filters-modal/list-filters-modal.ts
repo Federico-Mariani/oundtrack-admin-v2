@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { TranslocoDirective, provideTranslocoScope } from '@jsverse/transloco';
 import { ListFilters } from '../../list-filters/list-filters';
 import { Button } from '../../button/button';
@@ -35,6 +35,6 @@ import type { ListFiltersModalParams } from './list-filters-modal-params';
   `,
 })
 export class ListFiltersModal implements ModalContent<ListFiltersModalParams, void> {
-  readonly params = inject<ListFiltersModalParams>(DIALOG_DATA);
-  readonly ref = inject<DialogRef<void>>(DialogRef);
+  readonly params = injectBrnDialogContext<{ params: ListFiltersModalParams }>().params;
+  readonly ref = inject<BrnDialogRef<void>>(BrnDialogRef);
 }

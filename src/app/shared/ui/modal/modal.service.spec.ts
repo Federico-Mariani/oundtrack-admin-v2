@@ -1,13 +1,12 @@
 import {
-  ApplicationRef,
   ChangeDetectionStrategy,
   Component,
   inject,
   InjectionToken,
-  Injector,
+  ViewContainerRef,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { ModalService } from './modal.service';
 import type { ModalContent } from './modal-content';
 
@@ -22,65 +21,85 @@ const FEATURE_LABEL = new InjectionToken<string>('feature label');
   template: '<button (click)="ref.close(params.name)">{{ label }}: {{ params.name }}</button>',
 })
 class TestModal implements ModalContent<TestParams, string> {
-  readonly params = inject<TestParams>(DIALOG_DATA);
-  readonly ref = inject<DialogRef<string>>(DialogRef);
+  readonly params = injectBrnDialogContext<{ params: TestParams }>().params;
+  readonly ref = inject<BrnDialogRef<string>>(BrnDialogRef);
   readonly label = inject(FEATURE_LABEL);
 }
 
+@Component({
+  selector: 'app-test-modal-owner',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{ provide: FEATURE_LABEL, useValue: 'Feature' }],
+  template: '',
+})
+class TestModalOwner {
+  readonly viewContainerRef = inject(ViewContainerRef);
+}
+
 describe('ModalService', () => {
-  it('opens a component with typed parameters and the caller injector, and returns its close result', async () => {
-    TestBed.configureTestingModule({ imports: [TestModal] });
-    const injector = Injector.create({
-      parent: TestBed.inject(Injector),
-      providers: [{ provide: FEATURE_LABEL, useValue: 'Feature' }],
-    });
-    const service = TestBed.inject(ModalService);
-    const ref = service.open(TestModal, { name: 'First' }, { injector });
+  function setup() {
+    TestBed.configureTestingModule({ imports: [TestModal, TestModalOwner] });
+    const fixture = TestBed.createComponent(TestModalOwner);
+    return {
+      fixture,
+      service: TestBed.inject(ModalService),
+      options: { viewContainerRef: fixture.componentInstance.viewContainerRef },
+    };
+  }
+
+  it('uses Spartan content and preserves caller providers, parameters and close results', async () => {
+    const { fixture, service, options } = setup();
+    const ref = service.open(TestModal, { name: 'First' }, options);
     const closed = vi.fn();
-    ref.closed.subscribe(closed);
-    await TestBed.inject(ApplicationRef).whenStable();
-    const button = document.querySelector<HTMLButtonElement>('app-test-modal button')!;
+    ref.closed$.subscribe(closed);
+    await fixture.whenStable();
+    const button = document.querySelector<HTMLButtonElement>(
+      'hlm-dialog-content app-test-modal button',
+    )!;
     expect(button.textContent).toBe('Feature: First');
     button.click();
-    expect(closed).toHaveBeenCalledExactlyOnceWith('First');
-    expect(document.querySelector('app-test-modal')).toBeNull();
-    injector.destroy();
+    await vi.waitFor(() => {
+      expect(closed).toHaveBeenCalledExactlyOnceWith('First');
+    });
+    expect(document.querySelector('hlm-dialog-content')).toBeNull();
+    fixture.destroy();
   });
 
-  it('closes and releases the overlay when the calling injector is destroyed', () => {
-    TestBed.configureTestingModule({ imports: [TestModal] });
-    const injector = Injector.create({
-      parent: TestBed.inject(Injector),
-      providers: [{ provide: FEATURE_LABEL, useValue: 'Feature' }],
-    });
-    const ref = TestBed.inject(ModalService).open(TestModal, { name: 'Scoped' }, { injector });
+  it('immediately disposes the Spartan overlay when the calling component is destroyed', () => {
+    const { fixture, service, options } = setup();
+    const ref = service.open(TestModal, { name: 'Scoped' }, options);
     const closed = vi.fn();
-    ref.closed.subscribe(closed);
-    injector.destroy();
+    ref.closed$.subscribe(closed);
+    fixture.destroy();
     expect(closed).toHaveBeenCalledExactlyOnceWith(undefined);
-    expect(document.querySelector('app-test-modal')).toBeNull();
+    expect(document.querySelector('hlm-dialog-content')).toBeNull();
   });
 
-  it('isolates parameters and results for separate openings and dismisses without a result', () => {
-    TestBed.configureTestingModule({
-      imports: [TestModal],
-      providers: [{ provide: FEATURE_LABEL, useValue: 'Feature' }],
-    });
-    const service = TestBed.inject(ModalService);
-    const injector = TestBed.inject(Injector);
-    const first = service.open(TestModal, { name: 'First' }, { injector });
-    const second = service.open(TestModal, { name: 'Second' }, { injector });
+  it('isolates parameters and results between openings', async () => {
+    const { fixture, service, options } = setup();
+    const first = service.open(TestModal, { name: 'First' }, options);
+    const second = service.open(TestModal, { name: 'Second' }, options);
     const firstClosed = vi.fn();
     const secondClosed = vi.fn();
-    first.closed.subscribe(firstClosed);
-    second.closed.subscribe(secondClosed);
+    first.closed$.subscribe(firstClosed);
+    second.closed$.subscribe(secondClosed);
+    await fixture.whenStable();
     expect(first.id).not.toBe(second.id);
-    expect(first.config.data).toEqual({ name: 'First' });
-    expect(second.config.data).toEqual({ name: 'Second' });
+    expect(
+      Array.from(
+        document.querySelectorAll('app-test-modal button'),
+        (button) => button.textContent,
+      ),
+    ).toEqual(['Feature: First', 'Feature: Second']);
     second.close();
-    expect(secondClosed).toHaveBeenCalledExactlyOnceWith(undefined);
+    await vi.waitFor(() => {
+      expect(secondClosed).toHaveBeenCalledExactlyOnceWith(undefined);
+    });
     expect(firstClosed).not.toHaveBeenCalled();
     first.close('saved');
-    expect(firstClosed).toHaveBeenCalledExactlyOnceWith('saved');
+    await vi.waitFor(() => {
+      expect(firstClosed).toHaveBeenCalledExactlyOnceWith('saved');
+    });
+    fixture.destroy();
   });
 });

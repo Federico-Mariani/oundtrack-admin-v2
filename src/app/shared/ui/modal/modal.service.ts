@@ -1,42 +1,33 @@
 import { inject, Injectable, DestroyRef, type Type } from '@angular/core';
-import { Dialog, type DialogRef } from '@angular/cdk/dialog';
-import { Overlay } from '@angular/cdk/overlay';
+import { HlmDialogService } from '@spartan-ng/helm/dialog';
+import type { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import type { ModalContent } from './modal-content';
 import type { ModalOptions } from './modal-options';
 
-/** Global component-based entry point. Overlay mechanics stay with Angular CDK. */
+/** Global component-based entry point using Spartan's dialog and overlay lifecycle. */
 @Injectable({ providedIn: 'root' })
 export class ModalService {
-  private readonly dialog = inject(Dialog);
-  private readonly overlay = inject(Overlay);
-  private nextId = 0;
+  private readonly dialog = inject(HlmDialogService);
 
   open<TParams, TResult>(
     component: Type<ModalContent<TParams, TResult>>,
     params: NoInfer<TParams>,
     options: ModalOptions,
-  ): DialogRef<TResult> {
-    const id = `app-modal-${String(++this.nextId)}`;
-    const ref = this.dialog.open<TResult, TParams>(component, {
-      id,
-      data: params,
-      injector: options.injector,
-      ariaLabelledBy: `${id}-title`,
-      ariaDescribedBy: `${id}-description`,
+  ): BrnDialogRef<TResult> {
+    const ref = this.dialog.open<TResult, { params: TParams }>(component, {
+      context: { params },
+      viewContainerRef: options.viewContainerRef,
       ariaModal: true,
       autoFocus: 'first-tabbable',
       restoreFocus: true,
       disableClose: options.disableClose ?? false,
-      closeOnNavigation: true,
-      scrollStrategy: this.overlay.scrollStrategies.block(),
-      backdropClass: 'cdk-overlay-dark-backdrop',
-      width: 'min(32rem, calc(100vw - 2rem))',
-      maxHeight: 'calc(100dvh - 2rem)',
+      showCloseButton: false,
+      contentClass: 'max-h-[calc(100dvh-2rem)] overflow-y-auto',
     });
-    const unregister = options.injector.get(DestroyRef).onDestroy(() => {
-      ref.close();
+    const unregister = options.viewContainerRef.injector.get(DestroyRef).onDestroy(() => {
+      ref.forceClose();
     });
-    ref.closed.subscribe(() => {
+    ref.closed$.subscribe(() => {
       unregister();
     });
     return ref;
