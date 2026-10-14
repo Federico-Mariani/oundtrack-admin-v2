@@ -26,17 +26,8 @@
       />
     </div>
   }
-  @if (loading() && data().length > 0) {
-    <div
-      role="status"
-      class="flex items-center gap-2 border-b px-4 py-2 text-sm text-muted-foreground"
-    >
-      <ng-icon
-        name="lucideLoaderCircle"
-        class="animate-spin motion-reduce:animate-none"
-        aria-hidden="true"
-      />{{ t('refreshing') }}
-    </div>
+  @if (loading()) {
+    <span role="status" class="sr-only">{{ t('loading') }}</span>
   }
   <div
     class="min-w-0 max-w-full overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm"
@@ -88,67 +79,79 @@
           }
         </thead>
         <tbody hlmTBody>
-          @for (row of table.getRowModel().rows; track row.id) {
-            <tr hlmTr class="group" [attr.data-row-id]="row.id">
-              @for (cell of row.getVisibleCells(); track cell.id) {
+          @if (loading()) {
+            @for (index of loadingRows(); track index) {
+              <tr hlmTr aria-hidden="true" class="hover:bg-transparent" data-loading-row>
+                @for (column of table.getVisibleLeafColumns(); track column.id) {
+                  <td
+                    hlmTd
+                    class="px-5"
+                    [class.py-2]="density() === 'compact'"
+                    [class.py-4]="density() === 'comfortable'"
+                  >
+                    <app-shimmer class="h-10 w-full max-w-48" />
+                  </td>
+                }
+              </tr>
+            }
+          } @else {
+            @for (row of table.getRowModel().rows; track row.id) {
+              <tr hlmTr class="group" [attr.data-row-id]="row.id">
+                @for (cell of row.getVisibleCells(); track cell.id) {
+                  <td
+                    hlmTd
+                    class="overflow-hidden text-ellipsis px-5 tabular-nums"
+                    [class.py-2]="density() === 'compact'"
+                    [class.py-4]="density() === 'comfortable'"
+                  >
+                    <ng-container
+                      *flexRender="
+                        cell.column.columnDef.cell;
+                        props: cell.getContext();
+                        let content
+                      "
+                      >{{ content }}</ng-container
+                    >
+                  </td>
+                }
+              </tr>
+            } @empty {
+              <tr hlmTr class="hover:bg-transparent">
                 <td
                   hlmTd
-                  class="overflow-hidden text-ellipsis px-5 tabular-nums"
-                  [class.py-2]="density() === 'compact'"
-                  [class.py-4]="density() === 'comfortable'"
+                  class="h-56 text-center whitespace-normal"
+                  [attr.colspan]="visibleColumnCount()"
                 >
-                  <ng-container
-                    *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let content"
-                    >{{ content }}</ng-container
-                  >
+                  @if (!errorMessage()) {
+                    <div role="status" class="flex flex-col items-center gap-2 px-6">
+                      <span class="mb-2 rounded-full bg-muted p-3"
+                        ><ng-icon
+                          name="lucideSearchX"
+                          class="text-2xl text-muted-foreground"
+                          aria-hidden="true"
+                      /></span>
+                      <p class="font-medium">{{ t(hasFilters() ? 'noMatches' : 'empty') }}</p>
+                      <p class="text-sm text-muted-foreground">
+                        {{ t(hasFilters() ? 'noMatchesHint' : 'emptyHint') }}
+                      </p>
+                      @if (hasFilters()) {
+                        <app-button
+                          variant="outline"
+                          size="sm"
+                          class="mt-2"
+                          (click)="clearFilters()"
+                          [text]="t('clearSearch')"
+                        />
+                      }
+                    </div>
+                  }
                 </td>
-              }
-            </tr>
-          } @empty {
-            <tr hlmTr class="hover:bg-transparent">
-              <td
-                hlmTd
-                class="h-56 text-center whitespace-normal"
-                [attr.colspan]="visibleColumnCount()"
-              >
-                @if (loading()) {
-                  <div role="status" class="flex flex-col items-center gap-3 text-muted-foreground">
-                    <ng-icon
-                      name="lucideLoaderCircle"
-                      class="animate-spin text-2xl motion-reduce:animate-none"
-                      aria-hidden="true"
-                    />{{ t('loading') }}
-                  </div>
-                } @else if (!errorMessage()) {
-                  <div role="status" class="flex flex-col items-center gap-2 px-6">
-                    <span
-                      class="flex items-center justify-center clearmb-2 rounded-full bg-muted p-3 shrink-0"
-                      ><ng-icon
-                        name="lucideSearchX"
-                        class="text-2xl text-muted-foreground"
-                        aria-hidden="true"
-                    /></span>
-                    <p class="font-medium">{{ t(hasFilters() ? 'noMatches' : 'empty') }}</p>
-                    <p class="text-sm text-muted-foreground">
-                      {{ t(hasFilters() ? 'noMatchesHint' : 'emptyHint') }}
-                    </p>
-                    @if (hasFilters()) {
-                      <app-button
-                        variant="outline"
-                        size="sm"
-                        class="mt-2"
-                        (click)="clearFilters()"
-                        [text]="t('clearSearch')"
-                      />
-                    }
-                  </div>
-                }
-              </td>
-            </tr>
+              </tr>
+            }
           }
         </tbody>
       </table>
     </div>
   </div>
-  <app-data-table-pagination [table]="table" [disabled]="loading()" />
+  <app-data-table-pagination [table]="table" [remote]="remote()" [disabled]="loading()" />
 </section>

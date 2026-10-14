@@ -1,5 +1,5 @@
 import type { ComponentType } from '@angular/cdk/portal';
-import { inject, Injectable, type TemplateRef } from '@angular/core';
+import { inject, Injectable, type TemplateRef, type ViewContainerRef } from '@angular/core';
 import {
   type BrnDialogOptions,
   type BrnDialogRef,
@@ -10,6 +10,8 @@ import { HlmDialogContent } from './hlm-dialog-content';
 import { hlmDialogOverlayClass } from './hlm-dialog-overlay';
 
 export type HlmDialogOptions<DialogContext = unknown> = BrnDialogOptions & {
+  /** Preserve the caller's component/feature injection context for service-opened dialogs. */
+  viewContainerRef?: ViewContainerRef;
   contentClass?: string;
   showCloseButton?: boolean;
   closeLabel?: string;
@@ -40,7 +42,7 @@ export class HlmDialogService {
 
     return this._brnDialogService.open<unknown, TResult>(
       HlmDialogContent,
-      undefined,
+      options?.viewContainerRef,
       mergedOptions.context,
       mergedOptions,
     );

@@ -18,9 +18,10 @@
     icon="lucideSlidersHorizontal"
     [ariaLabel]="t('open', { count: activeCount() })"
     [title]="t('title')"
-    (click)="filtersOpen.set(true)"
+    (click)="openFilters()"
   />
   <app-icon-button
+    variant="ghost"
     size="icon-sm"
     class="hidden @[64rem]/table-controls:block"
     icon="lucideFilterX"
@@ -28,14 +29,4 @@
     [title]="t('reset')"
     (click)="resetFilters.emit()"
   />
-  <app-dialog
-    [(open)]="filtersOpen"
-    [title]="t('title')"
-    [description]="t('hint')"
-    [content]="filters"
-  />
-  <ng-template #filters>
-    <app-list-filters [fields]="fields()" />
-    <app-button variant="outline" [text]="t('reset')" (click)="resetFilters.emit()" />
-  </ng-template>
 </div>
