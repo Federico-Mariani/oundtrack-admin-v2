@@ -9,7 +9,6 @@
   "submit": "Crea film",
   "reset": "Reimposta",
   "backToMovies": "Torna ai film",
-  "success": "Film creato con successo.",
   "errors": {
     "network": "Impossibile connettersi al server. Riprova.",
     "bad-request": "Richiesta non valida. Controlla il modulo.",

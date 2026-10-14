@@ -9,7 +9,6 @@
   "submit": "Create movie",
   "reset": "Reset",
   "backToMovies": "Back to movies",
-  "success": "Movie created successfully.",
   "errors": {
     "network": "Unable to connect to the server. Please try again.",
     "bad-request": "Invalid request. Check the form.",
