@@ -10,6 +10,7 @@ import {
 import { IconButton } from '../../icon-button/icon-button';
 import { Select } from '../../select/select';
 import type { RowData, Table } from '@tanstack/angular-table';
+import type { DataTableRemoteState } from '../data-table-remote-state';
 import type { DataTableFeatures } from '../data-table-features';
 
 @Component({
@@ -29,8 +30,19 @@ import type { DataTableFeatures } from '../data-table-features';
 export class DataTablePagination<TData extends RowData> {
   readonly disabled = input(false);
   readonly table = input.required<Table<DataTableFeatures, TData>>();
-  protected readonly pagination = computed(() => this.table().atoms.pagination.get());
-  protected readonly total = computed(() => this.table().getRowCount());
+  readonly remote = input.required<DataTableRemoteState>();
+  protected readonly pagination = computed(() => ({
+    pageIndex: this.remote().page - 1,
+    pageSize: this.remote().limit,
+  }));
+  protected readonly pageCount = computed(() =>
+    Math.ceil(this.remote().total / this.remote().limit),
+  );
+  protected readonly canPrevious = computed(() => !this.disabled() && this.remote().page > 1);
+  protected readonly canNext = computed(
+    () => !this.disabled() && this.remote().page < this.pageCount(),
+  );
+  protected readonly total = computed(() => this.remote().total);
   protected readonly start = computed(() =>
     this.total() === 0 ? 0 : this.pagination().pageIndex * this.pagination().pageSize + 1,
   );
@@ -49,7 +61,7 @@ export class DataTablePagination<TData extends RowData> {
 
   protected setPageSize(value: string): void {
     const size = Number(value);
-    if (this.pageSizes.includes(size)) {
+    if (!this.disabled() && this.pageSizes.includes(size)) {
       this.table().setPagination({ pageIndex: 0, pageSize: size });
     }
   }

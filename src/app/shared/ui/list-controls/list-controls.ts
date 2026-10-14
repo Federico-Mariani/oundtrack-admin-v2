@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, inject, Injector } from '@angular/core';
 import type { Field } from '@angular/forms/signals';
 import { TranslocoDirective, provideTranslocoScope } from '@jsverse/transloco';
 import { provideIcons } from '@ng-icons/core';
@@ -6,13 +6,14 @@ import { lucideSlidersHorizontal, lucideFilterX } from '@ng-icons/lucide';
 import { TextInput } from '../text-input/text-input';
 import { ListFilters } from '../list-filters/list-filters';
 import type { ListFilterField } from '../list-filters/list-filter-field';
-import { Dialog } from '../dialog/dialog';
-import { Button } from '../button/button';
+import { ModalService } from '../modal/modal.service';
+import { ListFiltersModal } from './list-filters-modal/list-filters-modal';
+import type { DialogRef } from '@angular/cdk/dialog';
 import { IconButton } from '../icon-button/icon-button';
 @Component({
   selector: 'app-list-controls',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslocoDirective, TextInput, ListFilters, Dialog, Button, IconButton],
+  imports: [TranslocoDirective, TextInput, ListFilters, IconButton],
   providers: [provideIcons({ lucideSlidersHorizontal, lucideFilterX })],
   viewProviders: [
     provideTranslocoScope({
@@ -27,9 +28,31 @@ import { IconButton } from '../icon-button/icon-button';
   templateUrl: './list-controls.html',
 })
 export class ListControls {
+  private readonly modals = inject(ModalService);
+  private readonly injector = inject(Injector);
   readonly search = input.required<Field<string>>();
   readonly fields = input.required<readonly ListFilterField[]>();
   readonly activeCount = input(0);
   readonly resetFilters = output();
-  protected readonly filtersOpen = signal(false);
+  private filtersRef: DialogRef<void> | undefined;
+
+  protected openFilters(): void {
+    if (this.filtersRef) {
+      return;
+    }
+    const ref = this.modals.open(
+      ListFiltersModal,
+      {
+        fields: this.fields,
+        reset: () => {
+          this.resetFilters.emit();
+        },
+      },
+      { injector: this.injector },
+    );
+    this.filtersRef = ref;
+    ref.closed.subscribe(() => {
+      this.filtersRef = undefined;
+    });
+  }
 }

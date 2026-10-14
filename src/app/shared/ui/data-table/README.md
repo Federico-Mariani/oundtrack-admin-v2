@@ -55,12 +55,15 @@ o uno Store globale per tutte le liste.
 
 ## Dialog
 
-`shared/ui/dialog/Dialog` riceve titolo, descrizione, template e stato `open`.
-Si appoggia a Spartan/CDK per overlay, blocco dello scroll, focus trap, Escape,
-click sullo sfondo e ritorno del focus al controllo di apertura. I campi nel dialog
-sono gli stessi del form desktop: chiuderlo non annulla filtri già applicati.
-La chiusura è tradotta nello scope del componente; titolo e descrizione appartengono
-al consumatore. Gli scope condivisi usano `viewProviders` per isolare i contenuti.
+`ModalService.open(ListFiltersModal, params, { injector })` apre un componente dedicato.
+Il chiamante non include template o elementi dialog nel proprio HTML. I parametri mantengono
+il riferimento ai campi reattivi e il reset; chiudere la finestra non annulla i filtri applicati.
+Vedere `shared/ui/modal/README.md` per parametri, risultati e gestione del ciclo di vita.
+
+La paginazione deriva direttamente dai metadati server reattivi. I pulsanti e il callback
+bloccano richieste oltre il totale e durante il caricamento. Gli shimmer sostituiscono le
+righe durante ogni richiesta, mantenendo le colonne visibili; un solo stato accessibile
+annuncia il caricamento. Le animazioni rispettano `prefers-reduced-motion`.
 
 ## Dimensionamento e verifica
 

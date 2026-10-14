@@ -117,6 +117,72 @@ describe('DataTable interactions', () => {
     expect(button('Next page').closest('fieldset')?.disabled).toBe(true);
   });
 
+  it.each([
+    { page: 1, total: 0 },
+    { page: 1, total: 7 },
+    { page: 1, total: 20 },
+    { page: 3, total: 41 },
+  ])('blocks next and last on the final server page: %j', async ({ page, total }) => {
+    const changed = vi.fn();
+    fixture.componentInstance.pageChange.subscribe(changed);
+    fixture.componentRef.setInput('remote', {
+      page,
+      limit: 20,
+      total,
+      search: '',
+      filtered: false,
+    });
+    await fixture.whenStable();
+    for (const label of ['Next page', 'Last page']) {
+      const target = button(label);
+      expect(target.disabled).toBe(true);
+      target.click();
+      target.closest('app-icon-button')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    }
+    expect(changed).not.toHaveBeenCalled();
+  });
+
+  it('reacts when the server total changes without changing page or row count', async () => {
+    fixture.componentRef.setInput('remote', {
+      page: 1,
+      limit: 20,
+      total: 20,
+      search: '',
+      filtered: false,
+    });
+    await fixture.whenStable();
+    expect(button('Next page').disabled).toBe(true);
+    fixture.componentRef.setInput('remote', {
+      page: 1,
+      limit: 20,
+      total: 21,
+      search: '',
+      filtered: false,
+    });
+    await fixture.whenStable();
+    expect(button('Next page').disabled).toBe(false);
+    expect(element.textContent).toContain('of 21 records');
+  });
+
+  it('replaces stale rows with accessible shimmer loading rows and restores the server result', async () => {
+    fixture.componentRef.setInput('loading', true);
+    await fixture.whenStable();
+    expect(rows()).toHaveLength(0);
+    expect(element.querySelectorAll('tr[data-loading-row]')).toHaveLength(10);
+    expect(element.querySelectorAll('app-shimmer')).toHaveLength(20);
+    expect(element.querySelector('section')?.getAttribute('aria-busy')).toBe('true');
+    const changed = vi.fn();
+    fixture.componentInstance.pageChange.subscribe(changed);
+    button('Next page')
+      .closest('app-icon-button')!
+      .dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(changed).not.toHaveBeenCalled();
+    fixture.componentRef.setInput('loading', false);
+    await fixture.whenStable();
+    expect(rows()).toHaveLength(26);
+    expect(element.querySelector('app-shimmer')).toBeNull();
+  });
+
   it('distinguishes loading, errors and an empty collection and emits retry', async () => {
     fixture.componentRef.setInput('data', []);
     fixture.componentRef.setInput('loading', true);

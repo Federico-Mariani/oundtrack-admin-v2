@@ -17,10 +17,10 @@
       />
     </div>
     <span class="hidden @sm/pagination:inline">{{
-      t('page', { current: page(), total: table().getPageCount() })
+      t('page', { current: page(), total: pageCount() })
     }}</span>
     <span class="@sm/pagination:hidden">{{
-      t('pageCompact', { current: page(), total: table().getPageCount() })
+      t('pageCompact', { current: page(), total: pageCount() })
     }}</span>
     <div class="flex gap-1">
       <app-icon-button
@@ -29,24 +29,24 @@
         class="hidden @sm/pagination:block"
         icon="lucideChevronsLeft"
         [ariaLabel]="t('firstPage')"
-        [disabled]="!table().getCanPreviousPage()"
-        (click)="table().firstPage()"
+        [disabled]="!canPrevious()"
+        (click)="canPrevious() && table().firstPage()"
       />
       <app-icon-button
         variant="outline"
         size="icon-sm"
         icon="lucideChevronLeft"
         [ariaLabel]="t('previousPage')"
-        [disabled]="!table().getCanPreviousPage()"
-        (click)="table().previousPage()"
+        [disabled]="!canPrevious()"
+        (click)="canPrevious() && table().previousPage()"
       />
       <app-icon-button
         variant="outline"
         size="icon-sm"
         icon="lucideChevronRight"
         [ariaLabel]="t('nextPage')"
-        [disabled]="!table().getCanNextPage()"
-        (click)="table().nextPage()"
+        [disabled]="!canNext()"
+        (click)="canNext() && table().nextPage()"
       />
       <app-icon-button
         variant="outline"
@@ -54,8 +54,8 @@
         class="hidden @sm/pagination:block"
         icon="lucideChevronsRight"
         [ariaLabel]="t('lastPage')"
-        [disabled]="!table().getCanLastPage()"
-        (click)="table().lastPage()"
+        [disabled]="!canNext()"
+        (click)="canNext() && table().lastPage()"
       />
     </div>
   </div>
