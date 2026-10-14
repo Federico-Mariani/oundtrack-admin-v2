@@ -1,6 +1,6 @@
 {
   "title": "Crea film",
-  "pageDescription": "Aggiungi un film al catalogo."
+  "pageDescription": "Aggiungi un film al catalogo.",
   "description": "Inserisci titolo, anno e lingua per aggiungere un film al catalogo.",
   "fields": {
     "title": "Titolo",
