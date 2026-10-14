@@ -10,6 +10,7 @@ export type RequestErrorCode =
   | 'unknown';
 
 export interface RequestError {
+  readonly status?: number;
   readonly code: RequestErrorCode;
   readonly message?: string;
   readonly fieldErrors?: Readonly<Record<string, readonly string[]>>;

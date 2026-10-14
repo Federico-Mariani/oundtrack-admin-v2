@@ -17,7 +17,13 @@ describe('Logout redirect loading', () => {
       const goToLogin = vi.fn(() => navigation);
       TestBed.configureTestingModule({
         providers: [
-          { provide: AuthFacade, useValue: { data: { user: signal(null) }, actions: { logout } } },
+          {
+            provide: AuthFacade,
+            useValue: {
+              data: { user: signal(null), isAuthenticated: signal(true) },
+              actions: { logout },
+            },
+          },
           { provide: AuthNavigationService, useValue: { goToLogin } },
           { provide: LanguageService, useValue: { options: [], activeLanguage: signal('en') } },
           { provide: ThemeService, useValue: { isDark: signal(false) } },

@@ -12,6 +12,8 @@ import type { RequestError } from '@shared/state/request/request-error';
  * flight) can be pending at the same time.
  */
 export interface AuthState {
+  readonly generation: number;
+  readonly refreshRequest: RequestState<RequestError>;
   readonly session: AuthSessionModel | null;
   readonly user: UserModel | null;
   readonly loginRequest: RequestState<RequestError>;
@@ -21,6 +23,8 @@ export interface AuthState {
 }
 
 export const initialAuthState: AuthState = {
+  generation: 0,
+  refreshRequest: idleRequest(),
   session: null,
   user: null,
   loginRequest: idleRequest(),

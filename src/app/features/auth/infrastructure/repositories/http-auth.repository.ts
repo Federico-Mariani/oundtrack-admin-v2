@@ -31,6 +31,15 @@ export class HttpAuthRepository implements AuthRepositoryPort {
       );
   }
 
+  refreshSession(refreshToken: string): Observable<AuthSessionModel> {
+    return this.http
+      .post<ApiResponse<TokensResponseDto>>(`${this.baseUrl}/refresh`, { refreshToken })
+      .pipe(
+        map(({ data }) => toAuthSession(data)),
+        catchError((error: HttpErrorResponse) => throwError(() => toRequestError(error))),
+      );
+  }
+
   getCurrentUser(): Observable<UserModel> {
     return this.http.get<ApiResponse<UserResponseDto>>(`${this.baseUrl}/me`).pipe(
       map(({ data }) => toUser(data)),

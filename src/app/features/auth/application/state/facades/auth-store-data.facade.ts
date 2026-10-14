@@ -7,6 +7,9 @@ import { authFeature } from '../auth.feature';
 export class AuthStoreDataFacade {
   private readonly store = inject(Store);
 
+  readonly refreshSnapshot = this.store.selectSignal(authFeature.selectRefreshSnapshot);
+  readonly refreshChanges$ = this.store.select(authFeature.selectRefreshSnapshot);
+
   readonly session = this.store.selectSignal(authFeature.selectSession);
   readonly user = this.store.selectSignal(authFeature.selectUser);
   readonly isAuthenticated = this.store.selectSignal(authFeature.selectIsAuthenticated);

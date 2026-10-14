@@ -1,5 +1,13 @@
 import { DEFAULT_SIDEBAR_GROUPS } from './default-sidebar.config';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Sidebar } from '../../ui/sidebar/sidebar';
 import { HlmSidebarInset, HlmSidebarTrigger } from '@spartan-ng/helm/sidebar';
@@ -40,6 +48,18 @@ export class DefaultLayout {
   protected readonly themeIcon = computed<string>(() =>
     this.theme.isDark() ? 'lucideSunMedium' : 'lucideMoon',
   );
+
+  constructor() {
+    effect(() => {
+      if (!this.authFacade.data.isAuthenticated()) {
+        untracked(() => {
+          if (!this.loggingOut()) {
+            void this.authNavigation.goToLogin();
+          }
+        });
+      }
+    });
+  }
 
   protected toggleTheme(): void {
     this.theme.toggle();
