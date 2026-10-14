@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, model, output } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
@@ -27,14 +27,29 @@ import type { DataTableDensity } from '../data-table-density';
 })
 export class DataTableToolbar<TData extends RowData> {
   readonly table = input.required<Table<DataTableFeatures, TData>>();
+  readonly remoteSearch = input<string | null>(null);
+  readonly searchChange = output<string>();
+  readonly resetQuery = output();
+  protected readonly canSort = computed(() =>
+    this.table()
+      .getAllLeafColumns()
+      .some((column) => column.getCanSort()),
+  );
   readonly searchable = input(true);
   readonly density = model<DataTableDensity>('comfortable');
   protected readonly search = computed(() => {
+    if (this.remoteSearch() !== null) {
+      return this.remoteSearch() ?? '';
+    }
     const value: unknown = this.table().atoms.globalFilter.get();
     return typeof value === 'string' ? value : '';
   });
 
   protected setSearch(value: string): void {
+    if (this.remoteSearch() !== null) {
+      this.searchChange.emit(value);
+      return;
+    }
     this.table().setGlobalFilter(value);
     this.table().firstPage();
   }
@@ -45,12 +60,16 @@ export class DataTableToolbar<TData extends RowData> {
   }
 
   protected resetView(): void {
-    this.setSearch('');
-    this.table().resetColumnFilters(true);
-    this.table().resetSorting();
+    if (this.remoteSearch() !== null) {
+      this.resetQuery.emit();
+    } else {
+      this.setSearch('');
+      this.table().resetColumnFilters(true);
+      this.table().resetSorting();
+      this.table().resetPagination();
+    }
     this.table().resetColumnVisibility();
     this.table().resetColumnSizing();
-    this.table().resetPagination();
     this.density.set('comfortable');
   }
 }

@@ -27,6 +27,7 @@ import type { DataTableFeatures } from '../data-table-features';
   templateUrl: './data-table-pagination.html',
 })
 export class DataTablePagination<TData extends RowData> {
+  readonly disabled = input(false);
   readonly table = input.required<Table<DataTableFeatures, TData>>();
   protected readonly pagination = computed(() => this.table().atoms.pagination.get());
   protected readonly total = computed(() => this.table().getRowCount());
@@ -39,7 +40,7 @@ export class DataTablePagination<TData extends RowData> {
   protected readonly page = computed(() =>
     this.total() === 0 ? 0 : this.pagination().pageIndex + 1,
   );
-  protected readonly pageSizes = [10, 25, 50, 100];
+  protected readonly pageSizes = [10, 20, 25, 50, 100];
   protected readonly pageSizeItems = this.pageSizes.map((size) => ({
     label: String(size),
     value: String(size),
@@ -49,8 +50,7 @@ export class DataTablePagination<TData extends RowData> {
   protected setPageSize(value: string): void {
     const size = Number(value);
     if (this.pageSizes.includes(size)) {
-      this.table().setPageSize(size);
-      this.table().firstPage();
+      this.table().setPagination({ pageIndex: 0, pageSize: size });
     }
   }
 }

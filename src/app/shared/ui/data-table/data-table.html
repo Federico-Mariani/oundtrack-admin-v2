@@ -4,7 +4,14 @@
   [attr.aria-busy]="loading()"
   [attr.aria-label]="caption()"
 >
-  <app-data-table-toolbar [table]="table" [searchable]="searchable()" [(density)]="density" />
+  <app-data-table-toolbar
+    [table]="table"
+    [searchable]="searchable()"
+    [remoteSearch]="remote()?.search ?? null"
+    (searchChange)="searchChange.emit($event)"
+    (resetQuery)="resetQuery.emit()"
+    [(density)]="density"
+  />
   @if (errorMessage(); as message) {
     <div
       role="alert"
@@ -183,5 +190,5 @@
       </table>
     </div>
   </div>
-  <app-data-table-pagination [table]="table" />
+  <app-data-table-pagination [table]="table" [disabled]="remote() !== null && loading()" />
 </section>

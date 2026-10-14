@@ -214,4 +214,30 @@ describe('DataTable interactions', () => {
     });
     expect(element.textContent).toContain('Righe per pagina');
   });
+  it('uses server totals and emits query changes without slicing or filtering the page locally', async () => {
+    fixture.componentRef.setInput('remote', {
+      page: 3,
+      limit: 20,
+      total: 100,
+      search: 'not in these rows',
+      filtered: true,
+    });
+    fixture.componentRef.setInput('data', [
+      { id: 'server-row', name: 'Result from server', year: 2020 },
+    ]);
+    const pageChanged = vi.fn();
+    const searchChanged = vi.fn();
+    fixture.componentInstance.pageChange.subscribe(pageChanged);
+    fixture.componentInstance.searchChange.subscribe(searchChanged);
+    await fixture.whenStable();
+    expect(rows()).toHaveLength(1);
+    expect(element.textContent).toContain('100 records');
+    expect(element.querySelector('thead button[title="Change sort order"]')).toBeNull();
+    button('Next page').click();
+    await fixture.whenStable();
+    expect(pageChanged).toHaveBeenCalledWith({ page: 4, limit: 20 });
+    await search('something else');
+    expect(searchChanged).toHaveBeenCalledWith('something else');
+    expect(rows()).toHaveLength(1);
+  });
 });

@@ -1,6 +1,10 @@
 @if (columns().length > 0) {
   <app-data-table
     [columns]="columns()"
+    [remote]="remote()"
+    (pageChange)="pageChange.emit($event)"
+    (searchChange)="searchChange.emit($event)"
+    (resetQuery)="resetQuery.emit()"
     [initialColumnVisibility]="initialColumnVisibility"
     [data]="rows()"
     [getRowId]="rowId"

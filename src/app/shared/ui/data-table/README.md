@@ -1,7 +1,7 @@
 # DataTable
 
-Tabella **client-side** riutilizzabile, basata su Spartan Helm e TanStack Angular Table 9.
-La feature fornisce l'intera collezione; ricerca, ordinamento e paginazione avvengono localmente.
+Tabella riutilizzabile, basata su Spartan Helm e TanStack Angular Table 9.
+Senza `remote` ricerca, ordinamento e paginazione avvengono localmente sull’intera collezione.
 
 ## Contratto
 
@@ -23,7 +23,7 @@ Per un esempio completo consultare `features/movies/presentation/components/movi
 
 - Ricerca sulle colonne accessor abilitate con `enableGlobalFilter`.
 - Ordinamento singolo tramite gli header e il menu «Ordina», anche sulle colonne nascoste; definire `sortFn` per date e numeri.
-- Pagine da 10, 25, 50 o 100 righe, con conteggio dei risultati filtrati.
+- Pagine da 10, 20, 25, 50 o 100 righe, con conteggio dei risultati filtrati.
 - Menu delle colonne visibili e densità compatta/comoda.
 - Ridimensionamento tramite mouse o touch; frecce sinistra/destra da tastiera
   (10 px, oppure 40 px con Shift). Invio o doppio clic ripristinano la larghezza.
@@ -55,9 +55,26 @@ La pagina legge dati/loading/error dalla facade e gestisce le azioni emesse dal 
 specifico della feature. Mapper, colonne e celle Movies restano nella presentation Movies.
 Le traduzioni e la formattazione delle date non entrano nello Store.
 
-Non passare una sola pagina del server a questa tabella aspettandosi un ordinamento globale.
-Quando le API introdurranno paginazione remota, servirà un contratto esplicito per query e totale,
-con elaborazione manuale lato TanStack e gestione delle richieste nella feature.
+## Modalità server
+
+Passare `remote: { page, limit, total, search, filtered }` e in `data` solo la pagina restituita.
+Le pagine del contratto partono da 1; l’indice TanStack parte da 0, convertito solo nel componente.
+`total` è il totale filtrato del server. La tabella non filtra, ordina o pagina nuovamente le righe.
+
+Gestire `pageChange`, `searchChange`, `resetQuery` nella presentation tramite facade. In modalità
+server i controlli di ordinamento locale sono disattivati: il consumatore configura solo gli
+ordinamenti supportati dalle proprie API, ad esempio nel pannello `ListFilters`. Durante il
+caricamento i controlli di pagina sono disabilitati; ricerca e filtri possono sostituire una richiesta.
+
+I contratti `PageRequest`, `PageResult<T>` e `ListQuery<TFilters, TSort>` sono in `shared/types/pagination`.
+Gli adattatori per query HTTP e risposta `{ data, meta }` sono in `core/http`. La tabella non importa
+questi adattatori, né conosce i filtri Movies. `ListFilters` riceve campi/etichette/opzioni e valori,
+gestisce una bozza, valida numeri/intervalli e invia i criteri solo su Applica.
+
+Ogni feature mantiene query e risultato nel proprio Store, con mapper espliciti e `switchMap`
+per annullare le richieste superate. Movies applica 300 ms di debounce alla ricerca, conserva i
+criteri tra pagine/refresh, torna a pagina 1 su nuovi criteri e recupera l’ultima pagina valida
+se il totale diminuisce. Non costruire un repository generico o un unico Store globale per le liste.
 
 ## Verifica
 

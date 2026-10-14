@@ -1,0 +1,6 @@
+{
+  "title": "Filters and sorting",
+  "apply": "Apply",
+  "reset": "Reset",
+  "invalid": "Check the values and ranges: the end must not precede the start."
+}

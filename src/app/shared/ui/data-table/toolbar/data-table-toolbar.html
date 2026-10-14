@@ -13,6 +13,7 @@
         #searchInput
         hlmInput
         type="search"
+        [attr.maxlength]="remoteSearch() !== null ? 200 : null"
         class="h-9 ps-9 pe-10"
         [placeholder]="t('search')"
         [attr.aria-label]="t('search')"
@@ -32,13 +33,15 @@
     </div>
   }
   <div class="ms-auto flex items-center gap-2">
-    <app-button
-      variant="outline"
-      size="sm"
-      icon="lucideArrowUpDown"
-      [text]="t('sortBy')"
-      [menu]="sortMenu"
-    />
+    @if (canSort()) {
+      <app-button
+        variant="outline"
+        size="sm"
+        icon="lucideArrowUpDown"
+        [text]="t('sortBy')"
+        [menu]="sortMenu"
+      />
+    }
     <app-button
       variant="outline"
       size="sm"

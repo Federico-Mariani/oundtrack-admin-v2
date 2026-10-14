@@ -1,8 +1,11 @@
-import { createActionGroup, emptyProps } from '@ngrx/store';
-
+import { createActionGroup, props } from '@ngrx/store';
+import type { MoviesListQuery } from '../../../domain/models/movies-list-query.model';
 export const MoviesLoadActions = createActionGroup({
-  source: 'MOVIES - Load',
+  source: 'Movies Load',
   events: {
-    'Movies Load Requested': emptyProps(),
+    'Movies Load Requested': props<{
+      readonly query: MoviesListQuery;
+      readonly debounce?: boolean;
+    }>(),
   },
 });

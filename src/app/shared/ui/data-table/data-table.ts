@@ -1,3 +1,5 @@
+import type { DataTableRemoteState } from './data-table-remote-state';
+import type { PageRequest } from '@shared/types/pagination/page-request';
 import { fitTableColumns } from './sizing/fit-table-columns';
 import { readTableColumnSizes } from './sizing/read-table-column-sizes';
 import {
@@ -23,6 +25,8 @@ import {
 import { Button } from '../button/button';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import {
+  type PaginationState,
+  type Updater,
   type ColumnDef,
   type ColumnVisibilityState,
   FlexRender,
@@ -36,7 +40,7 @@ import { DataTablePagination } from './pagination/data-table-pagination';
 import { DataTableColumnResize } from './column-resize/data-table-column-resize';
 import { dataTableTranslationsLoader } from './i18n/data-table-translations.loader';
 
-/** Client-side table. Data fetching and business actions belong to the consuming feature. */
+/** Client or controlled server table. HTTP and business actions belong to the consuming feature. */
 @Component({
   selector: 'app-data-table',
   host: { class: 'block min-w-0' },
@@ -77,6 +81,10 @@ export class DataTable<TData extends RowData> {
   readonly searchable = input(true);
   readonly initialColumnVisibility = input<ColumnVisibilityState>({});
   readonly retry = output();
+  readonly remote = input<DataTableRemoteState | null>(null);
+  readonly pageChange = output<PageRequest>();
+  readonly searchChange = output<string>();
+  readonly resetQuery = output();
 
   protected readonly density = signal<DataTableDensity>('comfortable');
   protected readonly table = injectTable(() => ({
@@ -92,7 +100,33 @@ export class DataTable<TData extends RowData> {
     globalFilterFn: 'includesString',
     columnResizeMode: 'onChange',
     enableMultiSort: false,
-    autoResetPageIndex: true,
+    autoResetPageIndex: !this.remote(),
+    manualPagination: Boolean(this.remote()),
+    manualFiltering: Boolean(this.remote()),
+    manualSorting: Boolean(this.remote()),
+    enableSorting: !this.remote(),
+    ...(this.remote()
+      ? {
+          rowCount: this.remote()?.total ?? 0,
+          state: {
+            pagination: {
+              pageIndex: (this.remote()?.page ?? 1) - 1,
+              pageSize: this.remote()?.limit ?? 20,
+            },
+          },
+          onPaginationChange: (updater: Updater<PaginationState>): void => {
+            const remote = this.remote();
+            if (!remote) {
+              return;
+            }
+            const current = { pageIndex: remote.page - 1, pageSize: remote.limit };
+            const next = typeof updater === 'function' ? updater(current) : updater;
+            if (next.pageIndex !== current.pageIndex || next.pageSize !== current.pageSize) {
+              this.pageChange.emit({ page: next.pageIndex + 1, limit: next.pageSize });
+            }
+          },
+        }
+      : {}),
   }));
   private readonly viewport = viewChild<ElementRef<HTMLDivElement>>('tableViewport');
   protected readonly viewportWidth = signal(0);
@@ -131,11 +165,15 @@ export class DataTable<TData extends RowData> {
   );
   protected readonly hasFilters = computed(
     () =>
-      Boolean(this.table.atoms.globalFilter.get()) ||
+      (this.remote()?.filtered ?? Boolean(this.table.atoms.globalFilter.get())) ||
       this.table.atoms.columnFilters.get().length > 0,
   );
 
   protected clearFilters(): void {
+    if (this.remote()) {
+      this.resetQuery.emit();
+      return;
+    }
     this.table.resetGlobalFilter(true);
     this.table.resetColumnFilters(true);
     this.table.firstPage();

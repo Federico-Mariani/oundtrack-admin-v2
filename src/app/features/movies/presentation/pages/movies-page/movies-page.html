@@ -19,7 +19,16 @@
       (click)="reload()"
     />
   </header>
+  <app-movies-filters
+    [query]="query()"
+    (applyFilters)="applyFilters($event)"
+    (resetFilters)="resetQuery()"
+  />
   <app-movies-table
+    [remote]="remote()"
+    (pageChange)="changePage($event)"
+    (searchChange)="search($event)"
+    (resetQuery)="resetQuery()"
     [movies]="movies()"
     [caption]="t('title')"
     [loading]="loading()"

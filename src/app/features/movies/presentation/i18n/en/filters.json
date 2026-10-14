@@ -1,0 +1,16 @@
+{
+  "language": "Metadata language",
+  "anyLanguage": "All languages",
+  "italian": "Italian",
+  "english": "English",
+  "yearFrom": "Release year from",
+  "yearTo": "Release year to",
+  "externalId": "External ID",
+  "sort": "Sort by",
+  "newest": "Newest additions",
+  "oldest": "Oldest additions",
+  "recentlyUpdated": "Recently updated",
+  "leastRecentlyUpdated": "Least recently updated",
+  "idAscending": "External ID: ascending",
+  "idDescending": "External ID: descending"
+}

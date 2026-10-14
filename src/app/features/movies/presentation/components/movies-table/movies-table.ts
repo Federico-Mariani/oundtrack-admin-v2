@@ -1,3 +1,5 @@
+import type { DataTableRemoteState } from '@shared/ui/data-table/data-table-remote-state';
+import type { PageRequest } from '@shared/types/pagination/page-request';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoService } from '@jsverse/transloco';
@@ -24,6 +26,10 @@ export class MoviesTable {
   readonly caption = input.required<string>();
   readonly loading = input(false);
   readonly errorMessage = input<string | null>(null);
+  readonly remote = input<DataTableRemoteState | null>(null);
+  readonly pageChange = output<PageRequest>();
+  readonly searchChange = output<string>();
+  readonly resetQuery = output();
   readonly retry = output();
   readonly copyId = output<Id>();
   readonly copyExternalId = output<number>();

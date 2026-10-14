@@ -1,3 +1,4 @@
+import { toApiLocale } from '../http/api-locale.mapper';
 import { inject } from '@angular/core';
 import type { HttpInterceptorFn } from '@angular/common/http';
 
@@ -17,7 +18,7 @@ export const languageInterceptor: HttpInterceptorFn = (request, next) => {
   return next(
     request.clone({
       setHeaders: {
-        'Accept-Language': locale,
+        'Accept-Language': toApiLocale(locale),
       },
     }),
   );
