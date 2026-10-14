@@ -184,4 +184,99 @@ describe('Movie detail modal', () => {
     ref.forceClose();
     fixture.destroy();
   });
+  it('provides custom playback, seek, volume and technical information controls', async () => {
+    const { fixture, ref, detail, loading } = setup();
+    const first = movie();
+    const track = first.soundtracks[0].tracks[0];
+    detail.set({
+      ...first,
+      soundtracks: [
+        {
+          id: 'soundtrack',
+          tracks: [track, { ...track, id: 'track-two', name: 'Cornfield Chase' }],
+        },
+      ],
+    });
+    loading.set(false);
+    await fixture.whenStable();
+    await vi.waitFor(() => {
+      expect(document.querySelectorAll('audio')).toHaveLength(2);
+    });
+    const audio = document.querySelectorAll('audio')[0];
+    const second = document.querySelectorAll('audio')[1];
+    let paused = true;
+    vi.spyOn(audio, 'paused', 'get').mockImplementation(() => paused);
+    vi.spyOn(audio, 'duration', 'get').mockReturnValue(150);
+    vi.spyOn(audio, 'play').mockImplementation(() => {
+      paused = false;
+      audio.dispatchEvent(new Event('play'));
+      audio.dispatchEvent(new Event('playing'));
+      return Promise.resolve();
+    });
+    const pause = vi.spyOn(audio, 'pause').mockImplementation(() => {
+      paused = true;
+      audio.dispatchEvent(new Event('pause'));
+    });
+    const button = (label: string): HTMLButtonElement =>
+      document.querySelector<HTMLButtonElement>(`button[aria-label="${label}: S.T.A.Y."]`)!;
+    expect(audio.controls).toBe(false);
+    expect(document.querySelector('app-movie-detail-modal details')).toBeNull();
+    button('Play').click();
+    await fixture.whenStable();
+    expect(audio.play).toHaveBeenCalledOnce();
+    expect(button('Pause')).not.toBeNull();
+    audio.dispatchEvent(new Event('loadedmetadata'));
+    await fixture.whenStable();
+    const seek = document.querySelector<HTMLInputElement>(
+      'input[aria-label="Playback position: S.T.A.Y."]',
+    )!;
+    expect(seek.disabled).toBe(false);
+    seek.value = '65';
+    seek.dispatchEvent(new Event('input'));
+    expect(audio.currentTime).toBe(65);
+    const volume = document.querySelector<HTMLInputElement>(
+      'input[aria-label="Volume: S.T.A.Y."]',
+    )!;
+    volume.value = '0.4';
+    volume.dispatchEvent(new Event('input'));
+    expect(audio.volume).toBe(0.4);
+    button('Mute').click();
+    await fixture.whenStable();
+    expect(audio.muted).toBe(true);
+    button('Unmute').click();
+    await fixture.whenStable();
+    expect(audio.muted).toBe(false);
+    second.dispatchEvent(new Event('play'));
+    await fixture.whenStable();
+    expect(pause).toHaveBeenCalled();
+    expect(button('Play')).not.toBeNull();
+    expect(document.getElementById('track-info-soundtrack-track')).toBeNull();
+    button('Track information').click();
+    await fixture.whenStable();
+    expect(button('Track information').getAttribute('aria-expanded')).toBe('true');
+    expect(document.getElementById('track-info-soundtrack-track')?.textContent).toContain(
+      'external',
+    );
+    ref.forceClose();
+    fixture.destroy();
+  });
+  it('handles rejected playback without leaving the custom player pending', async () => {
+    const { fixture, ref, detail, loading } = setup();
+    detail.set(movie());
+    loading.set(false);
+    await fixture.whenStable();
+    await vi.waitFor(() => {
+      expect(document.querySelector('audio')).not.toBeNull();
+    });
+    const audio = document.querySelector('audio')!;
+    vi.spyOn(audio, 'play').mockRejectedValue(
+      new DOMException('Cannot decode', 'NotSupportedError'),
+    );
+    document.querySelector<HTMLButtonElement>('button[aria-label="Play: S.T.A.Y."]')!.click();
+    await fixture.whenStable();
+    expect(document.body.textContent).toContain('Audio unavailable.');
+    expect(document.querySelector('button[aria-label="Play: S.T.A.Y."]')).toBeNull();
+    ref.forceClose();
+    fixture.destroy();
+  });
 });

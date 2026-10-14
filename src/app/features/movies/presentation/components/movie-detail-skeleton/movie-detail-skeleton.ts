@@ -25,14 +25,7 @@ import { Shimmer } from '@shared/ui/shimmer/shimmer';
           </div>
         </div>
       </div>
-      <div class="space-y-3 rounded-xl border p-4 sm:p-5">
-        <app-shimmer class="h-5 w-36" />
-        <div class="flex gap-2">
-          <app-shimmer class="h-9 w-20 rounded-lg" />
-          <app-shimmer class="h-9 w-24 rounded-lg" />
-        </div>
-      </div>
-      <div class="space-y-4 rounded-xl border p-4 sm:p-5">
+      <div class="space-y-4">
         <app-shimmer class="h-5 w-40" />
         @for (row of [0, 1]; track row) {
           <div class="space-y-3 rounded-xl border bg-background/50 p-4">
@@ -43,12 +36,23 @@ import { Shimmer } from '@shared/ui/shimmer/shimmer';
               </div>
               <app-shimmer class="h-6 w-12" />
             </div>
-            <app-shimmer class="h-10 w-full rounded-full" />
+            <div class="flex items-center gap-3">
+              <app-shimmer class="size-10 shrink-0 rounded-full" /><app-shimmer
+                class="h-2 flex-1 rounded-full"
+              /><app-shimmer class="h-4 w-12" />
+            </div>
           </div>
         }
       </div>
-      <div class="rounded-xl border p-4 sm:p-5">
+      <div class="space-y-5 border-t pt-6">
         <app-shimmer class="h-5 w-44" />
+        <div class="grid grid-cols-2 gap-5">
+          @for (field of [0, 1, 2, 3]; track field) {
+            <div class="space-y-2">
+              <app-shimmer class="h-3 w-20" /><app-shimmer class="h-4 w-full max-w-48" />
+            </div>
+          }
+        </div>
       </div>
     </div>
   `,

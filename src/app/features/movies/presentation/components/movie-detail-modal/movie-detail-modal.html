@@ -41,12 +41,23 @@
             <p class="text-sm text-muted-foreground">
               {{ t('releaseDate') }}: {{ formatDate(info()?.releaseDate) }}
             </p>
-            <div class="flex flex-wrap gap-2" [attr.aria-label]="t('genres')">
-              @for (genre of movie.genres; track genre.id) {
-                <span class="rounded-full border bg-background/60 px-3 py-1 text-xs">{{
-                  localizedName(genre.info)
-                }}</span>
-              }
+            <div class="flex flex-wrap gap-x-4 gap-y-2">
+              <div class="flex flex-wrap gap-2" [attr.aria-label]="t('genres')">
+                @for (genre of movie.genres; track genre.id) {
+                  <span class="rounded-full border bg-background/60 px-3 py-1 text-xs">{{
+                    localizedName(genre.info)
+                  }}</span>
+                }
+              </div>
+              <div class="flex flex-wrap gap-2" [attr.aria-label]="t('categories')">
+                @for (category of movie.gameCategories; track category.id) {
+                  <span
+                    class="rounded-full border bg-background/60 px-3 py-1 text-xs"
+                    [title]="t('categories')"
+                    >{{ localizedName(category.info) }}</span
+                  >
+                }
+              </div>
             </div>
           </div>
         </header>
@@ -65,23 +76,8 @@
             </select>
           </div>
         }
-        <section class="space-y-3 rounded-xl border p-4 sm:p-5">
-          <h3 class="font-semibold">{{ t('categories') }}</h3>
-          <div class="flex flex-wrap gap-2">
-            @for (category of movie.gameCategories; track category.id) {
-              <div class="flex items-center gap-2 rounded-lg bg-muted px-3 py-2 text-sm">
-                @if (category.image) {
-                  <app-movie-detail-image class="size-8 rounded" [src]="category.image" />
-                }
-                <span>{{ localizedName(category.info) }}</span>
-              </div>
-            } @empty {
-              <p class="text-sm text-muted-foreground">{{ t('noCategories') }}</p>
-            }
-          </div>
-        </section>
-        <section class="space-y-4 rounded-xl border p-4 sm:p-5">
-          <h3 class="font-semibold">{{ t('soundtracks') }}</h3>
+        <section class="space-y-4">
+          <h3 class="text-lg font-semibold tracking-tight">{{ t('soundtracks') }}</h3>
           @for (soundtrack of movie.soundtracks; track soundtrack.id; let index = $index) {
             <div class="space-y-3">
               @if (movie.soundtracks.length > 1) {
@@ -90,54 +86,86 @@
               @for (track of soundtrack.tracks; track track.id) {
                 <app-movie-track-player
                   [track]="track"
+                  [soundtrackId]="soundtrack.id"
                   (playbackStarted)="play($event)"
                   (reload)="reload()"
                 />
               } @empty {
                 <p class="text-sm text-muted-foreground">{{ t('noSoundtracks') }}</p>
               }
-              <details class="text-xs text-muted-foreground">
-                <summary class="cursor-pointer">{{ t('soundtrackId') }}</summary>
-                <p class="mt-2 break-all">{{ soundtrack.id }}</p>
-              </details>
             </div>
           } @empty {
             <p class="text-sm text-muted-foreground">{{ t('noSoundtracks') }}</p>
           }
         </section>
-        <details class="rounded-xl border p-4 text-sm sm:p-5">
-          <summary class="cursor-pointer font-medium">{{ t('metadata') }}</summary>
-          <dl class="mt-4 grid gap-x-6 gap-y-2 break-words sm:grid-cols-[auto_1fr]">
-            <dt class="text-muted-foreground">{{ t('movieId') }}</dt>
-            <dd class="break-all">{{ movie.id }}</dd>
-            <dt class="text-muted-foreground">{{ t('externalId') }}</dt>
-            <dd>{{ movie.externalMovieId }}</dd>
-            <dt class="text-muted-foreground">{{ t('createdAt') }}</dt>
-            <dd>{{ formatDate(movie.createdAt) }}</dd>
-            <dt class="text-muted-foreground">{{ t('updatedAt') }}</dt>
-            <dd>{{ formatDate(movie.updatedAt) }}</dd>
-            @if (info(); as info) {
-              <dt class="text-muted-foreground">{{ t('infoId') }} ({{ locale() }})</dt>
-              <dd class="break-all">{{ info.id }}</dd>
-              <dt class="text-muted-foreground">{{ t('createdAt') }} ({{ locale() }})</dt>
-              <dd>{{ formatDate(info.createdAt) }}</dd>
-              <dt class="text-muted-foreground">{{ t('updatedAt') }} ({{ locale() }})</dt>
-              <dd>{{ formatDate(info.updatedAt) }}</dd>
-            }
-            <dt class="text-muted-foreground">{{ t('genreIds') }}</dt>
-            <dd>
-              @for (genre of movie.genres; track genre.id) {
-                <p class="break-all">{{ localizedName(genre.info) }}: {{ genre.id }}</p>
-              }
-            </dd>
-            <dt class="text-muted-foreground">{{ t('categoryIds') }}</dt>
-            <dd>
-              @for (category of movie.gameCategories; track category.id) {
-                <p class="break-all">{{ localizedName(category.info) }}: {{ category.id }}</p>
-              }
-            </dd>
+        <section class="space-y-5 border-t pt-6">
+          <h3 class="text-lg font-semibold tracking-tight">{{ t('metadata') }}</h3>
+          <dl class="grid gap-x-8 gap-y-5 text-sm sm:grid-cols-2">
+            <div class="space-y-1">
+              <dt class="text-xs text-muted-foreground">{{ t('movieId') }}</dt>
+              <dd class="break-all font-mono text-xs leading-6">{{ movie.id }}</dd>
+            </div>
+            <div class="space-y-1">
+              <dt class="text-xs text-muted-foreground">{{ t('externalId') }}</dt>
+              <dd class="font-medium">{{ movie.externalMovieId }}</dd>
+            </div>
+            <div class="space-y-1">
+              <dt class="text-xs text-muted-foreground">{{ t('createdAt') }}</dt>
+              <dd>{{ formatDate(movie.createdAt) }}</dd>
+            </div>
+            <div class="space-y-1">
+              <dt class="text-xs text-muted-foreground">{{ t('updatedAt') }}</dt>
+              <dd>{{ formatDate(movie.updatedAt) }}</dd>
+            </div>
           </dl>
-        </details>
+          @if (info(); as info) {
+            <h4 class="pt-2 font-medium">{{ t('translation') }} · {{ locale() }}</h4>
+            <dl class="grid gap-x-8 gap-y-5 text-sm sm:grid-cols-2">
+              <div class="space-y-1 sm:col-span-2">
+                <dt class="text-xs text-muted-foreground">{{ t('infoId') }}</dt>
+                <dd class="break-all font-mono text-xs leading-6">{{ info.id }}</dd>
+              </div>
+              <div class="space-y-1">
+                <dt class="text-xs text-muted-foreground">{{ t('createdAt') }}</dt>
+                <dd>{{ formatDate(info.createdAt) }}</dd>
+              </div>
+              <div class="space-y-1">
+                <dt class="text-xs text-muted-foreground">{{ t('updatedAt') }}</dt>
+                <dd>{{ formatDate(info.updatedAt) }}</dd>
+              </div>
+            </dl>
+          }
+          <div class="grid gap-6 pt-2 sm:grid-cols-2">
+            <div class="space-y-3">
+              <h4 class="font-medium">{{ t('genreIds') }}</h4>
+              <dl class="space-y-3">
+                @for (genre of movie.genres; track genre.id) {
+                  <div>
+                    <dt class="text-sm text-muted-foreground">{{ localizedName(genre.info) }}</dt>
+                    <dd class="break-all font-mono text-xs leading-6">{{ genre.id }}</dd>
+                  </div>
+                } @empty {
+                  <p class="text-sm text-muted-foreground">—</p>
+                }
+              </dl>
+            </div>
+            <div class="space-y-3">
+              <h4 class="font-medium">{{ t('categoryIds') }}</h4>
+              <dl class="space-y-3">
+                @for (category of movie.gameCategories; track category.id) {
+                  <div>
+                    <dt class="text-sm text-muted-foreground">
+                      {{ localizedName(category.info) }}
+                    </dt>
+                    <dd class="break-all font-mono text-xs leading-6">{{ category.id }}</dd>
+                  </div>
+                } @empty {
+                  <p class="text-sm text-muted-foreground">{{ t('noCategories') }}</p>
+                }
+              </dl>
+            </div>
+          </div>
+        </section>
       </div>
     }
   </div>
