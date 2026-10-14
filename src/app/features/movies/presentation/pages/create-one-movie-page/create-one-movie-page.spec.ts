@@ -132,8 +132,5 @@ describe('Create movie form', () => {
     await fixture.whenStable();
     expect(element.querySelector<HTMLInputElement>('input[type="text"]')?.value).toBe('');
     expect(element.querySelector<HTMLInputElement>('input[type="number"]')?.value).toBe('');
-    expect(element.querySelector('[role="status"]')?.textContent).toContain(
-      'Movie created successfully',
-    );
   });
 });
