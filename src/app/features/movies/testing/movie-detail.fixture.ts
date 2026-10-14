@@ -12,10 +12,8 @@ export function movieDetailResponse(): MovieDetailResponseDto {
         language: 'it-IT',
         title: 'Interstellar',
         releaseDate: 1415145600000,
-        posterUrl:
-          'https://www.themoviedb.org/t/p/w500https://www.themoviedb.org/t/p/w500/poster.jpg',
-        backdropUrl:
-          'https://www.themoviedb.org/t/p/w500https://www.themoviedb.org/t/p/w500/backdrop.jpg',
+        posterUrl: 'https://www.themoviedb.org/t/p/w500/poster.jpg',
+        backdropUrl: 'https://www.themoviedb.org/t/p/w500/backdrop.jpg',
         createdAt: 1790340848056,
         updatedAt: 1790340848056,
       },
