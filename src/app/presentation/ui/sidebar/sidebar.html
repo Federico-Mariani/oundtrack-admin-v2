@@ -1,4 +1,4 @@
-<div hlmSidebarWrapper>
+<div hlmSidebarWrapper class="h-dvh min-h-0 overflow-hidden">
   <hlm-sidebar collapsible="icon" *transloco="let t">
     <div hlmSidebarHeader>
       <ul hlmSidebarMenu>
@@ -25,6 +25,8 @@
             align="end"
             side="right"
             [hlmDropdownMenuTrigger]="menu"
+            [disabled]="loggingOut()"
+            [attr.aria-busy]="loggingOut()"
           >
             <app-avatar
               [alt]="'avatar'"
@@ -36,7 +38,11 @@
               >
               <span class="truncate text-xs">{{ user()?.email }}</span>
             </div>
-            <ng-icon name="lucideChevronsUpDown" />
+            @if (loggingOut()) {
+              <hlm-spinner />
+            } @else {
+              <ng-icon name="lucideChevronsUpDown" />
+            }
           </button>
           <ng-template #menu>
             <hlm-dropdown-menu>
@@ -56,7 +62,12 @@
               </hlm-dropdown-menu-group>
               <hlm-dropdown-menu-separator />
               <hlm-dropdown-menu-group>
-                <button (click)="logout.emit()" hlmDropdownMenuItem variant="destructive">
+                <button
+                  (triggered)="logout.emit()"
+                  [disabled]="loggingOut()"
+                  hlmDropdownMenuItem
+                  variant="destructive"
+                >
                   <ng-icon name="lucideLogOut" />
                   {{ t('sidebar.menu.logout') }}
                 </button>

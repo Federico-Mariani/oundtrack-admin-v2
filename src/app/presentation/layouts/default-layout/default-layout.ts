@@ -1,5 +1,5 @@
 import { DEFAULT_SIDEBAR_GROUPS } from './default-sidebar.config';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Sidebar } from '../../ui/sidebar/sidebar';
 import { HlmSidebarInset, HlmSidebarTrigger } from '@spartan-ng/helm/sidebar';
@@ -26,6 +26,8 @@ export class DefaultLayout {
   private readonly authFacade = inject(AuthFacade);
   private readonly authNavigation = inject(AuthNavigationService);
 
+  protected readonly loggingOut = signal(false);
+
   protected readonly sidebarGroups = DEFAULT_SIDEBAR_GROUPS;
 
   protected readonly currentUser = this.authFacade.data.user;
@@ -49,8 +51,16 @@ export class DefaultLayout {
     }
   }
 
-  protected logout(): void {
-    this.authFacade.actions.logout();
-    void this.authNavigation.goToLogin();
+  protected async logout(): Promise<void> {
+    if (this.loggingOut()) {
+      return;
+    }
+    this.loggingOut.set(true);
+    try {
+      this.authFacade.actions.logout();
+      await this.authNavigation.goToLogin();
+    } finally {
+      this.loggingOut.set(false);
+    }
   }
 }
