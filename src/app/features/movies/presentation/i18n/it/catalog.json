@@ -1,6 +1,6 @@
 {
   "title": "Film",
-  "description": "Consulta e cerca i film del tuo catalogo.",
+  "description": "Consulta e cerca i film nel catalogo.",
   "refresh": "Aggiorna",
   "loadFailed": "Impossibile caricare i film. Riprova.",
   "copied": "Identificativo copiato.",

@@ -1,5 +1,4 @@
 {
   "title": "Crea film",
-  "notAvailable": "Il modulo di creazione dei film non è ancora disponibile.",
-  "backToMovies": "Torna ai film"
+  "description": "Aggiungi un film al catalogo."
 }

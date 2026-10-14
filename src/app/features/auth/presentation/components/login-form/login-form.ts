@@ -66,6 +66,7 @@ export class LoginForm {
     if (this.busy()) {
       return;
     }
+
     const model = this.loginFormController.model();
 
     this.authFacade.actions.login({

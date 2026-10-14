@@ -1,5 +1,4 @@
 {
   "title": "Create movie",
-  "notAvailable": "The movie creation form is not available yet.",
-  "backToMovies": "Back to movies"
+  "description": "Add a movie to the catalog."
 }
