@@ -36,5 +36,9 @@
   "mute": "Mute",
   "unmute": "Unmute",
   "trackInfo": "Track information",
-  "buffering": "Loading audio…"
+  "buffering": "Loading audio…",
+  "noGenres": "No genres available.",
+  "noLocalizedTracks": "No tracks available in this language.",
+  "metadataDescription": "Catalog data and the selected translation.",
+  "record": "Catalog record"
 }

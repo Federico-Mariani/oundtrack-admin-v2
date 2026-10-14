@@ -19,6 +19,7 @@ import { MovieDetailSkeleton } from '../movie-detail-skeleton/movie-detail-skele
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
 import { MovieDetailImage } from '../movie-detail-image/movie-detail-image';
 import { MovieTrackPlayer } from '../movie-track-player/movie-track-player';
+import type { MovieTrackModel } from '../../../domain/models/movie-track.model';
 import type { MovieDetailModalParams } from './movie-detail-modal-params';
 @Component({
   selector: 'app-movie-detail-modal',
@@ -32,6 +33,7 @@ import type { MovieDetailModalParams } from './movie-detail-modal-params';
     MovieTrackPlayer,
   ],
   templateUrl: './movie-detail-modal.html',
+  styleUrl: './movie-detail-modal.css',
 })
 export class MovieDetailModal implements ModalContent<MovieDetailModalParams, void> {
   readonly params = injectBrnDialogContext<{ params: MovieDetailModalParams }>().params;
@@ -72,6 +74,7 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
   protected changeLocale(event: Event): void {
     const value = event.target instanceof HTMLSelectElement ? event.target.value : '';
     if (value === 'it-IT' || value === 'en-US') {
+      this.playingAudio?.pause();
       this.selectedLocale.set(value);
     }
   }
@@ -83,6 +86,17 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
       ? new Intl.DateTimeFormat(this.language.activeLocale(), {
           dateStyle: 'medium',
           timeZone: 'UTC',
+        }).format(value)
+      : '—';
+  }
+  protected localizedTracks(tracks: readonly MovieTrackModel[]): readonly MovieTrackModel[] {
+    return tracks.filter((track) => track.language === this.locale());
+  }
+  protected formatTimestamp(value: number): string {
+    return Number.isFinite(new Date(value).getTime())
+      ? new Intl.DateTimeFormat(this.language.activeLocale(), {
+          dateStyle: 'medium',
+          timeStyle: 'short',
         }).format(value)
       : '—';
   }

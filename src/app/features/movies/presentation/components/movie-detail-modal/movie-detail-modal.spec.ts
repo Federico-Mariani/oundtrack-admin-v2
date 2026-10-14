@@ -162,7 +162,7 @@ describe('Movie detail modal', () => {
     detail.set({ ...movie(), gameCategories: [], soundtracks: [] });
     await fixture.whenStable();
     expect(document.body.textContent).toContain('No game categories available.');
-    expect(document.body.textContent).toContain('No tracks available.');
+    expect(document.body.textContent).toContain('No tracks available in this language.');
     ref.forceClose();
     fixture.destroy();
   });
@@ -276,6 +276,68 @@ describe('Movie detail modal', () => {
     await fixture.whenStable();
     expect(document.body.textContent).toContain('Audio unavailable.');
     expect(document.querySelector('button[aria-label="Play: S.T.A.Y."]')).toBeNull();
+    ref.forceClose();
+    fixture.destroy();
+  });
+  it('switches movie content and tracks with the pinned language selector and pauses playback', async () => {
+    const { fixture, ref, detail, loading } = setup();
+    const value = movie();
+    const italian = value.info['it-IT']!;
+    const track = value.soundtracks[0].tracks[0];
+    detail.set({
+      ...value,
+      info: { ...value.info, 'en-US': { ...italian, id: 'english-info', title: 'English title' } },
+      genres: [
+        {
+          id: 'genre',
+          info: {
+            'it-IT': { id: 'gi', name: 'Avventura' },
+            'en-US': { id: 'ge', name: 'Adventure' },
+          },
+        },
+      ],
+      gameCategories: [
+        {
+          id: 'category',
+          image: null,
+          info: { 'it-IT': { id: 'ci', name: 'Film' }, 'en-US': { id: 'ce', name: 'Movies' } },
+        },
+      ],
+      soundtracks: [
+        {
+          id: 'soundtrack',
+          tracks: [
+            track,
+            { ...track, id: 'english-track', name: 'English track', language: 'en-US' },
+          ],
+        },
+      ],
+    });
+    loading.set(false);
+    await fixture.whenStable();
+    await vi.waitFor(() => {
+      expect(document.body.textContent).toContain('English track');
+    });
+    const select = document.querySelector<HTMLSelectElement>('#movie-detail-language')!;
+    expect(select.value).toBe('en-US');
+    expect(select.disabled).toBe(false);
+    expect(document.body.textContent).toContain('English title');
+    expect(document.body.textContent).toContain('Adventure');
+    expect(document.querySelectorAll('audio')).toHaveLength(1);
+    const audio = document.querySelector('audio')!;
+    audio.dispatchEvent(new Event('play'));
+    select.value = 'it-IT';
+    select.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    await vi.waitFor(() => {
+      expect(document.body.textContent).toContain('S.T.A.Y.');
+    });
+    expect(audio.pause).toHaveBeenCalled();
+    expect(document.body.textContent).toContain('Interstellar');
+    expect(document.body.textContent).toContain('Avventura');
+    expect(document.body.textContent).not.toContain('English title');
+    expect(document.body.textContent).not.toContain('English track');
+    expect(document.querySelector('[aria-label="Game categories"]')?.textContent).toContain('Film');
     ref.forceClose();
     fixture.destroy();
   });

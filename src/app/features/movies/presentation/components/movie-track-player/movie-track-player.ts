@@ -39,6 +39,7 @@ import type { MovieTrackModel } from '../../../domain/models/movie-track.model';
     }),
   ],
   templateUrl: './movie-track-player.html',
+  styleUrl: './movie-track-player.css',
 })
 export class MovieTrackPlayer {
   readonly track = input.required<MovieTrackModel>();

@@ -36,5 +36,9 @@
   "mute": "Disattiva audio",
   "unmute": "Attiva audio",
   "trackInfo": "Informazioni sul brano",
-  "buffering": "Caricamento audio…"
+  "buffering": "Caricamento audio…",
+  "noGenres": "Nessun genere disponibile.",
+  "noLocalizedTracks": "Nessun brano disponibile in questa lingua.",
+  "metadataDescription": "Dati del catalogo e della traduzione selezionata.",
+  "record": "Scheda del catalogo"
 }
