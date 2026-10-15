@@ -5,8 +5,8 @@ export interface MovieTableRowModel {
   readonly id: Id;
   readonly externalMovieId: number;
   readonly title: string;
-  readonly languages: readonly SupportedLocale[];
-  readonly genres: readonly string[];
+  readonly languages: ReadonlyArray<SupportedLocale>;
+  readonly genres: ReadonlyArray<string>;
   readonly releaseDate: number | undefined;
   readonly releaseDateLabel: string;
   readonly posterUrl: string | null;

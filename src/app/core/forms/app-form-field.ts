@@ -2,9 +2,9 @@ import type { InputRule } from '@app/core/forms/rules/input-rule';
 
 export class AppFormField {
   private readonly _name: string;
-  private readonly _rules: InputRule[];
+  private readonly _rules: Array<InputRule>;
 
-  constructor(name: string, rules: InputRule[] = []) {
+  constructor(name: string, rules: Array<InputRule> = []) {
     this._name = name;
     this._rules = rules;
   }
@@ -13,7 +13,7 @@ export class AppFormField {
     return this._name;
   }
 
-  get rules(): InputRule[] {
+  get rules(): Array<InputRule> {
     return this._rules;
   }
 }

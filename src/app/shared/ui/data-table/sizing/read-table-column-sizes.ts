@@ -4,7 +4,7 @@ import type { DataTableColumnSize } from './data-table-column-size';
 
 export function readTableColumnSizes<TData extends RowData>(
   table: Table<DataTableFeatures, TData>,
-): DataTableColumnSize[] {
+): Array<DataTableColumnSize> {
   return table.getVisibleLeafColumns().map((column) => ({
     id: column.id,
     size: column.getSize(),

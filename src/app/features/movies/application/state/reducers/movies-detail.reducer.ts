@@ -8,7 +8,7 @@ import {
   succeededRequest,
   failedRequest,
 } from '@shared/state/request/request-state.transitions';
-export const moviesDetailReducer: ReducerTypes<MoviesState, readonly ActionCreator[]>[] = [
+export const moviesDetailReducer: Array<ReducerTypes<MoviesState, ReadonlyArray<ActionCreator>>> = [
   on(MoviesDetailActions.requested, (state, { id }): MoviesState => ({
     ...state,
     detailId: id,

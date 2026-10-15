@@ -26,7 +26,7 @@ export class PasswordInput {
    * field: an untouched field (e.g. an empty required input on first render)
    * is already invalid, but showing that error before any interaction is noise.
    */
-  protected readonly visibleErrors = computed<readonly ValidationError[]>(() => {
+  protected readonly visibleErrors = computed<ReadonlyArray<ValidationError>>(() => {
     const field = this.formField()();
 
     return field.touched() ? field.errors() : [];

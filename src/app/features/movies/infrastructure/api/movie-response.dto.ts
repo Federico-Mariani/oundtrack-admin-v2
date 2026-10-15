@@ -6,8 +6,8 @@ import type { MovieInfoResponseDto } from './movie-info-response.dto';
 export interface MovieResponseDto {
   readonly id: Id;
   readonly externalMovieId: number;
-  readonly genres: MovieGenreResponseDto[];
-  readonly info: MovieInfoResponseDto[];
+  readonly genres: Array<MovieGenreResponseDto>;
+  readonly info: Array<MovieInfoResponseDto>;
   readonly createdAt: number;
   readonly updatedAt: number;
 }

@@ -13,5 +13,5 @@ export interface RequestError {
   readonly status?: number;
   readonly code: RequestErrorCode;
   readonly message?: string;
-  readonly fieldErrors?: Readonly<Record<string, readonly string[]>>;
+  readonly fieldErrors?: Readonly<Record<string, ReadonlyArray<string>>>;
 }

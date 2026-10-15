@@ -14,6 +14,7 @@ import { provideAppTransloco } from '@app/core/i18n/transloco/transloco.provider
 import { provideAppTheme } from '@app/core/theme/theme.providers';
 import { provideMovies } from '@features/movies';
 import { languageInterceptor } from './core/interceptors/language.interceptor';
+import { provideGameCategories } from '@features/game-categories';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,5 +28,6 @@ export const appConfig: ApplicationConfig = {
     provideAppTheme(),
     provideAuth(),
     provideMovies(),
+    provideGameCategories(),
   ],
 };

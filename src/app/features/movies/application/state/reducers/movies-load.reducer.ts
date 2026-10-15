@@ -8,7 +8,7 @@ import {
 } from '@shared/state/request/request-state.transitions';
 import { MoviesLoadApiActions } from '../actions/api/movies-load-api.actions';
 
-export const moviesLoadReducer: ReducerTypes<MoviesState, readonly ActionCreator[]>[] = [
+export const moviesLoadReducer: Array<ReducerTypes<MoviesState, ReadonlyArray<ActionCreator>>> = [
   on(MoviesLoadActions.moviesLoadRequested, (state, { query }): MoviesState => ({
     ...state,
     query,

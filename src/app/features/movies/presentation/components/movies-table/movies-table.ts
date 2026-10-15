@@ -30,7 +30,7 @@ export class MoviesTable {
   private readonly languageService = inject(LanguageService);
   private readonly transloco = inject(TranslocoService);
 
-  readonly movies = input.required<readonly MovieModel[]>();
+  readonly movies = input.required<ReadonlyArray<MovieModel>>();
   readonly caption = input.required<string>();
   readonly loading = input(false);
   readonly errorMessage = input<string | null>(null);

@@ -44,7 +44,7 @@ import { sidebarTranslationsLoader } from '../../i18n/sidebar-translations.loade
   ],
 })
 export class Sidebar {
-  readonly groups = input.required<readonly SidebarGroup[]>();
+  readonly groups = input.required<ReadonlyArray<SidebarGroup>>();
   readonly user = input<SidebarUser | null>(null);
   readonly loggingOut = input(false);
   readonly logout = output();

@@ -9,6 +9,6 @@ import type { ListFilterField } from './list-filter-field';
   templateUrl: './list-filters.html',
 })
 export class ListFilters {
-  readonly fields = input.required<readonly ListFilterField[]>();
+  readonly fields = input.required<ReadonlyArray<ListFilterField>>();
   readonly compact = input(false);
 }

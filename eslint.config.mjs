@@ -83,6 +83,13 @@ export default defineConfig([
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
       ],
+      '@typescript-eslint/array-type': [
+        'error',
+        {
+          default: 'generic',
+          readonly: 'generic',
+        },
+      ],
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
       '@typescript-eslint/no-useless-constructor': 'error',
       '@typescript-eslint/prefer-readonly': 'error',

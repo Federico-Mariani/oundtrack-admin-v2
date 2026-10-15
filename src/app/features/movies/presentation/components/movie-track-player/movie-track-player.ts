@@ -2,8 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  type ElementRef,
   effect,
+  type ElementRef,
   inject,
   input,
   output,
@@ -13,16 +13,17 @@ import {
 import { TranslocoDirective } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
-  lucidePlay,
-  lucidePause,
   lucideInfo,
-  lucideVolume2,
-  lucideVolumeX,
   lucideLoaderCircle,
   lucideMusic2,
+  lucidePause,
+  lucidePlay,
+  lucideVolume2,
+  lucideVolumeX,
 } from '@ng-icons/lucide';
 import { HlmButton } from '@spartan-ng/helm/button';
-import type { MovieTrackModel } from '../../../domain/models/movie-track.model';
+import type { MovieSoundtrackTrackModel } from '../../../domain/models/movie-soundtrack-track.model';
+
 @Component({
   selector: 'app-movie-track-player',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,7 +43,7 @@ import type { MovieTrackModel } from '../../../domain/models/movie-track.model';
   styleUrl: './movie-track-player.css',
 })
 export class MovieTrackPlayer {
-  readonly track = input.required<MovieTrackModel>();
+  readonly track = input.required<MovieSoundtrackTrackModel>();
   readonly soundtrackId = input.required<string>();
   readonly playbackStarted = output<HTMLAudioElement>();
   readonly reload = output();

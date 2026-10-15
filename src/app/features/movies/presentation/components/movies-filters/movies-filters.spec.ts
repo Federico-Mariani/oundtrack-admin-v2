@@ -23,7 +23,7 @@ import { MoviesFilters } from './movies-filters';
 })
 class FilterTestHost {
   readonly query = signal({ ...DEFAULT_MOVIES_LIST_QUERY, page: 3 });
-  readonly changes: MoviesFilterFormModel[] = [];
+  readonly changes: Array<MoviesFilterFormModel> = [];
   change(values: MoviesFilterFormModel): void {
     this.changes.push(values);
     this.query.set(applyMovieFilterValues(this.query(), values));

@@ -1,6 +1,6 @@
 /** Explicit paginated transport contract; non-paginated envelopes are unchanged. */
 export interface PaginatedApiResponse<T> {
-  readonly data: readonly T[];
+  readonly data: ReadonlyArray<T>;
   readonly meta: {
     readonly page: number;
     readonly limit: number;

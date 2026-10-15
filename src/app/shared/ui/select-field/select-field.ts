@@ -25,7 +25,7 @@ export class SelectField {
   readonly formField = input.required<Field<string>>();
   readonly label = input.required<string>();
   readonly hideLabel = input(false);
-  readonly items = input.required<SelectItem[]>();
+  readonly items = input.required<Array<SelectItem>>();
   protected change(value: string): void {
     const field = this.formField()();
     field.value.set(value);

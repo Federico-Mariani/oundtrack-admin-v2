@@ -17,7 +17,7 @@ export interface MoviesState {
   readonly detailId: Id | null;
   readonly detail: MovieDetailModel | null;
   readonly detailRequest: RequestState<RequestError>;
-  readonly movies: readonly MovieModel[];
+  readonly movies: ReadonlyArray<MovieModel>;
   readonly query: MoviesListQuery;
   readonly total: number;
   readonly createRequest: RequestState<RequestError>;

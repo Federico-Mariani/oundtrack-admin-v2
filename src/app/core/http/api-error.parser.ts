@@ -15,7 +15,7 @@ export function parseApiErrorBody(value: unknown): ApiErrorBody | null {
   };
 }
 
-function isFieldErrors(value: unknown): value is Readonly<Record<string, readonly string[]>> {
+function isFieldErrors(value: unknown): value is Readonly<Record<string, ReadonlyArray<string>>> {
   if (!isRecord(value)) {
     return false;
   }

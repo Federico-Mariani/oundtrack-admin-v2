@@ -21,5 +21,5 @@ import type { SupportedLocale } from '@shared/localization/supported-locale';
   `,
 })
 export class MovieLanguagesCell {
-  readonly languages = input.required<readonly SupportedLocale[]>();
+  readonly languages = input.required<ReadonlyArray<SupportedLocale>>();
 }

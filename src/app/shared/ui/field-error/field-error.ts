@@ -21,5 +21,5 @@ import { TranslocoDirective } from '@jsverse/transloco';
   host: { class: 'flex flex-col gap-1' },
 })
 export class FieldError {
-  readonly errors = input<readonly ValidationError[]>([]);
+  readonly errors = input<ReadonlyArray<ValidationError>>([]);
 }

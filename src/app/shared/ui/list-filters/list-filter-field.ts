@@ -5,5 +5,5 @@ export interface ListFilterField {
   readonly label: string;
   readonly kind: 'number' | 'select';
   readonly field: Field<string>;
-  readonly options?: SelectItem[];
+  readonly options?: Array<SelectItem>;
 }

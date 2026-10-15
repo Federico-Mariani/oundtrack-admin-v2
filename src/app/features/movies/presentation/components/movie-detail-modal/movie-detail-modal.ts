@@ -8,11 +8,11 @@ import { CreateMovieInfoModal } from '../create-movie-info-modal/create-movie-in
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
-  ViewContainerRef,
   computed,
+  DestroyRef,
   inject,
   signal,
+  ViewContainerRef,
 } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -32,8 +32,9 @@ import { MovieDetailSkeleton } from '../movie-detail-skeleton/movie-detail-skele
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
 import { MovieDetailImage } from '../movie-detail-image/movie-detail-image';
 import { MovieTrackPlayer } from '../movie-track-player/movie-track-player';
-import type { MovieTrackModel } from '../../../domain/models/movie-track.model';
+import type { MovieSoundtrackTrackModel } from '../../../domain/models/movie-soundtrack-track.model';
 import type { MovieDetailModalParams } from './movie-detail-modal-params';
+
 @Component({
   selector: 'app-movie-detail-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -145,7 +146,9 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
         }).format(value)
       : '—';
   }
-  protected localizedTracks(tracks: readonly MovieTrackModel[]): readonly MovieTrackModel[] {
+  protected localizedTracks(
+    tracks: ReadonlyArray<MovieSoundtrackTrackModel>,
+  ): ReadonlyArray<MovieSoundtrackTrackModel> {
     return tracks.filter((track) => track.language === this.locale());
   }
   protected formatTimestamp(value: number): string {

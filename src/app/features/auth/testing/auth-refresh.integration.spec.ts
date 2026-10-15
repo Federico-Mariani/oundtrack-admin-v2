@@ -42,7 +42,7 @@ describe('Automatic token refresh', () => {
   let store: Store;
   let original: AuthSessionModel;
   let stored: AuthSessionModel | null;
-  const errors: HttpErrorResponse[] = [];
+  const errors: Array<HttpErrorResponse> = [];
 
   beforeEach(() => {
     errors.length = 0;

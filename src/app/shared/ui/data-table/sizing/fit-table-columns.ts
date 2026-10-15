@@ -2,7 +2,7 @@ import type { DataTableColumnSize } from './data-table-column-size';
 
 /** Fill spare space; optionally refit a changed viewport while preserving readable minimums. */
 export function fitTableColumns(
-  columns: readonly DataTableColumnSize[],
+  columns: ReadonlyArray<DataTableColumnSize>,
   width: number,
   shrinkToFit = false,
 ): Record<string, number> {

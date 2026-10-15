@@ -15,7 +15,7 @@ export function createMoviesTableColumns(
   copyId: (id: Id) => void,
   copyExternalId: (id: number) => void,
   viewDetail: (id: Id) => void,
-): ColumnDef<DataTableFeatures, MovieTableRowModel>[] {
+): Array<ColumnDef<DataTableFeatures, MovieTableRowModel>> {
   return columnHelper.columns([
     columnHelper.accessor('title', {
       header: labels.title,

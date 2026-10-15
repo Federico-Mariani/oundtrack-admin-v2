@@ -68,8 +68,8 @@ import { dataTableTranslationsLoader } from './i18n/data-table-translations.load
   templateUrl: './data-table.html',
 })
 export class DataTable<TData extends RowData> {
-  readonly columns = input.required<ColumnDef<DataTableFeatures, TData>[]>();
-  readonly data = input.required<readonly TData[]>();
+  readonly columns = input.required<Array<ColumnDef<DataTableFeatures, TData>>>();
+  readonly data = input.required<ReadonlyArray<TData>>();
   readonly getRowId = input.required<(row: TData) => string>();
   readonly caption = input.required<string>();
   readonly loading = input(false);

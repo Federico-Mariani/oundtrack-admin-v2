@@ -24,7 +24,7 @@ import type { SidebarGroup } from '../sidebar-group';
 export class SidebarNavigation {
   private readonly sidebar = inject(HlmSidebarService);
 
-  readonly groups = input.required<readonly SidebarGroup[]>();
+  readonly groups = input.required<ReadonlyArray<SidebarGroup>>();
 
   protected closeMobile(event: MouseEvent): void {
     if (

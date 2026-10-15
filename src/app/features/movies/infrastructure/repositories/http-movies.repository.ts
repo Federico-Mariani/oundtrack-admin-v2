@@ -37,6 +37,7 @@ export class HttpMoviesRepository implements MoviesRepositoryPort {
         catchError((error: HttpErrorResponse) => throwError(() => toRequestError(error))),
       );
   }
+
   getOne(id: Id): Observable<MovieDetailModel> {
     return this.http
       .get<ApiResponse<MovieDetailResponseDto>>(`${this.baseUrl}/${encodeURIComponent(id)}`)

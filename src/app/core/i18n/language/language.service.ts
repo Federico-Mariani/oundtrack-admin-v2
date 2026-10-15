@@ -29,7 +29,7 @@ export class LanguageService {
 
   readonly activeLocale = computed(() => toSupportedLocale(this.activeLanguage()));
 
-  readonly options: readonly LanguageOption[] = LANGUAGE_OPTIONS;
+  readonly options: ReadonlyArray<LanguageOption> = LANGUAGE_OPTIONS;
 
   initialize(): void {
     this.setLanguage(this.resolveInitialLanguage());

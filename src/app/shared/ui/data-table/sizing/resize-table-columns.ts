@@ -2,7 +2,7 @@ import type { DataTableColumnSize } from './data-table-column-size';
 
 /** Move an internal boundary without shifting subsequent boundaries or fixed action columns. */
 export function resizeTableColumns(
-  columns: readonly DataTableColumnSize[],
+  columns: ReadonlyArray<DataTableColumnSize>,
   id: string,
   delta: number,
   viewportWidth: number,

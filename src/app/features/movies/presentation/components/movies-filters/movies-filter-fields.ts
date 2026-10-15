@@ -5,7 +5,7 @@ import type { MoviesFilterLabels } from './movies-filter-labels';
 export function moviesFilterFields(
   labels: MoviesFilterLabels,
   form: FieldTree<MoviesFilterFormModel>,
-): readonly ListFilterField[] {
+): ReadonlyArray<ListFilterField> {
   return [
     { key: 'releaseYearFrom', label: labels.yearFrom, kind: 'number', field: form.releaseYearFrom },
     {

@@ -8,7 +8,7 @@ import { AuthSessionStorageActions } from '../actions/auth-session-storage.actio
  * Session lifecycle: rehydration at startup and server-side invalidation.
  * Finding no persisted session is a completed restore, not a failure.
  */
-export const authSessionReducers: ReducerTypes<AuthState, readonly ActionCreator[]>[] = [
+export const authSessionReducers: Array<ReducerTypes<AuthState, ReadonlyArray<ActionCreator>>> = [
   on(AuthSessionActions.sessionRestoreRequested, (state): AuthState => ({
     ...state,
     sessionRestoreRequest: pendingRequest(),

@@ -9,7 +9,7 @@ import {
 import { AuthLoginApiActions } from '../actions/api/auth-login-api.actions';
 
 /** Login lifecycle: only `loginRequest` and, on success, `session` change. */
-export const authLoginReducers: ReducerTypes<AuthState, readonly ActionCreator[]>[] = [
+export const authLoginReducers: Array<ReducerTypes<AuthState, ReadonlyArray<ActionCreator>>> = [
   on(AuthLoginActions.loginSubmitted, (state): AuthState => ({
     ...state,
     loginRequest: pendingRequest(),

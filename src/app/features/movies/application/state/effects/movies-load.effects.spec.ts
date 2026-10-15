@@ -16,7 +16,7 @@ describe('Movies query concurrency', () => {
     const actions = new Subject<Action>();
     const oldResponse = new Subject<PageResult<MovieModel>>();
     const getAll = vi.fn().mockReturnValueOnce(oldResponse).mockReturnValue(of(page));
-    const emitted: Action[] = [];
+    const emitted: Array<Action> = [];
     const subscription = loadMovies$(new Actions(actions), {
       getAll,
       getOne: vi.fn(),

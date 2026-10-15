@@ -4,5 +4,5 @@ export interface ApiError {
   readonly code: ApiErrorCode;
   readonly status: number;
   readonly message?: string;
-  readonly fieldErrors?: Readonly<Record<string, readonly string[]>>;
+  readonly fieldErrors?: Readonly<Record<string, ReadonlyArray<string>>>;
 }

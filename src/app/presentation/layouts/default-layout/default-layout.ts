@@ -40,10 +40,12 @@ export class DefaultLayout {
 
   protected readonly currentUser = this.authFacade.data.user;
 
-  protected readonly languagesAvailable: SelectItem[] = this.language.options.map((option) => ({
-    label: option.label,
-    value: option.code,
-  }));
+  protected readonly languagesAvailable: Array<SelectItem> = this.language.options.map(
+    (option) => ({
+      label: option.label,
+      value: option.code,
+    }),
+  );
   protected readonly activeLanguage = computed<string>(() => this.language.activeLanguage());
   protected readonly themeIcon = computed<string>(() =>
     this.theme.isDark() ? 'lucideSunMedium' : 'lucideMoon',

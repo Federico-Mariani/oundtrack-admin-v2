@@ -6,7 +6,7 @@ import { serverFieldErrors, type ServerFieldErrors } from '@app/core/forms/serve
 export class AppFormController<MODEL> {
   private readonly _model: WritableSignal<MODEL>;
   private readonly _form: FieldTree<MODEL>;
-  private readonly _fields: AppFormField[];
+  private readonly _fields: Array<AppFormField>;
   private readonly _onSubmission: (() => void) | undefined;
   private readonly _serverErrors?: Signal<ServerFieldErrors | null | undefined>;
 
@@ -20,7 +20,7 @@ export class AppFormController<MODEL> {
     signal(null);
 
   constructor(
-    fields: AppFormField[],
+    fields: Array<AppFormField>,
     onSubmission?: () => void,
     serverErrors?: Signal<ServerFieldErrors | null | undefined>,
   ) {

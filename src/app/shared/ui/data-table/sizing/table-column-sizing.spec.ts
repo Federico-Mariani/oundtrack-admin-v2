@@ -2,7 +2,7 @@ import { fitTableColumns } from './fit-table-columns';
 import { resizeTableColumns } from './resize-table-columns';
 import type { DataTableColumnSize } from './data-table-column-size';
 
-const columns: readonly DataTableColumnSize[] = [
+const columns: ReadonlyArray<DataTableColumnSize> = [
   { id: 'title', size: 440, min: 260, max: 10000, resizable: true },
   { id: 'genres', size: 280, min: 180, max: 800, resizable: true },
   { id: 'externalId', size: 160, min: 100, max: 800, resizable: true },

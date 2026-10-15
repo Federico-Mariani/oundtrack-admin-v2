@@ -28,7 +28,7 @@ export class Select {
   private static nextId = 0;
 
   protected readonly triggerId = `app-select-${String(Select.nextId++)}`;
-  readonly items = input.required<SelectItem[]>();
+  readonly items = input.required<Array<SelectItem>>();
   readonly disabled = input(false);
   readonly invalid = input(false);
   readonly describedBy = input<string>();

@@ -38,7 +38,7 @@ export class ListControls {
   private readonly modals = inject(ModalService);
   private readonly viewContainerRef = inject(ViewContainerRef);
   readonly search = input.required<Field<string>>();
-  readonly fields = input.required<readonly ListFilterField[]>();
+  readonly fields = input.required<ReadonlyArray<ListFilterField>>();
   readonly activeCount = input(0);
   readonly resetFilters = output();
   private filtersRef: BrnDialogRef<void> | undefined;

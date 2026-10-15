@@ -19,7 +19,7 @@ export class DataTableColumnResize<TData extends RowData> {
   protected readonly resizing = signal(false);
   private startX = 0;
   private pointerId: number | null = null;
-  private startColumns: readonly DataTableColumnSize[] = [];
+  private startColumns: ReadonlyArray<DataTableColumnSize> = [];
 
   protected startResize(event: PointerEvent): void {
     if (event.button !== 0 || !event.isPrimary || !(event.currentTarget instanceof HTMLElement)) {
@@ -73,7 +73,7 @@ export class DataTableColumnResize<TData extends RowData> {
     }
   }
 
-  private apply(columns: readonly DataTableColumnSize[], delta: number): void {
+  private apply(columns: ReadonlyArray<DataTableColumnSize>, delta: number): void {
     const sizes = resizeTableColumns(columns, this.header().column.id, delta, this.viewportWidth());
     this.table().setColumnSizing((current) => ({ ...current, ...sizes }));
   }

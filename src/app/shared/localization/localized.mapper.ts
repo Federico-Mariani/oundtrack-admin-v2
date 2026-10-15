@@ -6,7 +6,7 @@ interface LocalizedSource {
 }
 
 export function toLocalized<TSource extends LocalizedSource, TValue>(
-  values: readonly TSource[],
+  values: ReadonlyArray<TSource>,
   mapper: (value: TSource) => TValue,
 ): Localized<TValue> {
   const result: Partial<Record<SupportedLocale, TValue>> = {};

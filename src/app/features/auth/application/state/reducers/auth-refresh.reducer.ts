@@ -13,7 +13,7 @@ import { AuthLogoutActions } from '../actions/auth-logout.actions';
 import { AuthSessionActions } from '../actions/auth-session.actions';
 import { AuthSessionStorageActions } from '../actions/auth-session-storage.actions';
 
-export const authRefreshReducers: ReducerTypes<AuthState, readonly ActionCreator[]>[] = [
+export const authRefreshReducers: Array<ReducerTypes<AuthState, ReadonlyArray<ActionCreator>>> = [
   on(
     AuthLoginActions.loginSubmitted,
     AuthLoginApiActions.loginSucceeded,

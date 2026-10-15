@@ -14,7 +14,7 @@ import { AuthCurrentUserApiActions } from '../actions/api/auth-current-user-api.
  * (response outlived a logout) is discarded, so the store never shows a
  * profile for a terminated session.
  */
-export const authUserReducers: ReducerTypes<AuthState, readonly ActionCreator[]>[] = [
+export const authUserReducers: Array<ReducerTypes<AuthState, ReadonlyArray<ActionCreator>>> = [
   on(AuthCurrentUserActions.currentUserLoadRequested, (state): AuthState => ({
     ...state,
     currentUserRequest: pendingRequest(),

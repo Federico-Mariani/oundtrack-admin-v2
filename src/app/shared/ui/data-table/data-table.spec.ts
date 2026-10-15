@@ -74,7 +74,7 @@ describe('DataTable interactions', () => {
     return result!;
   }
 
-  function rows(): HTMLTableRowElement[] {
+  function rows(): Array<HTMLTableRowElement> {
     return Array.from(element.querySelectorAll<HTMLTableRowElement>('tbody tr[data-row-id]'));
   }
 
@@ -223,7 +223,7 @@ describe('DataTable interactions', () => {
     expect(
       pagination.compareDocumentPosition(surface) & Node.DOCUMENT_POSITION_PRECEDING,
     ).toBeTruthy();
-    const widths = (): string[] =>
+    const widths = (): Array<string> =>
       Array.from(element.querySelectorAll('col')).map((column) => column.style.width);
     const before = widths();
     button('Resize column year').dispatchEvent(

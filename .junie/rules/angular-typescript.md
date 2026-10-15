@@ -42,7 +42,7 @@ state. Business logic lives in domain / application.
 - **One primary concept per file.** A file exports one main thing and is named after it.
 - kebab-case filenames with a role suffix when it adds clarity:
   `movies-load.actions.ts`, `movies-load.reducer.ts`, `movies-load.effects.ts`,
-  `movies-store-data.facade.ts`, `http-movies.repository.ts`, `local-storage-auth-session.storage.ts`,
+  `game-categories-store-data.facade.ts`, `http-movies.repository.ts`, `local-storage-auth-session.storage.ts`,
   `auth-session.mapper.ts`, `tokens-response.dto.ts`, `movies-repository.token.ts`,
   `create-one-movie-page.ts`, `auth.guard.ts`, `movies.routes.ts`.
 - Domain models and ports are plain nouns without suffix: `movie.model.ts`, `auth-session.model.ts`,

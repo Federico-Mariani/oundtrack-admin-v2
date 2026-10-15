@@ -9,7 +9,7 @@ import type { ValidationError } from '@angular/forms/signals';
  * before surfacing them on an input, so the same mechanism works across the
  * whole project.
  */
-export type ServerFieldErrors = Readonly<Record<string, readonly string[]>>;
+export type ServerFieldErrors = Readonly<Record<string, ReadonlyArray<string>>>;
 
 /** Error `kind` shared by every server-originated field error. */
 const SERVER_VALIDATION_ERROR_KIND = 'server';
@@ -28,7 +28,7 @@ const SERVER_VALIDATION_ERROR_KIND = 'server';
 export function serverFieldErrors(
   fieldErrors: ServerFieldErrors | null | undefined,
   fieldName: string,
-): ValidationError.WithoutFieldTree[] {
+): Array<ValidationError.WithoutFieldTree> {
   const messages = fieldErrors?.[fieldName] ?? [];
 
   return messages.map((message) => ({ kind: SERVER_VALIDATION_ERROR_KIND, message }));

@@ -14,4 +14,4 @@ export const LANGUAGE_OPTIONS = [
     code: 'it',
     label: 'Italiano',
   },
-] as const satisfies readonly LanguageOption[];
+] as const satisfies ReadonlyArray<LanguageOption>;

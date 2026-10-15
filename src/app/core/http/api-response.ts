@@ -12,5 +12,5 @@ export interface ApiResponse<TData, TMeta = null> {
  */
 export interface ApiErrorBody {
   readonly message?: string;
-  readonly fields?: Readonly<Record<string, readonly string[]>>;
+  readonly fields?: Readonly<Record<string, ReadonlyArray<string>>>;
 }

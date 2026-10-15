@@ -33,7 +33,7 @@ describe('Auth feedback translations', () => {
     translations.setTranslation({ auth: { errors: enErrors } }, 'en');
     translations.setTranslation({ auth: { errors: itErrors } }, 'it');
     const feedback = TestBed.inject(AuthFeedbackService);
-    const codes: RequestErrorCode[] = [
+    const codes: Array<RequestErrorCode> = [
       'network',
       'bad-request',
       'unauthorized',

@@ -6,5 +6,5 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   templateUrl: './movie-genres-cell.html',
 })
 export class MovieGenresCell {
-  readonly genres = input.required<readonly string[]>();
+  readonly genres = input.required<ReadonlyArray<string>>();
 }

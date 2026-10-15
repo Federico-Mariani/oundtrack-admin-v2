@@ -2,7 +2,7 @@ import { MOVIES_NAVIGATION } from '@features/movies';
 import type { SidebarGroup } from '../../ui/sidebar/sidebar-group';
 
 /** Shell menu composition only. Feature paths remain owned by their routing APIs. */
-export const DEFAULT_SIDEBAR_GROUPS: readonly SidebarGroup[] = [
+export const DEFAULT_SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
   {
     id: 'overview',
     items: [{ id: 'home', labelKey: 'sidebar.menu.home', icon: 'lucideHome', commands: ['/'] }],
