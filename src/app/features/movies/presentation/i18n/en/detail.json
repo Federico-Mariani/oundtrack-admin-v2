@@ -42,5 +42,6 @@
   "metadataDescription": "Catalog data and the selected translation.",
   "record": "Catalog record",
   "addLanguage": "Add a language",
-  "allLanguages": "All languages are already available"
+  "allLanguages": "All languages are already available",
+  "copyId": "Copy ID"
 }

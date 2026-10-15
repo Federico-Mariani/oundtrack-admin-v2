@@ -4,6 +4,31 @@ import { MoviesDetailActions } from '../actions/movies-detail.actions';
 import { MoviesDetailApiActions } from '../actions/api/movies-detail-api.actions';
 import { pendingRequest } from '@shared/state/request/request-state.transitions';
 describe('Movie detail state isolation', () => {
+  it('updates an existing catalog row after reloading detail without changing pagination', () => {
+    const movie = {
+      id: 'one',
+      externalMovieId: 1,
+      info: {},
+      genres: [],
+      soundtracks: [],
+      gameCategories: [],
+      createdAt: 0,
+      updatedAt: 1,
+    };
+    const other = { ...movie, id: 'two' };
+    const initial: MoviesState = {
+      ...initialMoviesState,
+      detailId: 'one',
+      movies: [{ ...movie, updatedAt: 0 }, other],
+      total: 20,
+    };
+    const updated = moviesReducer(initial, MoviesDetailApiActions.succeeded({ id: 'one', movie }));
+    expect(updated.movies).toEqual([movie, other]);
+    expect(updated.movies[1]).toBe(other);
+    expect(updated.total).toBe(20);
+    expect(updated.query).toBe(initial.query);
+  });
+
   it('keeps list and creation requests intact and ignores late responses after close', () => {
     const initial: MoviesState = {
       ...initialMoviesState,

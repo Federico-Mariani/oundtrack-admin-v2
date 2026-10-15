@@ -2,7 +2,7 @@ import { LANGUAGE_OPTIONS } from '@app/core/i18n/language/language-options';
 import { toSupportedLocale } from '@app/core/i18n/language/language-locale.mapper';
 import { IconButton } from '@shared/ui/icon-button/icon-button';
 import { provideIcons } from '@ng-icons/core';
-import { lucidePlus } from '@ng-icons/lucide';
+import { lucidePlus, lucideRefreshCw } from '@ng-icons/lucide';
 import { ModalService } from '@shared/ui/modal/modal.service';
 import { CreateMovieInfoModal } from '../create-movie-info-modal/create-movie-info-modal';
 import {
@@ -15,7 +15,7 @@ import {
   signal,
 } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
-import { TranslocoDirective } from '@jsverse/transloco';
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { resolveLocalized } from '@shared/localization/localized.queries';
 import type { Localized } from '@shared/localization/localized';
@@ -23,7 +23,10 @@ import type { SupportedLocale } from '@shared/localization/supported-locale';
 import { ModalFrame } from '@shared/ui/modal/modal-frame';
 import type { ModalContent } from '@shared/ui/modal/modal-content';
 import { Select } from '@shared/ui/select/select';
-import { HlmTooltip } from '@spartan-ng/helm/tooltip';
+import { Clipboard } from '@angular/cdk/clipboard';
+import { NotificationService } from '@app/core/notifications/notification.service';
+import { HlmContextMenuTrigger } from '@spartan-ng/helm/context-menu';
+import { HlmDropdownMenu, HlmDropdownMenuItem } from '@spartan-ng/helm/dropdown-menu';
 import { Button } from '@shared/ui/button/button';
 import { MovieDetailSkeleton } from '../movie-detail-skeleton/movie-detail-skeleton';
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
@@ -40,18 +43,30 @@ import type { MovieDetailModalParams } from './movie-detail-modal-params';
     Button,
     Select,
     IconButton,
-    HlmTooltip,
+    HlmContextMenuTrigger,
+    HlmDropdownMenu,
+    HlmDropdownMenuItem,
     MovieDetailSkeleton,
     MovieDetailImage,
     MovieTrackPlayer,
   ],
-  providers: [provideIcons({ lucidePlus })],
+  providers: [provideIcons({ lucidePlus, lucideRefreshCw })],
   templateUrl: './movie-detail-modal.html',
   styleUrl: './movie-detail-modal.css',
 })
 export class MovieDetailModal implements ModalContent<MovieDetailModalParams, void> {
   readonly params = injectBrnDialogContext<{ params: MovieDetailModalParams }>().params;
   readonly ref = inject<BrnDialogRef<void>>(BrnDialogRef);
+  private readonly clipboard = inject(Clipboard);
+  private readonly notifications = inject(NotificationService);
+  private readonly transloco = inject(TranslocoService);
+  protected copyId(id: string): void {
+    if (this.clipboard.copy(id)) {
+      this.notifications.success(this.transloco.translate('movies.catalog.copied'));
+    } else {
+      this.notifications.error(this.transloco.translate('movies.catalog.copyFailed'));
+    }
+  }
   private readonly facade = inject(MoviesFacade);
   private readonly language = inject(LanguageService);
   private readonly selectedLocale = signal<SupportedLocale | null>(null);

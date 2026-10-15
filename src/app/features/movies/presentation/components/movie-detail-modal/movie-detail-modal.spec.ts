@@ -1,3 +1,5 @@
+import { Clipboard } from '@angular/cdk/clipboard';
+import { NotificationService } from '@app/core/notifications/notification.service';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -125,7 +127,8 @@ describe('Movie detail modal', () => {
       { id: 'one' },
       {
         viewContainerRef: fixture.componentInstance.viewContainerRef,
-        contentClass: 'sm:max-w-5xl p-0 overflow-hidden',
+        contentClass:
+          'w-[64rem] max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-2rem)] p-0 overflow-hidden',
       },
     );
     return { fixture, ref, detail, loading, error, actions, creatingInfo, infoCreated, infoError };
@@ -139,7 +142,11 @@ describe('Movie detail modal', () => {
     });
     expect(document.querySelector('app-movie-detail-skeleton')).not.toBeNull();
     expect(document.querySelector('app-select')).toBeNull();
-    expect(document.querySelector('hlm-spinner')).toBeNull();
+    await vi.waitFor(() => {
+      expect(
+        document.querySelector<HTMLButtonElement>('button[aria-label="Reload details"]')?.disabled,
+      ).toBe(true);
+    });
     detail.set(movie());
     loading.set(false);
     await fixture.whenStable();
@@ -160,6 +167,30 @@ describe('Movie detail modal', () => {
     ref.forceClose();
     expect(actions.closeDetail).toHaveBeenCalledExactlyOnceWith('one');
     expect(audio.pause).toHaveBeenCalled();
+    fixture.destroy();
+  });
+  it('reloads from the header, pauses playback and prevents repeated requests while pending', async () => {
+    const { fixture, ref, detail, loading, actions } = setup();
+    detail.set(movie());
+    loading.set(false);
+    await fixture.whenStable();
+    await vi.waitFor(() => {
+      expect(document.querySelector('audio')).not.toBeNull();
+    });
+    const audio = document.querySelector('audio')!;
+    audio.dispatchEvent(new Event('play'));
+    const reload = document.querySelector<HTMLButtonElement>(
+      'button[aria-label="Reload details"]',
+    )!;
+    reload.click();
+    expect(actions.loadDetail).toHaveBeenCalledTimes(2);
+    expect(audio.pause).toHaveBeenCalled();
+    loading.set(true);
+    await fixture.whenStable();
+    reload.click();
+    expect(actions.loadDetail).toHaveBeenCalledTimes(2);
+    expect(document.querySelector('app-select')).toBeNull();
+    ref.forceClose();
     fixture.destroy();
   });
   it('shows request failures, supports retry, and renders empty sections', async () => {
@@ -356,12 +387,12 @@ describe('Movie detail modal', () => {
     ref.forceClose();
     fixture.destroy();
   });
-  it('opens a single-language select and shows classification IDs only in tooltips', async () => {
+  it('opens a single-language select and copies classification IDs from context menus', async () => {
     const { fixture, ref, detail, loading } = setup();
     detail.set({
       ...movie(),
       genres: [
-        { id: 'genre-tooltip-id', info: { 'it-IT': { id: 'genre-info', name: 'Avventura' } } },
+        { id: 'genre-context-id', info: { 'it-IT': { id: 'genre-info', name: 'Avventura' } } },
       ],
     });
     loading.set(false);
@@ -383,21 +414,33 @@ describe('Movie detail modal', () => {
     expect(values).not.toContain('info');
     expect(values).not.toContain('it-IT');
     expect(values).not.toContain('category');
-    expect(values).not.toContain('genre-tooltip-id');
+    expect(values).not.toContain('genre-context-id');
     const genre = document.querySelector<HTMLElement>('[aria-label="Genres"] [tabindex="0"]')!;
-    genre.focus();
-    await vi.waitFor(() => {
-      expect(document.body.textContent).toContain('ID: genre-tooltip-id');
-    });
-    genre.blur();
+    const copy = vi.spyOn(TestBed.inject(Clipboard), 'copy').mockReturnValue(true);
+    const success = vi
+      .spyOn(TestBed.inject(NotificationService), 'success')
+      .mockImplementation(() => undefined);
+    const failure = vi
+      .spyOn(TestBed.inject(NotificationService), 'error')
+      .mockImplementation(() => undefined);
+    genre.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+    await fixture.whenStable();
+    expect(document.querySelector('[role="menu"]')?.textContent).toContain('genre-context-id');
+    document.querySelector<HTMLButtonElement>('[role="menuitem"]')!.click();
+    await fixture.whenStable();
+    expect(copy).toHaveBeenLastCalledWith('genre-context-id');
+    expect(success).toHaveBeenCalledWith('Identifier copied.');
     const category = document.querySelector<HTMLElement>(
       '[aria-label="Game categories"] [tabindex="0"]',
     )!;
-    category.focus();
-    await vi.waitFor(() => {
-      expect(document.body.textContent).toContain('ID: category');
-    });
-    category.blur();
+    copy.mockReturnValue(false);
+    category.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+    await fixture.whenStable();
+    expect(document.querySelector('[role="menu"]')?.textContent).toContain('category');
+    document.querySelector<HTMLButtonElement>('[role="menuitem"]')!.click();
+    await fixture.whenStable();
+    expect(copy).toHaveBeenLastCalledWith('category');
+    expect(failure).toHaveBeenCalledWith('Could not copy the identifier.');
     ref.forceClose();
     fixture.destroy();
   });

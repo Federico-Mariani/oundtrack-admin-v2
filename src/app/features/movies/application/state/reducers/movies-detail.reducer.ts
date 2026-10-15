@@ -21,7 +21,14 @@ export const moviesDetailReducer: ReducerTypes<MoviesState, readonly ActionCreat
       : state,
   ),
   on(MoviesDetailApiActions.succeeded, (state, { id, movie }): MoviesState =>
-    state.detailId === id ? { ...state, detail: movie, detailRequest: succeededRequest() } : state,
+    state.detailId === id
+      ? {
+          ...state,
+          movies: state.movies.map((item) => (item.id === id ? movie : item)),
+          detail: movie,
+          detailRequest: succeededRequest(),
+        }
+      : state,
   ),
   on(MoviesDetailApiActions.failed, (state, { id, error }): MoviesState =>
     state.detailId === id ? { ...state, detail: null, detailRequest: failedRequest(error) } : state,

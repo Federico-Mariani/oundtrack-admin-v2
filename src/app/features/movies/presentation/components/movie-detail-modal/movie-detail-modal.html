@@ -4,9 +4,27 @@
   [description]="t('description')"
   [overlayHeader]="true"
 >
+  <app-icon-button
+    modalActions
+    icon="lucideRefreshCw"
+    variant="ghost"
+    size="icon-sm"
+    [ariaLabel]="t('reload')"
+    [title]="t('reload')"
+    [loading]="loading()"
+    [disabled]="loading()"
+    (click)="reload()"
+  />
+  <ng-template #identifierMenu let-id="id">
+    <div hlmDropdownMenu class="w-72 max-w-[calc(100vw-2rem)]">
+      <p class="px-2 py-2 text-xs text-muted-foreground">ID</p>
+      <p class="select-text break-all px-2 pb-3 font-mono text-xs">{{ id }}</p>
+      <button hlmDropdownMenuItem type="button" (triggered)="copyId(id)">{{ t('copyId') }}</button>
+    </div>
+  </ng-template>
   @if (!loading() && !error() && movie()) {
     <div
-      class="absolute left-5 top-5 z-20 flex max-w-[calc(100%-6rem)] items-center gap-2 sm:left-8 sm:top-8 sm:max-w-[calc(100%-8rem)]"
+      class="absolute left-5 top-5 z-20 flex max-w-[calc(100%-8rem)] items-center gap-2 sm:left-8 sm:top-8 sm:max-w-[calc(100%-10rem)]"
     >
       <app-select
         class="block w-36 min-w-0 rounded-lg bg-background shadow-sm"
@@ -74,8 +92,9 @@
               @for (genre of movie.genres; track genre.id) {
                 <span
                   tabindex="0"
-                  [hlmTooltip]="'ID: ' + genre.id"
-                  class="cursor-help rounded-full border px-3 py-1.5 text-sm focus-visible:outline-2 focus-visible:outline-ring"
+                  [hlmContextMenuTrigger]="identifierMenu"
+                  [hlmContextMenuTriggerData]="{ id: genre.id }"
+                  class="cursor-context-menu rounded-full border px-3 py-1.5 text-sm focus-visible:outline-2 focus-visible:outline-ring"
                   >{{ localizedName(genre.info) }}</span
                 >
               } @empty {
@@ -91,8 +110,9 @@
               @for (category of movie.gameCategories; track category.id) {
                 <span
                   tabindex="0"
-                  [hlmTooltip]="'ID: ' + category.id"
-                  class="cursor-help focus-visible:outline-2 focus-visible:outline-ring inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground"
+                  [hlmContextMenuTrigger]="identifierMenu"
+                  [hlmContextMenuTriggerData]="{ id: category.id }"
+                  class="cursor-context-menu focus-visible:outline-2 focus-visible:outline-ring inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground"
                   ><span
                     class="size-1.5 rounded-full bg-current opacity-60"
                     aria-hidden="true"

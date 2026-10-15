@@ -87,7 +87,7 @@ describe('MoviesTable integration', () => {
       expect(element.querySelectorAll('tbody tr[data-row-id]')).toHaveLength(2);
     });
     expect(element.textContent).toContain('Release date');
-    expect(element.querySelectorAll('thead th')).toHaveLength(4);
+    expect(element.querySelectorAll('thead th')).toHaveLength(5);
     const cell = element.querySelector('app-movie-title-cell')!;
     expect(cell.textContent).toContain('Alpha');
     expect(cell.textContent).toContain('1/1/2020');

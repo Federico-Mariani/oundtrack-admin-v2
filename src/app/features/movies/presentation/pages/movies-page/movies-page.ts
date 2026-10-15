@@ -75,7 +75,8 @@ export class MoviesPage {
       { id },
       {
         viewContainerRef: this.viewContainerRef,
-        contentClass: 'sm:max-w-5xl p-0 overflow-hidden',
+        contentClass:
+          'w-[64rem] max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-2rem)] p-0 overflow-hidden',
       },
     );
     this.detailRef.closed$.subscribe(() => {

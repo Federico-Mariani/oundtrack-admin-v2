@@ -42,5 +42,6 @@
   "metadataDescription": "Dati del catalogo e della traduzione selezionata.",
   "record": "Scheda del catalogo",
   "addLanguage": "Aggiungi una lingua",
-  "allLanguages": "Tutte le lingue sono già disponibili"
+  "allLanguages": "Tutte le lingue sono già disponibili",
+  "copyId": "Copia ID"
 }

@@ -58,6 +58,7 @@ async function setup() {
   await vi.waitFor(() => {
     expect(element.querySelector('input[type="number"]')).not.toBeNull();
   });
+  await fixture.whenStable();
   const fill = async (selector: string, value: string) => {
     const input = element.querySelector<HTMLInputElement>(selector)!;
     input.value = value;

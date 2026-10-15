@@ -29,7 +29,18 @@ describe('toMovieTableRow', () => {
     expect(row.releaseDate).toBe(Date.UTC(2020, 1, 15));
     expect(row.releaseDateLabel).toBe(formatter.format(Date.UTC(2020, 1, 15)));
     expect(row.title).toBe('Example');
+    expect(row.languages).toEqual(['en-US']);
     expect(row.genres).toEqual(['Drama']);
+  });
+
+  it('lists every available translation independently of the display locale', () => {
+    const source = movie();
+    const row = toMovieTableRow(
+      { ...source, info: { ...source.info, 'it-IT': { ...source.info['en-US']!, id: 'italian' } } },
+      'en-US',
+      new Intl.DateTimeFormat('en-US'),
+    );
+    expect(row.languages).toEqual(['it-IT', 'en-US']);
   });
 
   it('handles invalid dates without preventing the table from rendering', () => {
@@ -45,6 +56,7 @@ describe('toMovieTableRow', () => {
       new Intl.DateTimeFormat('en-US'),
     );
     expect(row.title).toBe('—');
+    expect(row.languages).toEqual([]);
     expect(row.posterUrl).toBeNull();
     expect(row.releaseDate).toBeUndefined();
   });

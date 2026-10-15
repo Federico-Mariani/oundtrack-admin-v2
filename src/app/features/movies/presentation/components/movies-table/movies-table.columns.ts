@@ -1,3 +1,4 @@
+import { MovieLanguagesCell } from '../movie-languages-cell/movie-languages-cell';
 import { type ColumnDef, createColumnHelper, flexRenderComponent } from '@tanstack/angular-table';
 import type { DataTableFeatures } from '@shared/ui/data-table/data-table-features';
 import type { Id } from '@shared/types/id';
@@ -39,6 +40,16 @@ export function createMoviesTableColumns(
       minSize: 180,
       cell: (context) =>
         flexRenderComponent(MovieGenresCell, { inputs: { genres: context.row.original.genres } }),
+    }),
+    columnHelper.accessor((row) => row.languages.join(', '), {
+      id: 'languages',
+      header: labels.languages,
+      size: 160,
+      minSize: 120,
+      cell: (context) =>
+        flexRenderComponent(MovieLanguagesCell, {
+          inputs: { languages: context.row.original.languages },
+        }),
     }),
     columnHelper.accessor('releaseDate', {
       header: labels.releaseDate,

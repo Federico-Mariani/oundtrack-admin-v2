@@ -6,5 +6,6 @@
   "actions": "Actions",
   "copyId": "Copy movie ID",
   "copyExternalId": "Copy external ID",
-  "viewDetail": "View details"
+  "viewDetail": "View details",
+  "languages": "Languages"
 }

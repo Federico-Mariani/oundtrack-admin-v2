@@ -37,14 +37,17 @@ import { IconButton } from '../icon-button/icon-button';
           {{ description() }}
         </p>
       </div>
-      <app-icon-button
-        icon="lucideX"
-        variant="ghost"
-        size="icon-sm"
-        [ariaLabel]="t('close')"
-        [disabled]="closeDisabled()"
-        (click)="ref.close()"
-      />
+      <div class="flex items-center gap-1">
+        <ng-content select="[modalActions]" />
+        <app-icon-button
+          icon="lucideX"
+          variant="ghost"
+          size="icon-sm"
+          [ariaLabel]="t('close')"
+          [disabled]="closeDisabled()"
+          (click)="ref.close()"
+        />
+      </div>
     </div>
     <ng-content />
   `,
