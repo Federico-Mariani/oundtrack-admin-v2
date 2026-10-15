@@ -9,7 +9,7 @@
         hlmBtn
         type="button"
         size="icon"
-        class="play-control row-span-2 aspect-square size-11 shrink-0 self-center rounded-full"
+        class="play-control row-span-2 aspect-square size-11 sm:size-15 shrink-0 self-center rounded-full"
         [disabled]="playPending()"
         [attr.aria-label]="t(playing() ? 'pause' : 'play') + ': ' + track().name"
         (click)="togglePlayback()"
@@ -30,7 +30,7 @@
       </button>
     } @else {
       <span
-        class="row-span-2 flex aspect-square size-11 shrink-0 items-center justify-center self-center rounded-full bg-muted"
+        class="row-span-2 flex aspect-square size-11 sm:size-15 shrink-0 items-center justify-center self-center rounded-full bg-muted"
         ><ng-icon name="lucideMusic2" class="text-xl text-muted-foreground" aria-hidden="true"
       /></span>
     }
@@ -41,9 +41,9 @@
     <button
       hlmBtn
       variant="ghost"
-      size="icon"
+      size="icon-sm"
       type="button"
-      class="shrink-0 rounded-full text-muted-foreground"
+      class="shrink-0 justify-self-center rounded-md text-muted-foreground"
       [attr.aria-label]="t('trackInfo') + ': ' + track().name"
       [attr.aria-expanded]="showInfo()"
       [attr.aria-controls]="'track-info-' + soundtrackId() + '-' + track().id"
@@ -72,7 +72,7 @@
     ></audio>
   }
   @if (track().path && !failed()) {
-    <div class="col-span-2 col-start-2 flex min-w-0 items-center gap-2">
+    <div class="col-start-2 row-start-2 flex min-w-0 items-center gap-2 sm:gap-3">
       <span class="shrink-0 text-xs tabular-nums text-muted-foreground">{{
         formatTime(currentTime())
       }}</span>
@@ -92,19 +92,19 @@
       <span class="shrink-0 text-xs tabular-nums text-muted-foreground">{{
         duration() ? formatTime(duration()) : '—:—'
       }}</span>
-      <button
-        hlmBtn
-        variant="ghost"
-        size="icon-sm"
-        type="button"
-        class="rounded-full text-muted-foreground"
-        [attr.aria-label]="t(muted() ? 'unmute' : 'mute') + ': ' + track().name"
-        [attr.aria-pressed]="muted()"
-        (click)="toggleMute()"
-      >
-        <ng-icon [name]="muted() ? 'lucideVolumeX' : 'lucideVolume2'" aria-hidden="true" />
-      </button>
     </div>
+    <button
+      hlmBtn
+      variant="ghost"
+      size="icon-sm"
+      type="button"
+      class="col-start-3 row-start-2 justify-self-center rounded-md text-muted-foreground"
+      [attr.aria-label]="t(muted() ? 'unmute' : 'mute') + ': ' + track().name"
+      [attr.aria-pressed]="muted()"
+      (click)="toggleMute()"
+    >
+      <ng-icon [name]="muted() ? 'lucideVolumeX' : 'lucideVolume2'" aria-hidden="true" />
+    </button>
     @if (buffering() || playPending()) {
       <span role="status" class="sr-only">{{ t('buffering') }}</span>
     }

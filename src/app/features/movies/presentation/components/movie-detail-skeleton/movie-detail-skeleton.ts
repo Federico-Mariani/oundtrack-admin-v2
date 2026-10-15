@@ -7,9 +7,11 @@ import { Shimmer } from '@shared/ui/shimmer/shimmer';
   imports: [Shimmer],
   host: { class: 'block', 'aria-hidden': 'true' },
   template: `
-    <div class="relative h-52 sm:h-72">
+    <div class="relative h-64 sm:h-96">
       <app-shimmer class="h-full w-full rounded-none" />
-      <div class="absolute inset-0 bg-gradient-to-t from-popover to-transparent"></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-popover from-0% via-popover/65 via-55% to-popover/20"
+      ></div>
     </div>
     <div class="relative -mt-20 space-y-7 px-5 pb-6 sm:-mt-24 sm:px-8 sm:pb-8">
       <div class="flex items-end gap-4 sm:gap-6">
@@ -38,18 +40,21 @@ import { Shimmer } from '@shared/ui/shimmer/shimmer';
         <app-shimmer class="h-5 w-40" />
         @for (row of [0, 1]; track row) {
           <div
-            class="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 rounded-2xl border bg-card px-4 py-3.5"
+            class="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-4 gap-y-3 rounded-lg border bg-card p-5 sm:gap-x-8 sm:px-8"
           >
-            <app-shimmer class="row-span-2 aspect-square size-11 self-center rounded-full" />
+            <app-shimmer
+              class="row-span-2 aspect-square size-11 self-center sm:size-15 rounded-full"
+            />
             <div class="min-w-0 space-y-2">
               <app-shimmer class="h-5 w-3/4 max-w-44" /><app-shimmer class="h-4 w-1/2 max-w-32" />
             </div>
-            <app-shimmer class="size-6 rounded-full" />
-            <div class="col-span-2 col-start-2 flex h-8 items-center gap-2">
+            <app-shimmer class="size-8 justify-self-center rounded-md" />
+            <div class="col-start-2 row-start-2 flex h-8 items-center gap-2">
               <app-shimmer class="h-3 w-8" /><app-shimmer
                 class="h-1.5 flex-1 rounded-full"
               /><app-shimmer class="h-3 w-8" />
             </div>
+            <app-shimmer class="col-start-3 row-start-2 size-8 justify-self-center rounded-md" />
           </div>
         }
       </div>

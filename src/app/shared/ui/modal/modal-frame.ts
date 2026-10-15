@@ -27,7 +27,7 @@ import { IconButton } from '../icon-button/icon-button';
       *transloco="let t; prefix: 'modal'"
       [class]="
         overlayHeader()
-          ? 'absolute right-5 top-5 sm:right-8 sm:top-8 z-20 rounded-full bg-background/90 p-1 shadow-sm'
+          ? 'absolute right-5 top-5 sm:right-8 sm:top-8 z-20 rounded-lg bg-background/90 p-1 shadow-sm'
           : 'mb-5 flex items-start justify-between gap-4'
       "
     >

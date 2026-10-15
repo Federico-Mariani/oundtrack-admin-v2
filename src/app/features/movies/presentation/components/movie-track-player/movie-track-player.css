@@ -2,10 +2,11 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  column-gap: 0.75rem;
-  padding: 0.875rem 1rem;
+  column-gap: 1rem;
+  row-gap: 0.75rem;
+  padding: 1.25rem;
   border: 1px solid var(--border);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   background: var(--card);
   transition:
     border-color 160ms,
@@ -87,12 +88,18 @@
 .audio-range:disabled::-moz-range-thumb {
   visibility: hidden;
 }
+@media (min-width: 640px) {
+  .track-card {
+    column-gap: 2rem;
+    padding-inline: 2rem;
+  }
+  .play-control {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .track-card {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    column-gap: 0.75rem;
     transition: none;
   }
 }
