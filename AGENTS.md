@@ -36,3 +36,8 @@ effects / facades). The detailed, **mandatory** project rules live in `.junie/ru
 Run `npm run quality` (lint + format check + type check), then `npm test` and
 `npm run build` when the change can affect them. Do not report a task as done while any
 of them fails because of your changes.
+
+## Styling and pull requests
+
+- Use Tailwind utility classes for layout and visual styling. Create component CSS files only for specialized styling that needs dedicated CSS, such as browser-specific range-input pseudo-elements.
+- Write pull request titles and descriptions in English.

@@ -408,8 +408,9 @@ describe('Movie detail modal', () => {
     expect(document.querySelectorAll('hlm-select-item')).toHaveLength(1);
     document.querySelector<HTMLElement>('hlm-select-item')!.click();
     await fixture.whenStable();
-    const values = Array.from(document.querySelectorAll('.metadata-list dd'), (element) =>
-      element.textContent.trim(),
+    const values = Array.from(
+      document.querySelectorAll('app-movie-detail-modal section dl dd'),
+      (element) => element.textContent.trim(),
     );
     expect(values).not.toContain('info');
     expect(values).not.toContain('it-IT');

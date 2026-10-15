@@ -52,7 +52,6 @@ import type { MovieDetailModalParams } from './movie-detail-modal-params';
   ],
   providers: [provideIcons({ lucidePlus, lucideRefreshCw })],
   templateUrl: './movie-detail-modal.html',
-  styleUrl: './movie-detail-modal.css',
 })
 export class MovieDetailModal implements ModalContent<MovieDetailModalParams, void> {
   readonly params = injectBrnDialogContext<{ params: MovieDetailModalParams }>().params;
