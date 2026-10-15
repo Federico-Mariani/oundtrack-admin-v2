@@ -1,5 +1,8 @@
+import * as moviesInfoCreateEffects from './application/state/effects/movies-info-create.effects';
+import * as moviesInfoCreateFeedbackEffects from './application/state/effects/movies-info-create-feedback.effects';
 import * as moviesCreateEffect from './application/state/effects/movies-create.effects';
 import * as moviesCreateFeedbackEffect from './application/state/effects/movies-create-feedback.effects';
+import * as moviesDetailEffects from './application/state/effects/movies-detail.effects';
 import { type EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
@@ -20,6 +23,9 @@ export function provideMovies(): EnvironmentProviders {
     },
     provideState(moviesFeature),
     provideEffects(
+      moviesInfoCreateEffects,
+      moviesInfoCreateFeedbackEffects,
+      moviesDetailEffects,
       moviesLoadEffect,
       moviesLoadFeedbackEffect,
       moviesCreateEffect,

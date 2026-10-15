@@ -17,9 +17,12 @@ describe('Movies query concurrency', () => {
     const oldResponse = new Subject<PageResult<MovieModel>>();
     const getAll = vi.fn().mockReturnValueOnce(oldResponse).mockReturnValue(of(page));
     const emitted: Action[] = [];
-    const subscription = loadMovies$(new Actions(actions), { getAll, create: vi.fn() }).subscribe(
-      (action) => emitted.push(action),
-    );
+    const subscription = loadMovies$(new Actions(actions), {
+      getAll,
+      getOne: vi.fn(),
+      createInfo: vi.fn(),
+      create: vi.fn(),
+    }).subscribe((action) => emitted.push(action));
     actions.next(MoviesLoadActions.moviesLoadRequested({ query: DEFAULT_MOVIES_LIST_QUERY }));
     await vi.advanceTimersByTimeAsync(0);
     const first = { ...DEFAULT_MOVIES_LIST_QUERY, search: 'mat' };
@@ -41,6 +44,8 @@ describe('Movies query concurrency', () => {
     const query = { ...DEFAULT_MOVIES_LIST_QUERY, page: 5 };
     const next = vi.fn();
     loadMovies$(new Actions(of(MoviesLoadActions.moviesLoadRequested({ query }))), {
+      getOne: vi.fn(),
+      createInfo: vi.fn(),
       create: vi.fn(),
       getAll: () => of({ ...page, page: 5, total: 21 }),
     }).subscribe(next);
@@ -57,9 +62,12 @@ describe('Movies query concurrency', () => {
       .mockReturnValueOnce(throwError(() => error))
       .mockReturnValue(of(page));
     const next = vi.fn();
-    const subscription = loadMovies$(new Actions(actions), { getAll, create: vi.fn() }).subscribe(
-      next,
-    );
+    const subscription = loadMovies$(new Actions(actions), {
+      getAll,
+      getOne: vi.fn(),
+      createInfo: vi.fn(),
+      create: vi.fn(),
+    }).subscribe(next);
     const request = MoviesLoadActions.moviesLoadRequested({ query: DEFAULT_MOVIES_LIST_QUERY });
     actions.next(request);
     await vi.runAllTimersAsync();

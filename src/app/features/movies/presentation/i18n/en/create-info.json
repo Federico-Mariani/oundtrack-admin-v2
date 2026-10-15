@@ -1,0 +1,20 @@
+{
+  "title": "Add a language",
+  "description": "Create movie data in one of the remaining languages.",
+  "language": "Language to create",
+  "submit": "Create translation",
+  "cancel": "Cancel",
+  "pending": "Creating movie data…",
+  "success": "Movie data created in the new language.",
+  "errors": {
+    "network": "Connection unavailable. Please try again.",
+    "bad-request": "Unable to create data for the selected language.",
+    "unauthorized": "Your session expired. Sign in again.",
+    "forbidden": "You do not have permission to create this data.",
+    "not-found": "This movie is no longer available.",
+    "conflict": "Data for this language already exists. Reload the movie details.",
+    "validation": "Check the selected language.",
+    "server": "The server could not complete creation. Please try again.",
+    "unknown": "Unable to create the translation. Please try again."
+  }
+}

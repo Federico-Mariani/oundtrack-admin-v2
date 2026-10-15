@@ -23,26 +23,39 @@ import { IconButton } from '../icon-button/icon-button';
   ],
   host: { class: 'block' },
   template: `
-    <div *transloco="let t; prefix: 'modal'" class="mb-5 flex items-start justify-between gap-4">
-      <div>
+    <div
+      *transloco="let t; prefix: 'modal'"
+      [class]="
+        overlayHeader()
+          ? 'absolute right-5 top-5 sm:right-8 sm:top-8 z-20 rounded-lg bg-background/90 p-1 shadow-sm'
+          : 'mb-5 flex items-start justify-between gap-4'
+      "
+    >
+      <div [class.sr-only]="overlayHeader()">
         <h2 hlmDialogTitle class="text-lg font-semibold">{{ title() }}</h2>
         <p hlmDialogDescription class="mt-1 text-sm text-muted-foreground">
           {{ description() }}
         </p>
       </div>
-      <app-icon-button
-        icon="lucideX"
-        variant="ghost"
-        size="icon-sm"
-        [ariaLabel]="t('close')"
-        (click)="ref.close()"
-      />
+      <div class="flex items-center gap-1">
+        <ng-content select="[modalActions]" />
+        <app-icon-button
+          icon="lucideX"
+          variant="ghost"
+          size="icon-sm"
+          [ariaLabel]="t('close')"
+          [disabled]="closeDisabled()"
+          (click)="ref.close()"
+        />
+      </div>
     </div>
     <ng-content />
   `,
 })
 export class ModalFrame {
   protected readonly ref = inject<BrnDialogRef>(BrnDialogRef);
+  readonly closeDisabled = input(false);
+  readonly overlayHeader = input(false);
   readonly title = input.required<string>();
   readonly description = input.required<string>();
 }

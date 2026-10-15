@@ -1,0 +1,148 @@
+<article
+  *transloco="let t; prefix: 'movies.detail'"
+  class="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-4 gap-y-3 rounded-lg border bg-card p-5 transition-[border-color,box-shadow] duration-[160ms] motion-reduce:transition-none sm:gap-x-8 sm:px-8"
+  [class]="
+    playing()
+      ? 'border-[color-mix(in_srgb,var(--primary)_45%,var(--border))] shadow-[0_0_0_1px_color-mix(in_srgb,var(--primary)_8%,transparent)]'
+      : ''
+  "
+>
+  <div class="contents">
+    @if (track().path && !failed()) {
+      <button
+        hlmBtn
+        type="button"
+        size="icon"
+        class="grid place-items-center p-0 shadow-[0_4px_12px_color-mix(in_srgb,var(--primary)_12%,transparent)] row-span-2 aspect-square size-11 sm:size-15 shrink-0 self-center rounded-full"
+        [disabled]="playPending()"
+        [attr.aria-label]="t(playing() ? 'pause' : 'play') + ': ' + track().name"
+        (click)="togglePlayback()"
+      >
+        @if (buffering() || playPending()) {
+          <ng-icon
+            name="lucideLoaderCircle"
+            class="text-xl motion-safe:animate-spin"
+            aria-hidden="true"
+          />
+        } @else {
+          <ng-icon
+            [name]="playing() ? 'lucidePause' : 'lucidePlay'"
+            class="text-xl"
+            aria-hidden="true"
+          />
+        }
+      </button>
+    } @else {
+      <span
+        class="row-span-2 flex aspect-square size-11 sm:size-15 shrink-0 items-center justify-center self-center rounded-full bg-muted"
+        ><ng-icon name="lucideMusic2" class="text-xl text-muted-foreground" aria-hidden="true"
+      /></span>
+    }
+    <div class="min-w-0 flex-1">
+      <h4 class="break-words font-semibold leading-snug">{{ track().name }}</h4>
+      <p class="mt-1 text-sm text-muted-foreground">{{ track().artist }}</p>
+    </div>
+    <button
+      hlmBtn
+      variant="ghost"
+      size="icon-sm"
+      type="button"
+      class="shrink-0 justify-self-center rounded-md text-muted-foreground"
+      [attr.aria-label]="t('trackInfo') + ': ' + track().name"
+      [attr.aria-expanded]="showInfo()"
+      [attr.aria-controls]="'track-info-' + soundtrackId() + '-' + track().id"
+      (click)="showInfo.set(!showInfo())"
+    >
+      <ng-icon name="lucideInfo" aria-hidden="true" />
+    </button>
+  </div>
+  @if (track().path) {
+    <audio
+      #audio
+      preload="none"
+      class="hidden"
+      [src]="track().path"
+      (play)="started(audio)"
+      (pause)="paused()"
+      (ended)="paused(); updateTime(audio)"
+      (timeupdate)="updateTime(audio)"
+      (loadedmetadata)="updateTime(audio)"
+      (durationchange)="updateTime(audio)"
+      (waiting)="buffering.set(true)"
+      (playing)="buffering.set(false)"
+      (canplay)="buffering.set(false)"
+      (volumechange)="updateVolume(audio)"
+      (error)="mediaError()"
+    ></audio>
+  }
+  @if (track().path && !failed()) {
+    <div class="col-start-2 row-start-2 flex min-w-0 items-center gap-2 sm:gap-3">
+      <span class="shrink-0 text-xs tabular-nums text-muted-foreground">{{
+        formatTime(currentTime())
+      }}</span>
+      <input
+        type="range"
+        class="audio-range block h-8 min-w-0 flex-1 appearance-none m-0 p-0 bg-transparent cursor-pointer [--progress:0%] [--rail:var(--border)] focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 focus-visible:rounded-[0.4rem] disabled:cursor-default disabled:opacity-50 forced-colors:appearance-auto"
+        min="0"
+        [max]="duration() || 1"
+        step="0.1"
+        [value]="currentTime()"
+        [disabled]="duration() === 0"
+        [style.--progress]="(duration() ? (currentTime() / duration()) * 100 : 0) + '%'"
+        [attr.aria-label]="t('seek') + ': ' + track().name"
+        [attr.aria-valuetext]="formatTime(currentTime()) + ' / ' + formatTime(duration())"
+        (input)="seek($event)"
+      />
+      <span class="shrink-0 text-xs tabular-nums text-muted-foreground">{{
+        duration() ? formatTime(duration()) : '—:—'
+      }}</span>
+    </div>
+    <button
+      hlmBtn
+      variant="ghost"
+      size="icon-sm"
+      type="button"
+      class="col-start-3 row-start-2 justify-self-center rounded-md text-muted-foreground"
+      [attr.aria-label]="t(muted() ? 'unmute' : 'mute') + ': ' + track().name"
+      [attr.aria-pressed]="muted()"
+      (click)="toggleMute()"
+    >
+      <ng-icon [name]="muted() ? 'lucideVolumeX' : 'lucideVolume2'" aria-hidden="true" />
+    </button>
+    @if (buffering() || playPending()) {
+      <span role="status" class="sr-only">{{ t('buffering') }}</span>
+    }
+  } @else {
+    <p class="col-span-2 col-start-2 mt-2 text-sm text-muted-foreground" role="status">
+      {{ t('audioUnavailable') }}
+    </p>
+    <button
+      hlmBtn
+      variant="link"
+      type="button"
+      class="col-span-2 col-start-2 h-auto justify-self-start px-0 pt-2"
+      (click)="reload.emit()"
+    >
+      {{ t('reload') }}
+    </button>
+  }
+  @if (showInfo()) {
+    <dl
+      [id]="'track-info-' + soundtrackId() + '-' + track().id"
+      class="col-span-3 my-3 grid gap-3 text-xs sm:grid-cols-2"
+    >
+      <div class="space-y-1">
+        <dt class="text-muted-foreground">{{ t('trackId') }}</dt>
+        <dd class="break-all font-mono">{{ track().id }}</dd>
+      </div>
+      <div class="space-y-1">
+        <dt class="text-muted-foreground">{{ t('externalTrackId') }}</dt>
+        <dd class="break-all font-mono">{{ track().externalId }}</dd>
+      </div>
+      <div class="space-y-1 sm:col-span-2">
+        <dt class="text-muted-foreground">{{ t('soundtrackId') }}</dt>
+        <dd class="break-all font-mono">{{ soundtrackId() }}</dd>
+      </div>
+    </dl>
+  }
+</article>

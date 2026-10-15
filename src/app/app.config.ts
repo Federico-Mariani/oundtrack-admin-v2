@@ -1,3 +1,4 @@
+import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   type ApplicationConfig,
@@ -16,6 +17,7 @@ import { languageInterceptor } from './core/interceptors/language.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: OVERLAY_DEFAULT_CONFIG, useValue: { usePopover: false } },
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authTokenInterceptor, languageInterceptor])),

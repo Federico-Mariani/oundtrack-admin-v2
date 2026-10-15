@@ -1,3 +1,4 @@
+import { MovieLanguagesCell } from '../movie-languages-cell/movie-languages-cell';
 import { type ColumnDef, createColumnHelper, flexRenderComponent } from '@tanstack/angular-table';
 import type { DataTableFeatures } from '@shared/ui/data-table/data-table-features';
 import type { Id } from '@shared/types/id';
@@ -13,6 +14,7 @@ export function createMoviesTableColumns(
   labels: MoviesTableLabels,
   copyId: (id: Id) => void,
   copyExternalId: (id: number) => void,
+  viewDetail: (id: Id) => void,
 ): ColumnDef<DataTableFeatures, MovieTableRowModel>[] {
   return columnHelper.columns([
     columnHelper.accessor('title', {
@@ -39,6 +41,16 @@ export function createMoviesTableColumns(
       cell: (context) =>
         flexRenderComponent(MovieGenresCell, { inputs: { genres: context.row.original.genres } }),
     }),
+    columnHelper.accessor((row) => row.languages.join(', '), {
+      id: 'languages',
+      header: labels.languages,
+      size: 160,
+      minSize: 120,
+      cell: (context) =>
+        flexRenderComponent(MovieLanguagesCell, {
+          inputs: { languages: context.row.original.languages },
+        }),
+    }),
     columnHelper.accessor('releaseDate', {
       header: labels.releaseDate,
       enableHiding: false,
@@ -62,9 +74,13 @@ export function createMoviesTableColumns(
           inputs: {
             label: `${labels.actions}: ${context.row.original.title}`,
             copyIdLabel: labels.copyId,
+            viewDetailLabel: labels.viewDetail,
             copyExternalIdLabel: labels.copyExternalId,
           },
           outputs: {
+            viewDetail: () => {
+              viewDetail(context.row.original.id);
+            },
             copyId: () => {
               copyId(context.row.original.id);
             },

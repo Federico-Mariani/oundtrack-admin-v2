@@ -39,6 +39,7 @@ export class MoviesTable {
   readonly pageChange = output<PageRequest>();
   readonly resetQuery = output();
   readonly retry = output();
+  readonly viewDetail = output<Id>();
   readonly copyId = output<Id>();
   readonly copyExternalId = output<number>();
 
@@ -55,6 +56,9 @@ export class MoviesTable {
           },
           (id) => {
             this.copyExternalId.emit(id);
+          },
+          (id) => {
+            this.viewDetail.emit(id);
           },
         )
       : [];

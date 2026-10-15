@@ -28,6 +28,7 @@
     [loading]="loading()"
     [errorMessage]="loadError() ? t('loadFailed') : null"
     (retry)="reload()"
+    (viewDetail)="openDetail($event)"
     (copyId)="copyIdentifier($event)"
     (copyExternalId)="copyIdentifier($event)"
   />

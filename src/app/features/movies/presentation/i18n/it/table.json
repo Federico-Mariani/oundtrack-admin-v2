@@ -5,5 +5,7 @@
   "externalId": "ID esterno",
   "actions": "Azioni",
   "copyId": "Copia ID del film",
-  "copyExternalId": "Copia ID esterno"
+  "copyExternalId": "Copia ID esterno",
+  "viewDetail": "Apri dettaglio",
+  "languages": "Lingue"
 }

@@ -45,3 +45,8 @@ No direct CDK Dialog or DIALOG_DATA is used by application modals.
 The local Helm service accepts an optional `viewContainerRef` and forwards it to
 `BrnDialogService.open`. This small extension preserves feature-scoped providers when
 opening a component globally; retain it when regenerating the Helm primitive.
+
+Use `contentClass` for a different modal width or padding. For image-led content,
+`ModalFrame` accepts `overlayHeader` to keep its close button above the content while
+preserving screen-reader title and description. Provide an internal scroll container
+when using `overflow-hidden` on the dialog surface.

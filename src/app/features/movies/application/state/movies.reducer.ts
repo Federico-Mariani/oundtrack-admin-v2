@@ -1,4 +1,6 @@
+import { moviesInfoCreateReducer } from './reducers/movies-info-create.reducer';
 import { moviesCreateReducer } from './reducers/movies-create.reducer';
+import { moviesDetailReducer } from './reducers/movies-detail.reducer';
 import { createReducer } from '@ngrx/store';
 import { initialMoviesState } from './movies.state';
 import { moviesLoadReducer } from './reducers/movies-load.reducer';
@@ -11,4 +13,6 @@ export const moviesReducer = createReducer(
   initialMoviesState,
   ...moviesLoadReducer,
   ...moviesCreateReducer,
+  ...moviesDetailReducer,
+  ...moviesInfoCreateReducer,
 );

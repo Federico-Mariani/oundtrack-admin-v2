@@ -1,5 +1,5 @@
 import { resolveLocalized } from '@shared/localization/localized.queries';
-import type { SupportedLocale } from '@shared/localization/supported-locale';
+import { SUPPORTED_LOCALES, type SupportedLocale } from '@shared/localization/supported-locale';
 import type { MovieModel } from '../../domain/models/movie.model';
 import type { MovieTableRowModel } from '../models/movie-table-row.model';
 
@@ -21,6 +21,7 @@ export function toMovieTableRow(
     externalMovieId: movie.externalMovieId,
     title: info?.title ?? '—',
     genres,
+    languages: SUPPORTED_LOCALES.filter((language) => movie.info[language]),
     releaseDate,
     releaseDateLabel: releaseDate === undefined ? '—' : dateFormatter.format(releaseDate),
     posterUrl: info?.posterUrl ?? null,

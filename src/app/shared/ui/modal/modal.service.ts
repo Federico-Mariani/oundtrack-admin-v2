@@ -22,7 +22,7 @@ export class ModalService {
       restoreFocus: true,
       disableClose: options.disableClose ?? false,
       showCloseButton: false,
-      contentClass: 'max-h-[calc(100dvh-2rem)] overflow-y-auto',
+      contentClass: `max-h-[calc(100dvh-2rem)] overflow-y-auto ${options.contentClass ?? ''}`,
     });
     const unregister = options.viewContainerRef.injector.get(DestroyRef).onDestroy(() => {
       ref.forceClose();

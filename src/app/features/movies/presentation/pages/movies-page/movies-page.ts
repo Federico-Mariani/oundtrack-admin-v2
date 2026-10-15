@@ -1,3 +1,7 @@
+import type { Id } from '@shared/types/id';
+import type { BrnDialogRef } from '@spartan-ng/brain/dialog';
+import { ModalService } from '@shared/ui/modal/modal.service';
+import { MovieDetailModal } from '../../components/movie-detail-modal/movie-detail-modal';
 import type { MoviesFilterFormModel } from '../../models/movies-filter-form.model';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { MoviesFilters } from '../../components/movies-filters/movies-filters';
@@ -7,6 +11,7 @@ import { DEFAULT_MOVIES_LIST_QUERY } from '../../../domain/models/movies-list-qu
 import { applyMovieFilterValues } from '../../mappers/movie-filter-values.mapper';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
+  ViewContainerRef,
   ChangeDetectionStrategy,
   Component,
   inject,
@@ -29,6 +34,9 @@ import { MoviesTable } from '../../components/movies-table/movies-table';
   providers: [provideIcons({ lucideFilm })],
 })
 export class MoviesPage {
+  private readonly modal = inject(ModalService);
+  private readonly viewContainerRef = inject(ViewContainerRef);
+  private detailRef?: BrnDialogRef<void>;
   private readonly moviesFacade = inject(MoviesFacade);
   private readonly language = inject(LanguageService);
   private readonly clipboard = inject(Clipboard);
@@ -55,6 +63,24 @@ export class MoviesPage {
       untracked(() => {
         this.reload();
       });
+    });
+  }
+
+  protected openDetail(id: Id): void {
+    if (this.detailRef) {
+      return;
+    }
+    this.detailRef = this.modal.open(
+      MovieDetailModal,
+      { id },
+      {
+        viewContainerRef: this.viewContainerRef,
+        contentClass:
+          'w-[64rem] max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-2rem)] p-0 overflow-hidden',
+      },
+    );
+    this.detailRef.closed$.subscribe(() => {
+      this.detailRef = undefined;
     });
   }
 

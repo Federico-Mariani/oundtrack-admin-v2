@@ -1,3 +1,5 @@
+import type { MovieDetailModel } from '../../domain/models/movie-detail.model';
+import { movieDetailResponse } from '../../testing/movie-detail.fixture';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
@@ -77,6 +79,26 @@ describe('Movies paginated HTTP contract', () => {
     expect(result.limit).toBe(20);
     expect(result.total).toBe(41);
     expect(result.items[0]?.info['en-US']?.title).toBe('Matrix');
+  });
+  it('fetches one movie by encoded ID and maps its detail envelope', () => {
+    const next = vi.fn<(movie: MovieDetailModel) => void>();
+    TestBed.inject(HttpMoviesRepository).getOne('movie/one').subscribe(next);
+    const request = TestBed.inject(HttpTestingController).expectOne((req) =>
+      req.url.endsWith('/movies/movie%2Fone'),
+    );
+    expect(request.request.method).toBe('GET');
+    request.flush({ data: movieDetailResponse() });
+    expect(next.mock.calls[0]?.[0].id).toBe('movie-one');
+    expect(next.mock.calls[0]?.[0].soundtracks).toHaveLength(1);
+  });
+  it('maps detail failures', () => {
+    const error = vi.fn();
+    TestBed.inject(HttpMoviesRepository).getOne('missing').subscribe({ error });
+    const request = TestBed.inject(HttpTestingController).expectOne((req) =>
+      req.url.endsWith('/movies/missing'),
+    );
+    request.flush({ message: 'Not found' }, { status: 404, statusText: 'Not Found' });
+    expect(error).toHaveBeenCalledWith(expect.objectContaining({ code: 'not-found', status: 404 }));
   });
   it('omits empty filters and maps HTTP errors', () => {
     const error = vi.fn();
