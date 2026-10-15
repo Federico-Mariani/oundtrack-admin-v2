@@ -40,5 +40,7 @@
   "noGenres": "No genres available.",
   "noLocalizedTracks": "No tracks available in this language.",
   "metadataDescription": "Catalog data and the selected translation.",
-  "record": "Catalog record"
+  "record": "Catalog record",
+  "addLanguage": "Add a language",
+  "allLanguages": "All languages are already available"
 }

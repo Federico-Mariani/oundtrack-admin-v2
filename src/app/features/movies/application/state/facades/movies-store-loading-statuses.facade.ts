@@ -7,6 +7,7 @@ import { moviesFeature } from '../movies.feature';
 export class MoviesStoreLoadingStatusesFacade {
   private readonly store = inject(Store);
 
+  readonly isCreatingInfo = this.store.selectSignal(moviesFeature.selectIsCreatingInfo);
   readonly isLoadingDetail = this.store.selectSignal(moviesFeature.selectIsLoadingDetail);
   readonly isCreatingMovie = this.store.selectSignal(moviesFeature.selectIsCreatingMovie);
   readonly isLoadingMovies = this.store.selectSignal(moviesFeature.selectIsLoadingMovies);

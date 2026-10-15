@@ -1,3 +1,4 @@
+import type { CreateMovieInfoModel } from '../../domain/models/create-movie-info.model';
 import {
   DEFAULT_MOVIES_LIST_QUERY,
   type MoviesListQuery,
@@ -11,6 +12,8 @@ import type { MovieDetailModel } from '../../domain/models/movie-detail.model';
 import type { Id } from '@shared/types/id';
 
 export interface MoviesState {
+  readonly createInfoTarget: CreateMovieInfoModel | null;
+  readonly createInfoRequest: RequestState<RequestError>;
   readonly detailId: Id | null;
   readonly detail: MovieDetailModel | null;
   readonly detailRequest: RequestState<RequestError>;
@@ -22,6 +25,8 @@ export interface MoviesState {
 }
 
 export const initialMoviesState: MoviesState = {
+  createInfoTarget: null,
+  createInfoRequest: idleRequest(),
   detailId: null,
   detail: null,
   detailRequest: idleRequest(),

@@ -1,7 +1,15 @@
+import { LANGUAGE_OPTIONS } from '@app/core/i18n/language/language-options';
+import { toSupportedLocale } from '@app/core/i18n/language/language-locale.mapper';
+import { IconButton } from '@shared/ui/icon-button/icon-button';
+import { provideIcons } from '@ng-icons/core';
+import { lucidePlus } from '@ng-icons/lucide';
+import { ModalService } from '@shared/ui/modal/modal.service';
+import { CreateMovieInfoModal } from '../create-movie-info-modal/create-movie-info-modal';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ViewContainerRef,
   computed,
   inject,
   signal,
@@ -31,11 +39,13 @@ import type { MovieDetailModalParams } from './movie-detail-modal-params';
     ModalFrame,
     Button,
     Select,
+    IconButton,
     HlmTooltip,
     MovieDetailSkeleton,
     MovieDetailImage,
     MovieTrackPlayer,
   ],
+  providers: [provideIcons({ lucidePlus })],
   templateUrl: './movie-detail-modal.html',
   styleUrl: './movie-detail-modal.css',
 })
@@ -45,6 +55,14 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
   private readonly facade = inject(MoviesFacade);
   private readonly language = inject(LanguageService);
   private readonly selectedLocale = signal<SupportedLocale | null>(null);
+  private readonly modals = inject(ModalService);
+  private readonly viewContainerRef = inject(ViewContainerRef);
+  private createInfoRef?: BrnDialogRef<SupportedLocale>;
+  protected readonly missingLanguages = computed(() =>
+    LANGUAGE_OPTIONS.map((option) => toSupportedLocale(option.code)).filter(
+      (locale) => !this.locales().includes(locale),
+    ),
+  );
   private playingAudio?: HTMLAudioElement;
   protected readonly loading = this.facade.loadingStatuses.isLoadingDetail;
   protected readonly error = this.facade.errorStatuses.detail;
@@ -72,6 +90,24 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
     inject(DestroyRef).onDestroy(() => {
       this.playingAudio?.pause();
       this.facade.actions.closeDetail(this.params.id);
+    });
+  }
+  protected addLanguage(): void {
+    if (this.createInfoRef || !this.missingLanguages().length || this.loading() || this.error()) {
+      return;
+    }
+    this.playingAudio?.pause();
+    this.createInfoRef = this.modals.open(
+      CreateMovieInfoModal,
+      { id: this.params.id, languages: this.missingLanguages() },
+      { viewContainerRef: this.viewContainerRef, disableClose: true },
+    );
+    this.createInfoRef.closed$.subscribe((language) => {
+      this.createInfoRef = undefined;
+      if (language) {
+        this.selectedLocale.set(language);
+        this.reload();
+      }
     });
   }
   protected reload(): void {

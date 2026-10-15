@@ -8,6 +8,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { provideTransloco, provideTranslocoScope } from '@jsverse/transloco';
 import { of } from 'rxjs';
+import validation from '@app/core/i18n/translations/en/validation.json';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { ModalService } from '@shared/ui/modal/modal.service';
 import type { RequestError } from '@shared/state/request/request-error';
@@ -27,7 +28,7 @@ class MovieDetailTestOwner {
 }
 class EmptyTranslationLoader {
   getTranslation() {
-    return of({});
+    return of({ validation });
   }
 }
 function movie(): MovieDetailModel {
@@ -79,16 +80,30 @@ describe('Movie detail modal', () => {
     const detail = signal<MovieDetailModel | null>(null);
     const loading = signal(true);
     const error = signal<RequestError | null>(null);
-    const actions = { loadDetail: vi.fn(), closeDetail: vi.fn() };
+    const creatingInfo = signal(false);
+    const infoCreated = signal(false);
+    const infoError = signal<RequestError | null>(null);
+    const actions = {
+      loadDetail: vi.fn(),
+      closeDetail: vi.fn(),
+      createInfo: vi.fn(() => {
+        creatingInfo.set(true);
+      }),
+      resetCreateInfo: vi.fn(() => {
+        infoError.set(null);
+        infoCreated.set(false);
+        creatingInfo.set(false);
+      }),
+    };
     TestBed.configureTestingModule({
       imports: [MovieDetailTestOwner],
       providers: [
         {
           provide: MoviesFacade,
           useValue: {
-            data: { detail },
-            loadingStatuses: { isLoadingDetail: loading },
-            errorStatuses: { detail: error },
+            data: { detail, infoCreated },
+            loadingStatuses: { isLoadingDetail: loading, isCreatingInfo: creatingInfo },
+            errorStatuses: { detail: error, createInfo: infoError },
             actions,
           },
         },
@@ -113,7 +128,7 @@ describe('Movie detail modal', () => {
         contentClass: 'sm:max-w-5xl p-0 overflow-hidden',
       },
     );
-    return { fixture, ref, detail, loading, error, actions };
+    return { fixture, ref, detail, loading, error, actions, creatingInfo, infoCreated, infoError };
   }
   it('loads the requested movie, renders localized fallback and media, and clears state on close', async () => {
     const { fixture, ref, detail, loading, actions } = setup();
@@ -123,6 +138,7 @@ describe('Movie detail modal', () => {
       expect(document.body.textContent).toContain('Loading movie');
     });
     expect(document.querySelector('app-movie-detail-skeleton')).not.toBeNull();
+    expect(document.querySelector('app-select')).toBeNull();
     expect(document.querySelector('hlm-spinner')).toBeNull();
     detail.set(movie());
     loading.set(false);
@@ -382,6 +398,85 @@ describe('Movie detail modal', () => {
       expect(document.body.textContent).toContain('ID: category');
     });
     category.blur();
+    ref.forceClose();
+    fixture.destroy();
+  });
+  it('creates only missing languages, protects pending work and reloads the selected translation', async () => {
+    const { fixture, ref, detail, loading, actions, creatingInfo, infoCreated, infoError } =
+      setup();
+    detail.set(movie());
+    loading.set(false);
+    await fixture.whenStable();
+    await vi.waitFor(() => {
+      expect(document.querySelector('button[aria-label="Add a language"]')).not.toBeNull();
+    });
+    document.querySelector<HTMLButtonElement>('button[aria-label="Add a language"]')!.click();
+    await fixture.whenStable();
+    await vi.waitFor(() => {
+      expect(document.querySelector('app-create-movie-info-modal form')).not.toBeNull();
+    });
+    const form = document.querySelector<HTMLFormElement>('app-create-movie-info-modal form')!;
+    const submit = () =>
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    submit();
+    await fixture.whenStable();
+    expect(actions.createInfo).not.toHaveBeenCalled();
+    document
+      .querySelector<HTMLButtonElement>('app-create-movie-info-modal app-select button')!
+      .click();
+    await fixture.whenStable();
+    const options = document.querySelectorAll<HTMLElement>('hlm-select-item');
+    expect(options).toHaveLength(1);
+    expect(options[0].textContent).toContain('English');
+    options[0].click();
+    await fixture.whenStable();
+    submit();
+    await fixture.whenStable();
+    expect(actions.createInfo).toHaveBeenCalledExactlyOnceWith({ id: 'one', language: 'en-US' });
+    expect(
+      document.querySelector<HTMLButtonElement>(
+        'app-create-movie-info-modal button[aria-label="Close dialog"]',
+      )?.disabled ??
+        document.querySelector<HTMLButtonElement>(
+          'app-create-movie-info-modal app-modal-frame app-icon-button button',
+        )?.disabled,
+    ).toBe(true);
+    submit();
+    await fixture.whenStable();
+    expect(actions.createInfo).toHaveBeenCalledTimes(1);
+    creatingInfo.set(false);
+    infoError.set({ code: 'server' });
+    await fixture.whenStable();
+    expect(document.querySelector('app-create-movie-info-modal')?.textContent).toContain(
+      'The server could not complete creation.',
+    );
+    expect(document.querySelector('app-create-movie-info-modal app-select')?.textContent).toContain(
+      'English',
+    );
+    infoError.set(null);
+    submit();
+    await fixture.whenStable();
+    expect(actions.createInfo).toHaveBeenCalledTimes(2);
+    creatingInfo.set(false);
+    infoCreated.set(true);
+    await fixture.whenStable();
+    await vi.waitFor(() => {
+      expect(document.querySelector('app-create-movie-info-modal')).toBeNull();
+    });
+    expect(actions.loadDetail).toHaveBeenCalledTimes(2);
+    const current = movie();
+    detail.set({
+      ...current,
+      info: {
+        ...current.info,
+        'en-US': { ...current.info['it-IT']!, id: 'english', title: 'New English title' },
+      },
+    });
+    await fixture.whenStable();
+    expect(document.body.textContent).toContain('New English title');
+    expect(
+      document.querySelector<HTMLButtonElement>('button[aria-label="Add a language"]')?.disabled,
+    ).toBe(true);
     ref.forceClose();
     fixture.destroy();
   });

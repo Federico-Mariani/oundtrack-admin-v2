@@ -7,6 +7,7 @@ import { moviesFeature } from '../movies.feature';
 export class MoviesStoreDataFacade {
   private readonly store = inject(Store);
 
+  readonly infoCreated = this.store.selectSignal(moviesFeature.selectInfoCreated);
   readonly movieCreated = this.store.selectSignal(moviesFeature.selectMovieCreated);
   readonly detail = this.store.selectSignal(moviesFeature.selectDetail);
   readonly query = this.store.selectSignal(moviesFeature.selectQuery);

@@ -4,15 +4,24 @@
   [description]="t('description')"
   [overlayHeader]="true"
 >
-  @if (movie() && locales().length) {
+  @if (!loading() && !error() && movie()) {
     <div
-      class="absolute left-3 top-3 z-20 w-40 max-w-[calc(100%-5rem)] rounded-lg bg-background shadow-sm"
+      class="absolute left-5 top-5 z-20 flex max-w-[calc(100%-6rem)] items-center gap-2 sm:left-8 sm:top-8 sm:max-w-[calc(100%-8rem)]"
     >
       <app-select
+        class="block w-36 min-w-0 rounded-lg bg-background shadow-sm"
         [items]="languageItems()"
         [value]="locale()"
         [ariaLabel]="t('language')"
         (valueChange)="changeLocale($event)"
+      />
+      <app-icon-button
+        class="rounded-md bg-background shadow-sm"
+        icon="lucidePlus"
+        [ariaLabel]="t('addLanguage')"
+        [title]="t(missingLanguages().length ? 'addLanguage' : 'allLanguages')"
+        [disabled]="!missingLanguages().length"
+        (click)="addLanguage()"
       />
     </div>
   }

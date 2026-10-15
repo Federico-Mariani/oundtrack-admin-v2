@@ -1,3 +1,5 @@
+import type { CreateMovieInfoModel } from '../../domain/models/create-movie-info.model';
+import { toApiLocale } from '@app/core/http/api-locale.mapper';
 import type { CreateMovieModel } from '../../domain/models/create-movie.model';
 import type { ApiResponse } from '@app/core/http/api-response';
 import { toCreateMovieRequest } from '../mappers/create-movie-request.mapper';
@@ -25,6 +27,16 @@ export class HttpMoviesRepository implements MoviesRepositoryPort {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl + '/movies';
 
+  createInfo(request: CreateMovieInfoModel): Observable<void> {
+    return this.http
+      .post<unknown>(`${this.baseUrl}/${encodeURIComponent(request.id)}/info`, {
+        language: toApiLocale(request.language),
+      })
+      .pipe(
+        map(() => undefined),
+        catchError((error: HttpErrorResponse) => throwError(() => toRequestError(error))),
+      );
+  }
   getOne(id: Id): Observable<MovieDetailModel> {
     return this.http
       .get<ApiResponse<MovieDetailResponseDto>>(`${this.baseUrl}/${encodeURIComponent(id)}`)

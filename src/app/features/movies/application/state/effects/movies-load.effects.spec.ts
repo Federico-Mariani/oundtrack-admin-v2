@@ -20,6 +20,7 @@ describe('Movies query concurrency', () => {
     const subscription = loadMovies$(new Actions(actions), {
       getAll,
       getOne: vi.fn(),
+      createInfo: vi.fn(),
       create: vi.fn(),
     }).subscribe((action) => emitted.push(action));
     actions.next(MoviesLoadActions.moviesLoadRequested({ query: DEFAULT_MOVIES_LIST_QUERY }));
@@ -44,6 +45,7 @@ describe('Movies query concurrency', () => {
     const next = vi.fn();
     loadMovies$(new Actions(of(MoviesLoadActions.moviesLoadRequested({ query }))), {
       getOne: vi.fn(),
+      createInfo: vi.fn(),
       create: vi.fn(),
       getAll: () => of({ ...page, page: 5, total: 21 }),
     }).subscribe(next);
@@ -63,6 +65,7 @@ describe('Movies query concurrency', () => {
     const subscription = loadMovies$(new Actions(actions), {
       getAll,
       getOne: vi.fn(),
+      createInfo: vi.fn(),
       create: vi.fn(),
     }).subscribe(next);
     const request = MoviesLoadActions.moviesLoadRequested({ query: DEFAULT_MOVIES_LIST_QUERY });

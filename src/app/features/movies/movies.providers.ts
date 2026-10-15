@@ -1,3 +1,5 @@
+import * as moviesInfoCreateEffects from './application/state/effects/movies-info-create.effects';
+import * as moviesInfoCreateFeedbackEffects from './application/state/effects/movies-info-create-feedback.effects';
 import * as moviesCreateEffect from './application/state/effects/movies-create.effects';
 import * as moviesCreateFeedbackEffect from './application/state/effects/movies-create-feedback.effects';
 import * as moviesDetailEffects from './application/state/effects/movies-detail.effects';
@@ -21,6 +23,8 @@ export function provideMovies(): EnvironmentProviders {
     },
     provideState(moviesFeature),
     provideEffects(
+      moviesInfoCreateEffects,
+      moviesInfoCreateFeedbackEffects,
       moviesDetailEffects,
       moviesLoadEffect,
       moviesLoadFeedbackEffect,

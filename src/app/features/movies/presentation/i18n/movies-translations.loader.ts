@@ -10,6 +10,7 @@ export const moviesTranslationsLoader = createTranslationLoader({
     filters: () => import('./en/filters.json'),
     create: () => import('./en/create.json'),
     detail: () => import('./en/detail.json'),
+    createInfo: () => import('./en/create-info.json'),
   },
   it: {
     errors: () => import('./it/errors.json'),
@@ -18,5 +19,6 @@ export const moviesTranslationsLoader = createTranslationLoader({
     filters: () => import('./it/filters.json'),
     create: () => import('./it/create.json'),
     detail: () => import('./it/detail.json'),
+    createInfo: () => import('./it/create-info.json'),
   },
 });

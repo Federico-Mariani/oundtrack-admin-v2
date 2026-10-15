@@ -22,6 +22,7 @@ describe('Movie detail effects', () => {
     const first = new Subject<MovieDetailModel>();
     const second = new Subject<MovieDetailModel>();
     const repository: MoviesRepositoryPort = {
+      createInfo: vi.fn(),
       getOne: vi
         .fn()
         .mockReturnValueOnce(first)
@@ -48,6 +49,7 @@ describe('Movie detail effects', () => {
     const actions = new Subject<Action>();
     const error = { code: 'not-found' as const, status: 404 };
     const repository: MoviesRepositoryPort = {
+      createInfo: vi.fn(),
       getOne: vi
         .fn()
         .mockReturnValueOnce(throwError(() => error))

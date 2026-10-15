@@ -40,5 +40,7 @@
   "noGenres": "Nessun genere disponibile.",
   "noLocalizedTracks": "Nessun brano disponibile in questa lingua.",
   "metadataDescription": "Dati del catalogo e della traduzione selezionata.",
-  "record": "Scheda del catalogo"
+  "record": "Scheda del catalogo",
+  "addLanguage": "Aggiungi una lingua",
+  "allLanguages": "Tutte le lingue sono già disponibili"
 }
