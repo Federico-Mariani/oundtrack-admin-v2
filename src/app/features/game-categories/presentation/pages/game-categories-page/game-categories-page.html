@@ -1,0 +1,14 @@
+<div *transloco="let t; prefix: 'game-categories.catalog'" class="flex flex-col gap-6">
+  <header class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex flex-col gap-1">
+      <div class="flex items-center gap-3">
+        <span
+          class="flex size-8 items-center justify-center rounded-md border bg-card text-primary shadow-sm"
+          ><ng-icon name="lucideFilm" class="text-md" aria-hidden="true"
+        /></span>
+        <h1 class="text-2xl font-semibold tracking-tight">{{ t('title') }}</h1>
+      </div>
+      <p class="mt-1 text-sm text-muted-foreground">{{ t('description') }}</p>
+    </div>
+  </header>
+</div>

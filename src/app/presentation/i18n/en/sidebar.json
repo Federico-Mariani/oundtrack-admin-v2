@@ -3,6 +3,10 @@
   "subTitle": "Staging",
   "home": "Home",
   "entities": "Entities",
+  "gameCategories": {
+    "label": "Game categories",
+    "all": "All"
+  },
   "movies": {
     "label": "Movies",
     "all": "All",

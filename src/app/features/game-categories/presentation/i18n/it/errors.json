@@ -1,0 +1,13 @@
+{
+  "getAll": {
+    "network": "Impossibile connettersi al server. Controlla la connessione e riprova.",
+    "bad-request": "La richiesta per recuperare le categorie di gioco non è valida.",
+    "unauthorized": "Devi effettuare l'accesso per visualizzare le categorie di gioco.",
+    "forbidden": "Non sei autorizzato a visualizzare le categorie di gioco.",
+    "not-found": "Nessuna categoria di gioco trovata.",
+    "conflict": "Non è stato possibile recuperare le categorie di gioco a causa di un conflitto. Riprova.",
+    "validation": "La richiesta per recuperare le categorie di gioco contiene dati non validi.",
+    "server": "Il server non è riuscito a recuperare le categorie di gioco. Riprova più tardi.",
+    "unknown": "Si è verificato un errore durante il recupero delle categorie di gioco. Riprova."
+  }
+}

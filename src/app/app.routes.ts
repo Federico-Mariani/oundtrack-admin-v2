@@ -1,6 +1,7 @@
 import type { Routes } from '@angular/router';
 import { AUTH_PATHS, authGuard } from '@features/auth';
 import { MOVIES_PATHS } from '@features/movies';
+import { GAME_CATEGORIES_PATHS } from '@features/game-categories';
 
 export const routes: Routes = [
   {
@@ -19,6 +20,13 @@ export const routes: Routes = [
       {
         path: '',
         loadChildren: () => import('@features/home').then(({ HOME_ROUTES }) => HOME_ROUTES),
+      },
+      {
+        path: GAME_CATEGORIES_PATHS.root,
+        loadChildren: () =>
+          import('@features/game-categories').then(
+            ({ GAME_CATEGORIES_ROUTES }) => GAME_CATEGORIES_ROUTES,
+          ),
       },
       {
         path: MOVIES_PATHS.root,

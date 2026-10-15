@@ -89,7 +89,7 @@ export class MoviesNavigationService {
 - Return the Router's `Promise<boolean>` / a `UrlTree`; never swallow it (`void this.router.navigate(...)`
   inside the service) and never hide errors with `.catch(() => {})`. The caller chooses `await` or `void`.
 - Separate from the facade: `AuthFacade` does state/application operations (`login()`),
-  `MoviesNavigationService` does navigation (`goToLogin()`). Do not mix both in one class.
+  `GameCategoriesNavigationService` does navigation (`goToLogin()`). Do not mix both in one class.
 
 ## Routes — lazy and feature-local
 

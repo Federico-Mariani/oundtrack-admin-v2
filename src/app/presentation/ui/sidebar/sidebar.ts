@@ -21,7 +21,6 @@ import { sidebarTranslationsLoader } from '../../i18n/sidebar-translations.loade
   selector: 'app-sidebar',
   templateUrl: './sidebar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // Scope is private to this view: projected routed pages keep their feature scope.
   viewProviders: [provideTranslocoScope({ scope: 'sidebar', loader: sidebarTranslationsLoader })],
   providers: [
     provideIcons({

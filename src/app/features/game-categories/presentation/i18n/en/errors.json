@@ -1,0 +1,13 @@
+{
+  "getAll": {
+    "network": "Unable to connect to the server. Check your connection and try again.",
+    "bad-request": "The request to retrieve game categories is invalid.",
+    "unauthorized": "You must be logged in to view game categories.",
+    "forbidden": "You are not authorized to view game categories.",
+    "not-found": "No game categories found.",
+    "conflict": "Unable to retrieve game categories due to a conflict. Please try again.",
+    "validation": "The request to retrieve game categories contains invalid data.",
+    "server": "The server was unable to retrieve game categories. Please try again later.",
+    "unknown": "An error occurred while retrieving game categories. Please try again."
+  }
+}

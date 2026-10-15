@@ -1,5 +1,6 @@
 import { MOVIES_NAVIGATION } from '@features/movies';
 import type { SidebarGroup } from '../../ui/sidebar/sidebar-group';
+import { GAME_CATEGORIES_NAVIGATION } from '@features/game-categories';
 
 /** Shell menu composition only. Feature paths remain owned by their routing APIs. */
 export const DEFAULT_SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
@@ -11,6 +12,20 @@ export const DEFAULT_SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
     id: 'entities',
     labelKey: 'sidebar.menu.entities',
     items: [
+      {
+        id: 'gameCategories',
+        labelKey: 'sidebar.menu.gameCategories.label',
+        icon: 'lucideFilm',
+        commands: GAME_CATEGORIES_NAVIGATION.root(),
+        exact: false,
+        children: [
+          {
+            id: 'game-categories-all',
+            labelKey: 'sidebar.menu.gameCategories.all',
+            commands: GAME_CATEGORIES_NAVIGATION.root(),
+          },
+        ],
+      },
       {
         id: 'movies',
         labelKey: 'sidebar.menu.movies.label',

@@ -1,0 +1,5 @@
+{
+  "title": "Game categories",
+  "description": "Browse and search your game categories catalog.",
+  "loadFailed": "Could not load categories. Please try again."
+}
