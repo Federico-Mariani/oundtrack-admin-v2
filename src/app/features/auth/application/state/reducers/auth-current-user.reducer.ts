@@ -7,7 +7,6 @@ import {
   pendingRequest,
   succeededRequest,
 } from '@shared/state/request/request-state.transitions';
-import { AuthCurrentUserApiActions } from '../actions/api/auth-current-user-api.actions';
 
 /**
  * Current-user lifecycle. A user that arrives when no session exists anymore
@@ -15,16 +14,16 @@ import { AuthCurrentUserApiActions } from '../actions/api/auth-current-user-api.
  * profile for a terminated session.
  */
 export const authUserReducers: Array<ReducerTypes<AuthState, ReadonlyArray<ActionCreator>>> = [
-  on(AuthCurrentUserActions.currentUserLoadRequested, (state): AuthState => ({
+  on(AuthCurrentUserActions.requested, (state): AuthState => ({
     ...state,
     currentUserRequest: pendingRequest(),
   })),
-  on(AuthCurrentUserApiActions.currentUserLoaded, (state, { user }): AuthState =>
+  on(AuthCurrentUserActions.succeeded, (state, { user }): AuthState =>
     state.session
       ? { ...state, user, currentUserRequest: succeededRequest() }
       : { ...state, currentUserRequest: idleRequest() },
   ),
-  on(AuthCurrentUserApiActions.currentUserLoadFailed, (state, { error }): AuthState => ({
+  on(AuthCurrentUserActions.failed, (state, { error }): AuthState => ({
     ...state,
     currentUserRequest: failedRequest(error),
   })),

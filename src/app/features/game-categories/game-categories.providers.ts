@@ -3,13 +3,13 @@ import { GAME_CATEGORIES_REPOSITORY } from './application/tokens/game-categories
 import { HttpGameCategoriesRepository } from './infrastructure/repositories/http-game-categories.repository';
 import { provideState } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import * as loadGameCategoriesEffect from '../game-categories/application/state/effects/game-categories-load.effects';
 import { gameCategoriesFeature } from './application/state/game-categories.feature';
+import * as getAllEffects from './application/state/effects/game-categories-get-all.effects';
 
 export function provideGameCategories(): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: GAME_CATEGORIES_REPOSITORY, useClass: HttpGameCategoriesRepository },
     provideState(gameCategoriesFeature),
-    provideEffects(loadGameCategoriesEffect),
+    provideEffects(getAllEffects),
   ]);
 }

@@ -11,13 +11,13 @@ import { DEFAULT_MOVIES_LIST_QUERY } from '../../../domain/models/movies-list-qu
 import { applyMovieFilterValues } from '../../mappers/movie-filter-values.mapper';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
-  ViewContainerRef,
   ChangeDetectionStrategy,
   Component,
-  inject,
   computed,
   effect,
+  inject,
   untracked,
+  ViewContainerRef,
 } from '@angular/core';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -54,8 +54,8 @@ export class MoviesPage {
       Object.values(this.query().filters).some((value) => value !== undefined),
   }));
   protected readonly movies = this.moviesFacade.data.movies;
-  protected readonly loading = this.moviesFacade.loadingStatuses.isLoadingMovies;
-  protected readonly loadError = this.moviesFacade.errorStatuses.loadMovies;
+  protected readonly loading = this.moviesFacade.requests.getAll.isLoading;
+  protected readonly loadError = this.moviesFacade.requests.getAll.error;
 
   constructor() {
     effect(() => {

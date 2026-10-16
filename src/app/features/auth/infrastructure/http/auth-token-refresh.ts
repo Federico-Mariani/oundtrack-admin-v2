@@ -4,10 +4,10 @@ import {
   defer,
   filter,
   finalize,
-  switchMap,
   type Observable,
   of,
   shareReplay,
+  switchMap,
   take,
   throwError,
 } from 'rxjs';
@@ -65,11 +65,11 @@ export class AuthTokenRefresh {
               }
               if (state.request.status === 'error') {
                 const error = state.request.error;
-                if (error?.code === 'unauthorized' || error?.code === 'forbidden') {
+                if (error.code === 'unauthorized' || error.code === 'forbidden') {
                   this.expire(current.generation);
                 }
                 return throwError(
-                  () => new HttpErrorResponse({ status: error?.status ?? 500, error }),
+                  () => new HttpErrorResponse({ status: error.status ?? 500, error }),
                 );
               }
               return of(state.session);

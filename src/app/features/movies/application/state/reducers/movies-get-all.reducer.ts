@@ -1,21 +1,21 @@
 import { type ActionCreator, on, type ReducerTypes } from '@ngrx/store';
-import { MoviesLoadActions } from '../actions/movies-load.actions';
+import { MoviesGetAllActions } from '../actions/movies-get-all.actions';
 import type { MoviesState } from '../movies.state';
 import {
   failedRequest,
+  idleRequest,
   pendingRequest,
   succeededRequest,
 } from '@shared/state/request/request-state.transitions';
-import { MoviesLoadApiActions } from '../actions/api/movies-load-api.actions';
 
-export const moviesLoadReducer: Array<ReducerTypes<MoviesState, ReadonlyArray<ActionCreator>>> = [
-  on(MoviesLoadActions.moviesLoadRequested, (state, { query }): MoviesState => ({
+export const moviesGetAllReducer: Array<ReducerTypes<MoviesState, ReadonlyArray<ActionCreator>>> = [
+  on(MoviesGetAllActions.requested, (state, { query }): MoviesState => ({
     ...state,
     query,
     movies: [],
     loadRequest: pendingRequest(),
   })),
-  on(MoviesLoadApiActions.moviesLoaded, (state, { result, query }): MoviesState =>
+  on(MoviesGetAllActions.succeeded, (state, { result, query }): MoviesState =>
     state.query !== query
       ? state
       : {
@@ -26,7 +26,11 @@ export const moviesLoadReducer: Array<ReducerTypes<MoviesState, ReadonlyArray<Ac
           loadRequest: succeededRequest(),
         },
   ),
-  on(MoviesLoadApiActions.moviesLoadFailed, (state, { error, query }): MoviesState =>
+  on(MoviesGetAllActions.failed, (state, { error, query }): MoviesState =>
     state.query !== query ? state : { ...state, loadRequest: failedRequest(error) },
   ),
+  on(MoviesGetAllActions.reset, (state): MoviesState => ({
+    ...state,
+    loadRequest: idleRequest(),
+  })),
 ];

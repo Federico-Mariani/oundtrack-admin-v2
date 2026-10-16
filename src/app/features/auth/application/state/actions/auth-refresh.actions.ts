@@ -3,7 +3,7 @@ import type { AuthSessionModel } from '../../../domain/models/auth-session.model
 import type { RequestError } from '@shared/state/request/request-error';
 
 export const AuthRefreshActions = createActionGroup({
-  source: 'AUTH - Refresh',
+  source: 'Auth Refresh',
   events: {
     Requested: props<{ generation: number }>(),
     Succeeded: props<{ generation: number; session: AuthSessionModel }>(),

@@ -7,7 +7,6 @@ import { authFeature } from '../auth.feature';
 import { AuthRefreshActions } from '../actions/auth-refresh.actions';
 import { AuthSessionStorageActions } from '../actions/auth-session-storage.actions';
 import { AuthLoginActions } from '../actions/auth-login.actions';
-import { AuthLoginApiActions } from '../actions/api/auth-login-api.actions';
 import { AuthLogoutActions } from '../actions/auth-logout.actions';
 import { AuthSessionActions } from '../actions/auth-session.actions';
 import type { RequestError } from '@shared/state/request/request-error';
@@ -29,8 +28,8 @@ export const refreshSession$ = createEffect(
               ofType(
                 AuthLogoutActions.logoutSubmitted,
                 AuthSessionActions.sessionExpired,
-                AuthLoginActions.loginSubmitted,
-                AuthLoginApiActions.loginSucceeded,
+                AuthLoginActions.requested,
+                AuthLoginActions.succeeded,
                 AuthSessionStorageActions.sessionRestored,
               ),
             ),

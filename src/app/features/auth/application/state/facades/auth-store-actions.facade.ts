@@ -21,7 +21,7 @@ export class AuthStoreActionsFacade {
   }
 
   login(credentials: LoginCredentialsModel): void {
-    this.store.dispatch(AuthLoginActions.loginSubmitted({ credentials }));
+    this.store.dispatch(AuthLoginActions.requested({ credentials }));
   }
 
   restoreSession(): void {
@@ -29,7 +29,7 @@ export class AuthStoreActionsFacade {
   }
 
   reloadCurrentUser(): void {
-    this.store.dispatch(AuthCurrentUserActions.currentUserLoadRequested());
+    this.store.dispatch(AuthCurrentUserActions.requested());
   }
 
   logout(): void {

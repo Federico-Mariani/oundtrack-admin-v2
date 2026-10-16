@@ -16,14 +16,14 @@ export class GameCategoriesPage {
   private readonly gameCategoriesFacade = inject(GameCategoriesFacade);
 
   protected readonly categories = this.gameCategoriesFacade.data.categories;
-  protected readonly loading = this.gameCategoriesFacade.loadingStatuses.isLoadingGameCategories;
-  protected readonly loadError = this.gameCategoriesFacade.errorStatuses.loadCategories;
+  protected readonly loading = this.gameCategoriesFacade.requests.getAll.isLoading;
+  protected readonly loadError = this.gameCategoriesFacade.requests.getAll.error;
 
   constructor() {
     this.reload();
   }
 
   protected reload(): void {
-    this.gameCategoriesFacade.actions.loadCategories();
+    this.gameCategoriesFacade.actions.getAll();
   }
 }

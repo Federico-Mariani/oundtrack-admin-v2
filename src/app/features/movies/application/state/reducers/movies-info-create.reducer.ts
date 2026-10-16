@@ -1,17 +1,17 @@
 import { type ActionCreator, on, type ReducerTypes } from '@ngrx/store';
 import type { MoviesState } from '../movies.state';
 import { MoviesInfoCreateActions } from '../actions/movies-info-create.actions';
-import { MoviesInfoCreateApiActions } from '../actions/api/movies-info-create-api.actions';
 import {
+  failedRequest,
   idleRequest,
   pendingRequest,
   succeededRequest,
-  failedRequest,
 } from '@shared/state/request/request-state.transitions';
+
 export const moviesInfoCreateReducer: Array<
   ReducerTypes<MoviesState, ReadonlyArray<ActionCreator>>
 > = [
-  on(MoviesInfoCreateActions.submitted, (state, { request }): MoviesState =>
+  on(MoviesInfoCreateActions.requested, (state, { request }): MoviesState =>
     state.createInfoRequest.status === 'pending'
       ? state
       : { ...state, createInfoTarget: request, createInfoRequest: pendingRequest() },
@@ -21,14 +21,14 @@ export const moviesInfoCreateReducer: Array<
     createInfoTarget: null,
     createInfoRequest: idleRequest(),
   })),
-  on(MoviesInfoCreateApiActions.succeeded, (state, { request }): MoviesState =>
+  on(MoviesInfoCreateActions.succeeded, (state, { request }): MoviesState =>
     state.createInfoRequest.status === 'pending' &&
     state.createInfoTarget?.id === request.id &&
     state.createInfoTarget.language === request.language
       ? { ...state, createInfoRequest: succeededRequest() }
       : state,
   ),
-  on(MoviesInfoCreateApiActions.failed, (state, { request, error }): MoviesState =>
+  on(MoviesInfoCreateActions.failed, (state, { request, error }): MoviesState =>
     state.createInfoRequest.status === 'pending' &&
     state.createInfoTarget?.id === request.id &&
     state.createInfoTarget.language === request.language

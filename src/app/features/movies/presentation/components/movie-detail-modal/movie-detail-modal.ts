@@ -79,8 +79,8 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
     ),
   );
   private playingAudio?: HTMLAudioElement;
-  protected readonly loading = this.facade.loadingStatuses.isLoadingDetail;
-  protected readonly error = this.facade.errorStatuses.detail;
+  protected readonly loading = this.facade.requests.getById.isLoading;
+  protected readonly error = this.facade.requests.getById.error;
   protected readonly movie = computed(() => {
     const movie = this.facade.data.detail();
     return movie?.id === this.params.id ? movie : null;

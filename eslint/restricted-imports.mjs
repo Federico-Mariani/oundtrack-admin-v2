@@ -145,6 +145,10 @@ export const restrictedImports = [
     patterns: [ngrxForbidden, featureInternalsForbidden],
   }),
 
+  restrict('shared-ngrx', ['src/app/shared/state/ngrx/**/*.ts'], {
+    patterns: [featureInternalsForbidden],
+  }),
+
   restrict(
     'shared-pure',
     ['src/app/shared/types/**/*.ts', 'src/app/shared/state/request/**/*.ts'],

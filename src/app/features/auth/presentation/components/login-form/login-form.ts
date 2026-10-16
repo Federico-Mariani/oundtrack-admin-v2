@@ -40,11 +40,9 @@ export class LoginForm {
 
   protected readonly i18nScope = AUTH_I18N_SCOPE;
 
-  protected readonly isLoggingIn = computed(() => this.authFacade.loadingStatuses.isLoggingIn());
-  protected readonly isLoadingCurrentUser = computed(() =>
-    this.authFacade.loadingStatuses.isLoadingCurrentUser(),
-  );
-  protected readonly loginError = computed(() => this.authFacade.errorStatuses.login());
+  protected readonly isLoggingIn = this.authFacade.requests.login.isLoading;
+  protected readonly isLoadingCurrentUser = this.authFacade.requests.currentUser.isLoading;
+  protected readonly loginError = this.authFacade.requests.login.error;
 
   private readonly loginFieldErrors = computed(() => this.loginError()?.fieldErrors);
   protected readonly canSubmit: Signal<boolean> = computed(() => {

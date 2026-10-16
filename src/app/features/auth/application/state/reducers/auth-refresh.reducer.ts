@@ -2,21 +2,20 @@ import { type ActionCreator, on, type ReducerTypes } from '@ngrx/store';
 import { AuthRefreshActions } from '../actions/auth-refresh.actions';
 import type { AuthState } from '../auth.state';
 import {
-  pendingRequest,
-  succeededRequest,
   failedRequest,
   idleRequest,
+  pendingRequest,
+  succeededRequest,
 } from '@shared/state/request/request-state.transitions';
 import { AuthLoginActions } from '../actions/auth-login.actions';
-import { AuthLoginApiActions } from '../actions/api/auth-login-api.actions';
 import { AuthLogoutActions } from '../actions/auth-logout.actions';
 import { AuthSessionActions } from '../actions/auth-session.actions';
 import { AuthSessionStorageActions } from '../actions/auth-session-storage.actions';
 
 export const authRefreshReducers: Array<ReducerTypes<AuthState, ReadonlyArray<ActionCreator>>> = [
   on(
-    AuthLoginActions.loginSubmitted,
-    AuthLoginApiActions.loginSucceeded,
+    AuthLoginActions.requested,
+    AuthLoginActions.succeeded,
     AuthLogoutActions.logoutSubmitted,
     AuthSessionActions.sessionExpired,
     AuthSessionStorageActions.sessionRestored,

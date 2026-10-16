@@ -1,8 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   computed,
+  DestroyRef,
   effect,
   inject,
   untracked,
@@ -21,6 +21,7 @@ import { SelectField } from '@shared/ui/select-field/select-field';
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
 import type { CreateMovieInfoFormModel } from '../../models/create-movie-info-form.model';
 import type { CreateMovieInfoModalParams } from './create-movie-info-modal-params';
+
 @Component({
   selector: 'app-create-movie-info-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,8 +76,8 @@ export class CreateMovieInfoModal implements ModalContent<
   readonly params = injectBrnDialogContext<{ params: CreateMovieInfoModalParams }>().params;
   readonly ref = inject<BrnDialogRef<SupportedLocale>>(BrnDialogRef);
   private readonly facade = inject(MoviesFacade);
-  protected readonly busy = this.facade.loadingStatuses.isCreatingInfo;
-  protected readonly error = this.facade.errorStatuses.createInfo;
+  protected readonly busy = this.facade.requests.createInfo.isLoading;
+  protected readonly error = this.facade.requests.createInfo.error;
   protected readonly languages = this.params.languages.map((value) => ({
     value,
     label: value === 'it-IT' ? 'Italiano' : 'English',
@@ -93,7 +94,7 @@ export class CreateMovieInfoModal implements ModalContent<
     this.facade.actions.resetCreateInfo();
     this.controller.form().reset({ language: '' });
     effect(() => {
-      if (this.facade.data.infoCreated()) {
+      if (this.facade.requests.createInfo.isSuccess()) {
         untracked(() => {
           const language = this.controller.model().language;
           if (isSupportedLocale(language)) {

@@ -6,20 +6,19 @@ import {
   pendingRequest,
   succeededRequest,
 } from '@shared/state/request/request-state.transitions';
-import { AuthLoginApiActions } from '../actions/api/auth-login-api.actions';
 
 /** Login lifecycle: only `loginRequest` and, on success, `session` change. */
 export const authLoginReducers: Array<ReducerTypes<AuthState, ReadonlyArray<ActionCreator>>> = [
-  on(AuthLoginActions.loginSubmitted, (state): AuthState => ({
+  on(AuthLoginActions.requested, (state): AuthState => ({
     ...state,
     loginRequest: pendingRequest(),
   })),
-  on(AuthLoginApiActions.loginSucceeded, (state, { session }): AuthState => ({
+  on(AuthLoginActions.succeeded, (state, { session }): AuthState => ({
     ...state,
     session,
     loginRequest: succeededRequest(),
   })),
-  on(AuthLoginApiActions.loginFailed, (state, { error }): AuthState => ({
+  on(AuthLoginActions.failed, (state, { error }): AuthState => ({
     ...state,
     loginRequest: failedRequest(error),
   })),

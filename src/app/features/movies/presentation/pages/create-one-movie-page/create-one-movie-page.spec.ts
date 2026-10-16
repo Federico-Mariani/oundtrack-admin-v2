@@ -38,9 +38,13 @@ async function setup() {
       {
         provide: MoviesFacade,
         useValue: {
-          data: { movieCreated: created },
-          loadingStatuses: { isCreatingMovie: busy },
-          errorStatuses: { createMovie: error },
+          requests: {
+            create: {
+              isLoading: busy,
+              isSuccess: created,
+              error,
+            },
+          },
           actions: {
             createMovie,
             resetCreateMovie: () => {

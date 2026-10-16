@@ -2,7 +2,7 @@ import { createActionGroup, emptyProps } from '@ngrx/store';
 
 /** Logout is local (no backend call): a single intent terminates the session. */
 export const AuthLogoutActions = createActionGroup({
-  source: 'AUTH - Logout',
+  source: 'Auth Logout',
   events: {
     'Logout Submitted': emptyProps(),
   },

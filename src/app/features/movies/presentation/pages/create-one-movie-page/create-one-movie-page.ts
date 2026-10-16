@@ -49,15 +49,13 @@ export class CreateOneMoviePage {
   private readonly movies = inject(MoviesFacade);
   private readonly language = inject(LanguageService);
   protected readonly moviesLink = MOVIES_NAVIGATION.root();
-  protected readonly busy = this.movies.loadingStatuses.isCreatingMovie;
-  protected readonly created = this.movies.data.movieCreated;
+  protected readonly busy = this.movies.requests.create.isLoading;
+  protected readonly created = this.movies.requests.create.isSuccess;
   protected readonly languages = this.language.options.map((option) => ({
     label: option.label,
     value: toSupportedLocale(option.code),
   }));
-  private readonly fieldErrors = computed(
-    () => this.movies.errorStatuses.createMovie()?.fieldErrors,
-  );
+  private readonly fieldErrors = computed(() => this.movies.requests.create.error()?.fieldErrors);
   protected readonly controller = new AppFormController<CreateMovieFormModel>(
     [
       new AppFormField('title', [new RequiredInputRule(), new NonBlankInputRule()]),

@@ -10,7 +10,7 @@ import { AuthLogoutActions } from '../actions/auth-logout.actions';
 import { AuthSessionActions } from '../actions/auth-session.actions';
 import { AuthCurrentUserActions } from '../actions/auth-current-user.actions';
 import { AuthSessionStorageActions } from '../actions/auth-session-storage.actions';
-import { AuthLoginApiActions } from '../actions/api/auth-login-api.actions';
+import { AuthLoginActions } from '../actions/auth-login.actions';
 
 export const restoreSession$ = createEffect(
   (actions$ = inject(Actions), sessionStorage = inject(AUTH_SESSION_STORAGE)) =>
@@ -34,7 +34,7 @@ export const persistSession$ = createEffect(
     store = inject(Store),
   ) =>
     actions$.pipe(
-      ofType(AuthLoginApiActions.loginSucceeded, AuthRefreshActions.succeeded),
+      ofType(AuthLoginActions.succeeded, AuthRefreshActions.succeeded),
       filter(({ session }) => store.selectSignal(authFeature.selectSession)() === session),
       tap(({ session }) => {
         sessionStorage.save(session);
@@ -61,8 +61,8 @@ export const clearPersistedSession$ = createEffect(
 export const loadUserAfterSessionEstablished$ = createEffect(
   (actions$ = inject(Actions)) =>
     actions$.pipe(
-      ofType(AuthLoginApiActions.loginSucceeded, AuthSessionStorageActions.sessionRestored),
-      map(() => AuthCurrentUserActions.currentUserLoadRequested()),
+      ofType(AuthLoginActions.succeeded, AuthSessionStorageActions.sessionRestored),
+      map(() => AuthCurrentUserActions.requested()),
     ),
   { functional: true },
 );

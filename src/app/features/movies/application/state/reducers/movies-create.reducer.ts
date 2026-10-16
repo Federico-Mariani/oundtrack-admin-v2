@@ -1,15 +1,15 @@
 import { type ActionCreator, on, type ReducerTypes } from '@ngrx/store';
 import type { MoviesState } from '../movies.state';
 import { MoviesCreateActions } from '../actions/movies-create.actions';
-import { MoviesCreateApiActions } from '../actions/api/movies-create-api.actions';
 import {
+  failedRequest,
   idleRequest,
   pendingRequest,
   succeededRequest,
-  failedRequest,
 } from '@shared/state/request/request-state.transitions';
+
 export const moviesCreateReducer: Array<ReducerTypes<MoviesState, ReadonlyArray<ActionCreator>>> = [
-  on(MoviesCreateActions.submitted, (state): MoviesState => ({
+  on(MoviesCreateActions.requested, (state): MoviesState => ({
     ...state,
     createRequest: pendingRequest(),
   })),
@@ -17,11 +17,11 @@ export const moviesCreateReducer: Array<ReducerTypes<MoviesState, ReadonlyArray<
     ...state,
     createRequest: idleRequest(),
   })),
-  on(MoviesCreateApiActions.succeeded, (state): MoviesState => ({
+  on(MoviesCreateActions.succeeded, (state): MoviesState => ({
     ...state,
     createRequest: succeededRequest(),
   })),
-  on(MoviesCreateApiActions.failed, (state, { error }): MoviesState => ({
+  on(MoviesCreateActions.failed, (state, { error }): MoviesState => ({
     ...state,
     createRequest: failedRequest(error),
   })),
