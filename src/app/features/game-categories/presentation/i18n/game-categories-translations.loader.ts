@@ -6,9 +6,11 @@ export const gameCategoriesTranslationsLoader = createTranslationLoader({
   en: {
     errors: () => import('./en/errors.json'),
     catalog: () => import('./en/catalog.json'),
+    table: () => import('./en/table.json'),
   },
   it: {
     errors: () => import('./it/errors.json'),
     catalog: () => import('./it/catalog.json'),
+    table: () => import('./it/table.json'),
   },
 });

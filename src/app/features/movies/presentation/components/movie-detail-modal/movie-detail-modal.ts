@@ -149,7 +149,7 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
   protected localizedTracks(
     tracks: ReadonlyArray<MovieSoundtrackTrackModel>,
   ): ReadonlyArray<MovieSoundtrackTrackModel> {
-    return tracks.filter((track) => track.language === this.locale());
+    return tracks.filter((track) => track.languages.includes(this.locale()));
   }
   protected formatTimestamp(value: number): string {
     return Number.isFinite(new Date(value).getTime())

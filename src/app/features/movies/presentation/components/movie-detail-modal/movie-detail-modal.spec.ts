@@ -3,9 +3,9 @@ import { NotificationService } from '@app/core/notifications/notification.servic
 import {
   ChangeDetectionStrategy,
   Component,
-  ViewContainerRef,
   inject,
   signal,
+  ViewContainerRef,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideTransloco, provideTranslocoScope } from '@jsverse/transloco';
@@ -63,7 +63,7 @@ function movie(): MovieDetailModel {
             externalId: 'external',
             name: 'S.T.A.Y.',
             artist: 'Hans Zimmer',
-            language: 'it-IT',
+            languages: ['it-IT'],
             path: 'https://example.com/track.mp3',
           },
         ],
@@ -350,7 +350,7 @@ describe('Movie detail modal', () => {
           id: 'soundtrack',
           tracks: [
             track,
-            { ...track, id: 'english-track', name: 'English track', language: 'en-US' },
+            { ...track, id: 'english-track', name: 'English track', languages: ['en-US'] },
           ],
         },
       ],

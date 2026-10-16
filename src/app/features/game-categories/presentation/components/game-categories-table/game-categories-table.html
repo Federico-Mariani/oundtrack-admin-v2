@@ -1,0 +1,13 @@
+@if (columns().length > 0) {
+  <app-data-table
+    [columns]="columns()"
+    [data]="rows()"
+    [remote]="remote()"
+    [getRowId]="rowId"
+    [caption]="caption()"
+    [loading]="loading()"
+    [errorMessage]="errorMessage()"
+    [showPagination]="false"
+    (retry)="retry.emit()"
+  />
+}

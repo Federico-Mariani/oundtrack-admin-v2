@@ -153,5 +153,7 @@
       </table>
     </div>
   </div>
-  <app-data-table-pagination [table]="table" [remote]="remote()" [disabled]="loading()" />
+  @if (showPagination()) {
+    <app-data-table-pagination [table]="table" [remote]="remote()" [disabled]="loading()" />
+  }
 </section>

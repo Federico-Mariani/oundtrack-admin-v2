@@ -7,5 +7,5 @@ export interface MovieSoundtrackTrackModel {
   readonly path: string | null;
   readonly name: string;
   readonly artist: string;
-  readonly language: SupportedLocale;
+  readonly languages: Array<SupportedLocale>;
 }

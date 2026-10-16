@@ -4,5 +4,5 @@ export interface MovieSoundtrackTrackResponseDto {
   readonly path: string | null;
   readonly name: string;
   readonly artist: string;
-  readonly language: string;
+  readonly languages: Array<string>;
 }

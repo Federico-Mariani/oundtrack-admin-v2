@@ -1,4 +1,5 @@
 import type { MovieDetailResponseDto } from '../infrastructure/api/movie-detail-response.dto';
+
 export function movieDetailResponse(): MovieDetailResponseDto {
   return {
     id: 'movie-one',
@@ -48,7 +49,7 @@ export function movieDetailResponse(): MovieDetailResponseDto {
             path: 'https://media.oundtrack.com/track.mp3?Expires=123&Signature=a~b__',
             name: 'S.T.A.Y.',
             artist: 'Hans Zimmer',
-            language: 'en-EN',
+            languages: ['en-EN'],
           },
         ],
       },

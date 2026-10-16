@@ -80,6 +80,7 @@ export class DataTable<TData extends RowData> {
   readonly remote = input.required<DataTableRemoteState>();
   readonly pageChange = output<PageRequest>();
   readonly resetQuery = output();
+  readonly showPagination = input(true);
 
   protected readonly density = signal<DataTableDensity>('comfortable');
   protected readonly table = injectTable(() => ({
@@ -122,14 +123,33 @@ export class DataTable<TData extends RowData> {
   protected readonly viewportWidth = signal(0);
   constructor() {
     let previousViewportWidth = 0;
+    let previousVisibleColumnIds: string | null = null;
+
     effect(() => {
       const columns = readTableColumnSizes(this.table);
       const width = this.viewportWidth();
+
+      const visibleColumnIds = columns.map((column) => column.id).join('|');
+
       const resizedViewport = width > 0 && width !== previousViewportWidth;
+
+      const visibilityChanged =
+        previousVisibleColumnIds !== null && visibleColumnIds !== previousVisibleColumnIds;
+
       previousViewportWidth = width;
-      const sizes = fitTableColumns(columns, width, resizedViewport);
+      previousVisibleColumnIds = visibleColumnIds;
+
+      if (width <= 0 || columns.length === 0) {
+        return;
+      }
+
+      const sizes = fitTableColumns(columns, width, resizedViewport || visibilityChanged);
+
       if (columns.some((column) => Math.abs(sizes[column.id] - column.size) > 0.01)) {
-        this.table.setColumnSizing((current) => ({ ...current, ...sizes }));
+        this.table.setColumnSizing((current) => ({
+          ...current,
+          ...sizes,
+        }));
       }
     });
 

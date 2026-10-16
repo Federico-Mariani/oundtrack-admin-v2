@@ -1,0 +1,16 @@
+<div class="flex min-w-0 items-center gap-4">
+  <app-media-thumbnail
+    class="shrink-0 overflow-hidden rounded-lg ring-1 ring-border/60"
+    [src]="imageUrl()"
+    [width]="48"
+    [height]="48"
+    alt=""
+  />
+
+  <p
+    class="line-clamp-2 whitespace-normal text-sm font-semibold leading-5 text-foreground"
+    [title]="name()"
+  >
+    {{ name() }}
+  </p>
+</div>

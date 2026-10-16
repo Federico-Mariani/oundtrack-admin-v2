@@ -11,4 +11,11 @@
       <p class="mt-1 text-sm text-muted-foreground">{{ t('description') }}</p>
     </div>
   </header>
+  <app-game-categories-table
+    [categories]="categories()"
+    [caption]="t('title')"
+    [loading]="loading()"
+    [errorMessage]="loadError() ? t('loadFailed') : null"
+    (retry)="reload()"
+  />
 </div>
