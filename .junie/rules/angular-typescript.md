@@ -31,7 +31,7 @@ state. Business logic lives in domain / application.
 - ⚙ `import type { … }` / inline `type` specifiers for type-only imports; `export type` for
   type-only re-exports.
 - ⚙ Exported functions and class members declare explicit types at module boundaries (`explicit-module-boundary-types`); internal arrow functions may rely on inference.
-- ⚙ `interface` over `type` for object shapes; string-literal unions instead of `enum`.
+- ⚙ `interface` over `type` for object shapes; named `as const` value objects with derived unions for finite runtime values instead of `enum`.
 - ⚙ `readonly` on members never reassigned; immutable state (spread, never mutate).
 - ⚙ `eqeqeq`, `curly`, no fallthrough, no duplicate imports, no useless constructors.
 - Explicit generics where a default would hide a modelling decision (`RequestState<RequestError>`).
@@ -75,3 +75,9 @@ state. Business logic lives in domain / application.
   for services consumed directly by their class (facades).
 - Infrastructure never injects facades or `Store`; it consumes ports.
 - `environment` is imported only by infrastructure and composition roots, via `@environments/*`.
+
+## Named finite values
+
+Define finite statuses, codes, modes and discriminants once in a semantically named file owned by the appropriate layer. Export a runtime `as const` object and derive the value union from it. Use named members in assignments and comparisons; do not repeat raw strings or maintain a second independent union. Prefer existing semantic queries at consumers. External strings must still be validated at boundaries. Free-form text, display content and arbitrary identifiers do not need enum-like wrappers.
+
+Keep feature identities and request operation labels feature-local, following `.junie/rules/ngrx.md`. Shared definitions are only for truly domain-neutral concepts; do not create generic constants buckets or global feature registries. This convention is mandatory in review and is not claimed to be universally enforced by ESLint.
