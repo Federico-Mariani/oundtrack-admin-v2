@@ -41,3 +41,10 @@ of them fails because of your changes.
 
 - Use Tailwind utility classes for layout and visual styling. Create component CSS files only for specialized styling that needs dedicated CSS, such as browser-specific range-input pseudo-elements.
 - Write pull request titles and descriptions in English.
+
+## State conventions
+
+- Follow `.junie/rules/ngrx.md`: shared request action factories, per-operation `RequestState`, and `StoreFacade` composed from data, requests and actions.
+- Centralize each feature identity and operation labels in dependency-free feature-local definitions. Do not repeat raw feature names in action factory calls.
+- Model finite statuses, codes and discriminants with named `as const` definitions and derived union types. Use named members or semantic queries instead of raw-string comparisons.
+- These naming conventions guide new and migrated code; do not claim existing call sites have been migrated without changing and verifying them.

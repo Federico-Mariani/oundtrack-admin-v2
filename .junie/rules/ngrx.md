@@ -1,105 +1,220 @@
 # NgRx rules
 
-State management uses the **NgRx Global Store with modern standalone APIs**. The Auth feature (`src/app/features/auth/application/state/`) is the reference implementation: copy its shape for
-every new feature state.
+Use the NgRx Global Store with standalone APIs, functional effects and feature-local facades.
+The request action factories and requests facades introduced in the current codebase are the
+standard for new and migrated operations. Do not restore the old loading/error facade split.
 
-## Mandatory standard
+## Files and responsibilities
 
-| Concern      | Use                                                                                                                                               | File                                 |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| State shape  | `interface XState` + `initialXState`, only source state                                                                                           | `x.state.ts`                         |
-| Actions      | `createActionGroup({ source, events })`, one group per capability                                                                                 | `actions/x-<capability>.actions.ts`  |
-| Reducers     | micro-reducers = arrays of `on()` per capability                                                                                                  | `reducers/x-<capability>.reducer.ts` |
-| Root reducer | `createReducer(initialXState, ...micro reducers)` — composition only                                                                              | `x.reducer.ts`                       |
-| Feature      | `createFeature({ name, reducer, extraSelectors })`                                                                                                | `x.feature.ts`                       |
-| Effects      | `createEffect(() => ..., { functional: true })`, DI via `inject()` default params                                                                 | `effects/x-<capability>.effects.ts`  |
-| Facades      | `XFacade extends StoreFacade` + `XStoreDataFacade`, `XStoreLoadingStatusesFacade`, `XStoreErrorStatusesFacade`, `XStoreActionsFacade`             | `facades/*.facade.ts`                |
-| Registration | `provideState(xFeature)` + `provideEffects(...)` in `<feature>.providers.ts`; `provideStore()` + `provideStoreDevtools()` once in `app.config.ts` |                                      |
+Paths below are relative to `src/app/` unless stated otherwise.
 
-Action names must read well in Redux DevTools: `[Auth Login] Requested`,
-`[Auth Login API] Succeeded`, `[Auth Session Storage] Restore Succeeded`.
+| Concern           | Location                                                                         | Contract                                                                              |
+| ----------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Feature identity  | `features/<feature>/application/state/<feature>-state-definition.ts`             | Pure feature-local constant containing the existing store key and action source       |
+| Operation names   | `features/<feature>/application/state/<feature>-request-operation.ts`            | Feature-local `as const` object and derived value type                                |
+| State             | `features/<feature>/application/state/<feature>.state.ts`                        | Source data and one `RequestState<E>` per independent operation                       |
+| Request actions   | `features/<feature>/application/state/actions/<feature>-<operation>.actions.ts`  | One factory result containing requested, reset, succeeded and failed                  |
+| Request factories | `shared/state/ngrx/create-request-actions.ts`                                    | `createRequestActions` and `createEmptyRequestActions`                                |
+| Micro-reducers    | `features/<feature>/application/state/reducers/<feature>-<operation>.reducer.ts` | Arrays of `on()` handlers using shared transitions                                    |
+| Root reducer      | `features/<feature>/application/state/<feature>.reducer.ts`                      | `createReducer(initialState, ...microReducers)` composition only                      |
+| Feature           | `features/<feature>/application/state/<feature>.feature.ts`                      | `createFeature`, generated selectors and business-derived selectors                   |
+| Effects           | `features/<feature>/application/state/effects/<feature>-<operation>.effects.ts`  | Functional effects depending on application ports                                     |
+| Facades           | `features/<feature>/application/state/facades/*.facade.ts`                       | Data, requests, actions and their composition facade                                  |
+| Registration      | `features/<feature>/<feature>.providers.ts`                                      | `provideState` and `provideEffects`; root Store is registered once in `app.config.ts` |
 
-## Forbidden (ESLint-enforced where marked ⚙)
+## Feature identity and operation names
 
-- ⚙ `@ngrx/signals` / `signalStore` / `signalStoreFeature` / `rxMethod` / `withState` …
-- ⚙ `createFeatureSelector` — `createFeature` already generates `selectXState` and one selector per
-  top-level property. Never hand-write `select<Property>` that `createFeature` provides.
-- ⚙ `Store`, `moviesFeature`, actions in `presentation/**` — the UI knows only the facade.
-- ⚙ `@ngrx/*` outside `application/state/**`, `testing/**`, `<feature>.providers.ts`, `app.config.ts`.
-- Class-based actions, `enum ActionTypes`, `switch (action.type)`, `StoreModule`/`EffectsModule`,
-  NgModules created for NgRx.
-- A `selectors/` folder duplicating generated selectors. Derived state lives in `extraSelectors`
-  (split into `extra-selectors/` only if `x.feature.ts` becomes genuinely hard to read).
-- Global `pendingOperation`, global `isLoading`, global `error`, `if (isLoading) return` locks.
-- Storing derivable values in state (`isAuthenticated`, `accessToken`, `userFullName` are selectors).
-- Business logic in facades (`computed()` re-deriving what a selector already provides), local
-  Signals mirroring the store, or facades holding state.
-- `LoginUseCase`-style classes that only forward to a repository; effects depend on the port directly.
+Define each feature's identity once in a dependency-free state definition file. Both
+`createFeature` and action definitions import that file; actions must never import the
+feature object to obtain its name, because feature → reducer → actions creates a cycle.
+Do not introduce a shared registry of concrete feature names.
 
-## Request state (shared primitive)
-
-Every async operation owns its **own** `RequestState<E>` in the feature state (`loginRequest`, `currentUserRequest`, …) built from `@shared/state/request`:
-
-- `request-status.ts` → `'idle' | 'pending' | 'success' | 'error'`
-- `request-state.ts` → `RequestState<E>` (error type is mandatory; `RequestState<never>` for infallible ops)
-- `request-state.transitions.ts` → `idleRequest()`, `pendingRequest()`, `succeededRequest()`, `failedRequest(error)`
-- `request-state.queries.ts` → `isRequestPending()`, `requestError()` (use them as selector projectors)
-
-Reducers must read `loginRequest: pendingRequest()`, never `{ status: 'pending', error: null }`
-inline. Independent operations may be pending at the same time; errors never overwrite each other.
-
-## Facade pattern
+Target definition in `features/auth/application/state/auth-state-definition.ts`:
 
 ```ts
-// Presentation
+export const AUTH_STATE_DEFINITION = {
+  key: 'auth',
+  source: 'Auth',
+} as const;
+```
+
+The key is the stable persisted/registered store identifier; source is the stable DevTools
+label. They have different purposes but one owner. Preserve existing values when migrating.
+`createFeature` uses `AUTH_STATE_DEFINITION.key`. Existing exported key constants, if needed
+for compatibility, must derive from this definition rather than repeat the literal.
+
+Target operation definition in `features/auth/application/state/auth-request-operation.ts`:
+
+```ts
+export const AuthRequestOperation = {
+  CurrentUser: 'Get Current User',
+} as const;
+
+export type AuthRequestOperation = (typeof AuthRequestOperation)[keyof typeof AuthRequestOperation];
+```
+
+Add other actual Auth operations to the same operation object, preserving their current labels.
+Every feature follows this naming and placement convention. Do not create a global operation
+registry that couples unrelated features. Reuse an operation constant for the same operation;
+never duplicate its literal across actions, effects or other state files.
+
+Target action definition in `features/auth/application/state/actions/auth-current-user.actions.ts`:
+
+```ts
+import { createEmptyRequestActions } from '@shared/state/ngrx/create-request-actions';
+import type { RequestError } from '@shared/state/request/request-error';
+import type { UserModel } from '../../../domain/models/user.model';
+import { AUTH_STATE_DEFINITION } from '../auth-state-definition';
+import { AuthRequestOperation } from '../auth-request-operation';
+
+export const AuthCurrentUserActions = createEmptyRequestActions<
+  { readonly user: UserModel },
+  { readonly error: RequestError }
+>(AUTH_STATE_DEFINITION.source, AuthRequestOperation.CurrentUser);
+```
+
+These identity/operation files describe the target convention; this rules change does not
+claim that the existing action call sites have already been migrated.
+
+## Request action lifecycle
+
+- Use `createRequestActions<Requested, Succeeded, Failed>` when requested has a payload.
+- Use `createEmptyRequestActions<Succeeded, Failed>` when requested has no payload.
+- Use the returned `requested`, `reset`, `succeeded`, `failed` creators throughout reducers,
+  effects and action facades. Do not keep parallel API action groups for the same operation.
+- Factory failure payloads include `error: RequestError`; include correlation fields where
+  necessary. Never weaken payloads to `any` or silence mismatches with assertions.
+- Lifecycle labels and source formatting belong to the shared factory only. Preserve
+  `[Auth Get Current User] Requested` and `[Auth Get Current User API] Succeeded` formatting.
+- `createActionGroup` remains appropriate for non-request events such as session expiration.
+  Its source must also derive from the feature definition and named capability constants.
+- Compare action types with the corresponding creator's `.type`, never a handwritten string.
+  Prefer separate `ofType` pipelines when action unions do not narrow safely. Do not cast a
+  payload to compensate for the factories' broad `ActionCreator<string, ...>` return types.
+- Keep operation names unique within a feature so two creators cannot share an action type.
+
+## Request state and typed values
+
+Every independent operation owns a `RequestState<E>`; errors and pending states must not
+interfere with another operation. Retain explicit error types (`RequestState<never>` is valid
+for infallible state operations, but is not the current request factory's failure contract).
+
+Existing primitives under `shared/state/request/`:
+
+- `request-state.ts`: request state contract.
+- `request-status.ts`: lifecycle values and their type.
+- `request-state.transitions.ts`: `idleRequest`, `pendingRequest`, `succeededRequest`, `failedRequest`.
+- `request-state.queries.ts`: pure request queries, including `isRequestPending` and `requestError`.
+
+Reducers use the transition functions, never inline request state objects. A reset restores
+only the relevant lifecycle to idle; clearing domain data is an explicit operation decision.
+Do not replace the current explicit reducers with a generic reducer framework.
+
+For finite lifecycle values, the target convention is a runtime object plus its derived union
+in `shared/state/request/request-status.ts`:
+
+```ts
+export const RequestStatus = {
+  Idle: 'idle',
+  Pending: 'pending',
+  Success: 'success',
+  Error: 'error',
+} as const;
+
+export type RequestStatus = (typeof RequestStatus)[keyof typeof RequestStatus];
+```
+
+Use `RequestStatus.Pending`, not `'pending'`, in transitions, queries, signal projections and
+any necessary comparisons. Prefer semantic queries or request signals at consumers.
+Keep the serialized values unchanged. This is the target convention for the current union;
+introduce the runtime definition before migrating its consumers.
+
+Apply the same principle to error codes and other finite domain discriminants: one named
+runtime definition, a derived type and named members at use sites. Put domain values in their
+owning feature's domain and domain-neutral values in pure shared files. Do not move feature
+concepts into shared to avoid an import restriction. Parse and validate external strings at
+infrastructure boundaries; constants do not replace runtime validation.
+
+## Requests facade and presentation
+
+`shared/state/store-facade.ts` composes exactly `data`, `requests`, `actions` through
+`StoreFacade<DATA, REQUESTS, ACTIONS>` and provider tokens.
+
+- `<feature>-store-data.facade.ts` exposes selected business data only.
+- `<feature>-store-requests.facade.ts` selects each generated request-state selector and wraps
+  it once with `createRequestSignals` from `shared/state/request-signals.ts`.
+- `<feature>-store-actions.facade.ts` is the dispatch entry point and exposes intent methods.
+- `<feature>.facade.ts` composes those three facades. Do not duplicate request state locally.
+
+`RequestSignals<E>` exposes `status`, `isIdle`, `isLoading`, `isSuccess`, `isError`, `error` as
+signals. Its `computed` projections are allowed shared presentation-neutral projections;
+feature facades must not reimplement them or derive business state with `computed`.
+
+Presentation example using the current Auth requests facade:
+
+```ts
 private readonly auth = inject(AuthFacade);
-readonly user = this.auth.data.user;                         // Signal
-readonly isLoggingIn = this.auth.loadingStatuses.isLoggingIn; // Signal
-readonly loginError = this.auth.errorStatuses.login;          // Signal
-login(credentials: LoginCredentials): void { this.auth.actions.login(credentials); }
+readonly user = this.auth.data.user;
+readonly isLoggingIn = this.auth.requests.login.isLoading;
+readonly loginError = this.auth.requests.login.error;
 ```
 
-- Data / loading / error facades expose `store.selectSignal(xFeature.select…)` only — no dispatch.
-- The actions facade is the only place that dispatches; it exposes intent methods (`login`, `logout`).
-- `XFacade` is a composition root over the micro facades via `StoreFacade` (shared) and Angular DI.
-- Infrastructure that needs state (e.g. the HTTP interceptor) gets it through an application **port**
-  bound in the providers file (`ACCESS_TOKEN_PROVIDER → AuthStoreDataFacade`), never via the facade.
+Do not introduce `XStoreLoadingStatusesFacade`, `XStoreErrorStatusesFacade`, separate
+`loadingStatuses`/`errorStatuses` properties, or per-operation loading/error/success selectors
+that merely duplicate `createRequestSignals`. Keep actual business-derived selectors in
+`extraSelectors`. Never duplicate selectors already generated by `createFeature`.
 
-## Effects & concurrency
+## Effects, feedback and concurrency
 
-Choose the RxJS operator per operation semantics and say why in a comment:
+Choose concurrency from operation semantics, and explain non-obvious choices in the PR:
 
-| Operator     | Use when                                                | Auth example                    |
-| ------------ | ------------------------------------------------------- | ------------------------------- |
-| `exhaustMap` | repeated triggers of the same operation must be ignored | login, register (double submit) |
-| `switchMap`  | only the latest result matters                          | load current user               |
-| `concatMap`  | operations must be serialized                           | —                               |
-| `mergeMap`   | operations can genuinely run in parallel                | —                               |
+| Operator     | Meaning                                | Typical use                      |
+| ------------ | -------------------------------------- | -------------------------------- |
+| `exhaustMap` | Ignore repeated triggers while pending | Login or form submission         |
+| `switchMap`  | Keep the latest request                | Detail lookup or search          |
+| `concatMap`  | Serialize operations                   | Ordered writes                   |
+| `mergeMap`   | Permit independent concurrent work     | Separately correlated operations |
 
-- Effects depend on **ports** (`AUTH_REPOSITORY`, `AUTH_SESSION_STORAGE`), never on `HttpClient`,
-  `localStorage` or concrete implementations.
-- Separate effects stay independent streams; never introduce a global lock between them.
-- Handle races explicitly: cancel stale requests (`takeUntil(logout | expired)`) and let reducers
-  validate that a late response is still relevant before applying it.
-- Side-effect-only effects use `{ functional: true, dispatch: false }`.
-- Reducers are pure: no HTTP, storage, routing, injection or dispatch.
+- Effects are functional, with `inject()` default parameters, and depend on application ports.
+- Catch errors inside the inner observable and emit the operation's `failed` action, so the
+  effect remains alive. Feedback effects use `{ functional: true, dispatch: false }` and ports.
+- Do not compare literal action strings in feedback effects. Keep notifications and navigation
+  separate from domain state transitions; application state remains translation-agnostic.
+- Cancellation (`reset`, owner close, logout, expiration) must match the operation lifecycle.
+  The current factory reset has no payload: do not assume an ID is present on reset. If an
+  operation needs per-owner cancellation, define an explicit typed event for that requirement.
+- Cancel outdated effects and reject stale successes AND failures in reducers using the
+  relevant ID/generation. Cancellation alone does not guarantee that late results are safe.
+- Effects and reducers must agree about ignored duplicate requests: an `exhaustMap` write
+  must not allow a second request to replace the active target while the first is pending.
+- Independent operations may run concurrently. Never introduce a global loading/error lock.
+- Reducers are pure; no injection, I/O, routing, notifications or dispatch.
 
-## Feature state is local by default (⚙ ESLint-enforced)
+## Boundaries and forbidden patterns
 
-NgRx state management is **feature-local by default**. A feature's reducers, effects, actions and
-facades must not depend on the state manager of another bounded context — not even through its public
-API. Effects must not become a cross-feature orchestrator.
+- No SignalStore, class-based actions, `enum ActionTypes`, handwritten action type strings,
+  `switch (action.type)`, legacy Store/Effects modules or `createFeatureSelector`.
+- Presentation consumes facades only: no Store, feature objects or actions.
+- Feature state cannot import another feature's state or facade, even through its public API.
+  Collaborate through ports or app-level composition, never a global event bus.
+- Shared NgRx factories belong only in `shared/state/ngrx/`, the existing narrow ESLint
+  exception. They must remain feature-agnostic. `shared/state/request/` stays pure TypeScript;
+  `shared/state/request-signals.ts` may use Angular signals, not NgRx.
+- Infrastructure consumes state through an application port bound in feature providers,
+  never through Store or a facade.
 
-```text
-GOOD                                   BAD
-Presentation A → Public API B          Effect A   → Facade B
-App composition → Public APIs A / B    Effect A   → Store/Actions B
-Effect A → own Repository Port         Reducer A  → Feature B internals
-```
+## Applying the convention
 
-`feature-application-state` and `feature-facade` cannot import `@features/<other-feature>`
-(`boundaries/dependencies`). Presentation and composition roots (`app.config.ts`, `app.routes.ts`,
-`<feature>.providers.ts`) may still consume another feature's public API. If a feature state truly
-needs another context, prefer an application port, a shared domain-neutral contract, or composition
-at the app boundary; make it an explicit, documented, narrow opt-in exception — never a global event
-bus. See `architecture.md` → "Feature state is local by default".
+1. Inspect the feature's current operation names, state keys and request semantics.
+2. Introduce its dependency-free identity and operation definitions; preserve existing values.
+3. Replace repeated identity/operation literals in actions and feature registration.
+4. Add runtime definitions for finite statuses/codes and migrate comparisons and transitions.
+5. Use request factories for async actions; update every reducer, effect, feedback effect and
+   action facade together. Keep custom cancellation/correlation semantics intact.
+6. Expose requests through `XStoreRequestsFacade` and migrate presentation consumers.
+7. Remove obsolete request selectors, loading/error facades and duplicated API action groups.
+8. Verify lifecycle, errors, reset, concurrency and stale-result behavior, then run the quality
+   gates required by `.junie/rules/quality-gates.md`.
+
+Do not describe a documentation convention as an already completed runtime migration or an
+ESLint-enforced rule unless the implementation/configuration actually enforces it.

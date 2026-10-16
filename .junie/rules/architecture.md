@@ -43,7 +43,7 @@ contain only `index.ts` and `<feature>.providers.ts`.
 | `presentation/`                        | Angular pages/components and feature-owned routing (`routing/`: paths, navigation commands, navigation service, routes, guards)    | `@ngrx/*`, state internals, infrastructure, providers                                                   |
 | `<feature>.providers.ts`               | `provideX()`: binds ports → implementations (incl. an application port → a presentation adapter), `provideState`, `provideEffects` | —                                                                                                       |
 | `index.ts`                             | re-exports of what other features/app may use                                                                                      | —                                                                                                       |
-| `shared/`                              | cross-feature, domain-agnostic abstractions                                                                                        | features, core, app, environments; NgRx anywhere                                                        |
+| `shared/`                              | cross-feature, domain-agnostic abstractions                                                                                        | features, core, app, environments; NgRx outside `shared/state/ngrx`                                     |
 | `shared/types`, `shared/state/request` | pure TypeScript primitives                                                                                                         | Angular, NgRx, RxJS as well                                                                             |
 | `core/`                                | application-wide concerns                                                                                                          | feature internals, NgRx                                                                                 |
 
@@ -82,7 +82,7 @@ Everything not listed is an error (`boundaries/dependencies`, default `disallow`
 ## External packages per layer (`no-restricted-imports`)
 
 - `@ngrx/*` only in `features/*/application/state/**`, `features/*/testing/**`,
-  `<feature>.providers.ts`, `app.config.ts`.
+  `<feature>.providers.ts`, `app.config.ts`, and the feature-agnostic `shared/state/ngrx/**` factory exception.
 - `@ngrx/signals` is forbidden everywhere. `createFeatureSelector` is forbidden everywhere.
 - `domain/**` and `shared/types/**`, `shared/state/request/**`: no `@angular/*`, `@ngrx/*`,
   `rxjs`, `@environments/*`, `@app/*` (domain additionally: no `jwt-decode`).
@@ -221,3 +221,9 @@ import { Store } from '@ngrx/store'; // presentation → NgRx
 // shared/state/store-facade.ts
 import { AuthFacade } from '@features/auth'; // shared → feature
 ```
+
+## Shared request lifecycle infrastructure
+
+`shared/state/ngrx/` contains the existing request action factories and is the narrow NgRx import exception enforced by `eslint/restricted-imports.mjs`. It cannot depend on concrete features. `shared/state/request/` remains framework-free; Angular signal projections live separately in `shared/state/request-signals.ts`.
+
+Each feature owns its identity and operation definitions in `application/state/`. Actions, reducers and feature registration import those dependency-free definitions rather than importing the feature object from action files. Facades compose `data`, `requests`, and `actions`; request projections belong to `XStoreRequestsFacade`, not separate loading/error facades. See `ngrx.md` for exact filenames and lifecycle rules.
