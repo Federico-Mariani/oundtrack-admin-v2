@@ -15,7 +15,7 @@ export const DEFAULT_SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
       {
         id: 'gameCategories',
         labelKey: 'sidebar.menu.gameCategories.label',
-        icon: 'lucideFilm',
+        icon: 'lucideTags',
         commands: GAME_CATEGORIES_NAVIGATION.root(),
         exact: false,
         children: [

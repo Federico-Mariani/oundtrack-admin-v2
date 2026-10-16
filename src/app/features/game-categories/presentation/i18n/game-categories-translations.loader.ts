@@ -1,6 +1,6 @@
 import { createTranslationLoader } from '@app/core/i18n/transloco/translation-loader';
 
-export const GAME_CATEGORIES_I18N_SCOPE = 'game-categories';
+export const GAME_CATEGORIES_I18N_SCOPE = 'gameCategories';
 
 export const gameCategoriesTranslationsLoader = createTranslationLoader({
   en: {

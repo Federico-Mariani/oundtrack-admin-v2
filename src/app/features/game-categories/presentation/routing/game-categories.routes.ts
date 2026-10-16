@@ -5,7 +5,6 @@ import {
   gameCategoriesTranslationsLoader,
 } from '../i18n/game-categories-translations.loader';
 
-/** Routes owned by the Movies feature. Pages are lazily loaded. */
 export const GAME_CATEGORIES_ROUTES: Routes = [
   {
     path: '',

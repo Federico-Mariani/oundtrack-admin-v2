@@ -15,7 +15,7 @@ import { Select } from '@shared/ui/select/select';
 import type { SelectItem } from '@shared/interfaces/select-item';
 import { IconButton } from '@shared/ui/icon-button/icon-button';
 import { provideIcons } from '@ng-icons/core';
-import { lucideMoon, lucideSunMedium, lucideHome, lucideFilm } from '@ng-icons/lucide';
+import { lucideFilm, lucideHome, lucideMoon, lucideSunMedium, lucideTags } from '@ng-icons/lucide';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { isSupportedLanguage } from '@app/core/i18n/language/supported-language';
 import { ThemeService } from '@app/core/theme/theme.service';
@@ -25,7 +25,7 @@ import { AuthFacade, AuthNavigationService } from '@features/auth';
   selector: 'app-default-layout',
   templateUrl: './default-layout.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideIcons({ lucideSunMedium, lucideMoon, lucideHome, lucideFilm })],
+  providers: [provideIcons({ lucideSunMedium, lucideMoon, lucideHome, lucideFilm, lucideTags })],
   imports: [RouterOutlet, Sidebar, HlmSidebarInset, HlmSidebarTrigger, Select, IconButton],
 })
 export class DefaultLayout {
