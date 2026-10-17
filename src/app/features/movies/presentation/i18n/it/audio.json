@@ -57,5 +57,14 @@
     "server": "Il server non ha completato l’operazione. Riprova.",
     "unknown": "Non è stato possibile completare l’operazione. Riprova."
   },
-  "restartUpload": "Carica di nuovo il file"
+  "restartUpload": "Carica di nuovo il file",
+  "recording": "Registrazione selezionata",
+  "dropTitle": "Trascina qui il tuo file audio",
+  "dropDescription": "Un file MP3 per registrazione",
+  "browseFiles": "Scegli un file",
+  "replaceFile": "Scegli un altro file",
+  "removeFile": "Rimuovi file",
+  "fileReady": "Pronto per il caricamento",
+  "fileUploaded": "Caricato",
+  "multipleFiles": "Seleziona un solo file audio alla volta."
 }

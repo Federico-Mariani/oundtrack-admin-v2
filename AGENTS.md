@@ -40,6 +40,10 @@ of them fails because of your changes.
 ## Styling and pull requests
 
 - Use Tailwind utility classes for layout and visual styling. Create component CSS files only for specialized styling that needs dedicated CSS, such as browser-specific range-input pseudo-elements.
+- For every UI task, inspect and reuse existing app components first. Wrap Spartan primitives in focused, reusable app components under `shared/ui` before using new controls in feature templates.
+- Use readable section spacing and consistent padding in dialogs. Soundtrack forms use full-width primary and secondary actions, not compact buttons crowded into a corner.
+- File selection must support both keyboard-accessible browsing and drag and drop, with a dashed target, inline errors and a Spartan Attachment-based file summary. Keep file validation and upload workflows outside the reusable presentation control.
+- Do not add CSS/SCSS files or inline style blocks for ordinary UI work; use Tailwind classes. Dedicated CSS requires a concrete behavior that utilities cannot express.
 - Write pull request titles and descriptions in English.
 
 ## State conventions

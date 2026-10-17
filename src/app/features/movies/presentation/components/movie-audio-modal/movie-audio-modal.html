@@ -4,153 +4,126 @@
   [description]="t('description.' + params.mode)"
   [closeDisabled]="busy()"
 >
-  <form novalidate class="space-y-5" [attr.aria-busy]="busy()" (submit)="submit($event)">
+  <form novalidate class="space-y-8 pt-3" [attr.aria-busy]="busy()" (submit)="submit($event)">
     @if (params.track; as track) {
-      <div class="space-y-1">
-        <p class="font-medium">{{ track.name }}</p>
-        <p class="text-sm text-muted-foreground">{{ track.artist }}</p>
+      <div class="space-y-1.5 rounded-lg bg-muted/50 px-4 py-3.5">
+        <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          {{ t('recording') }}
+        </p>
+        <p class="break-words text-base font-semibold">{{ track.name }}</p>
+        <p class="text-sm leading-relaxed text-muted-foreground">{{ track.artist }}</p>
       </div>
     }
     @if (!languageOnly && !uploadOnly) {
-      <div class="space-y-2">
-        <label for="audio-external-id" class="text-sm font-medium">{{ t('externalId') }}</label>
-        <input
-          id="audio-external-id"
-          type="text"
-          autocomplete="off"
-          required
-          [value]="externalId()"
-          [disabled]="metadataLocked()"
-          (input)="changeExternalId($event)"
-          class="flex h-10 w-full rounded-md border bg-background px-3 text-sm focus-visible:outline-2 focus-visible:outline-ring disabled:opacity-60"
-          aria-describedby="audio-external-hint audio-external-error"
-          [attr.aria-invalid]="(submitted() && !externalId().trim()) || externalErrors().length > 0"
-        />
-        <p id="audio-external-hint" class="text-xs text-muted-foreground">
-          {{ t('externalHint') }}
-        </p>
-        <div id="audio-external-error" class="text-sm text-destructive">
-          @if (submitted() && !externalId().trim()) {
-            <p>{{ t('required') }}</p>
-          }
-          @for (message of externalErrors(); track $index) {
-            <p>{{ message }}</p>
-          }
-        </div>
-      </div>
+      <app-text-input
+        [formField]="externalForm.externalId"
+        [label]="t('externalId')"
+        [hint]="t('externalHint')"
+        [messages]="externalMessages()"
+        [comfortable]="true"
+      />
     }
     @if (!uploadOnly) {
-      <fieldset
-        class="space-y-3"
-        [disabled]="metadataLocked()"
-        aria-describedby="audio-language-error"
-      >
-        <legend class="mb-2 text-sm font-medium">{{ t('languages') }}</legend>
-        <label class="flex cursor-pointer items-center gap-3 text-sm"
-          ><input
-            type="checkbox"
-            class="size-4 accent-primary"
-            [checked]="allSelected()"
-            [disabled]="!available.length"
-            (change)="selectAll()"
-          />{{ t('allLanguages') }}</label
-        >
-        <div class="flex flex-wrap gap-3">
+      <app-form-section [title]="t('languages')" [description]="t('languagesHint')">
+        <div class="grid gap-3 sm:grid-cols-2">
           @for (option of options; track option.value) {
-            <label
-              class="flex items-center gap-2 rounded-md border px-3 py-2 text-sm has-disabled:cursor-not-allowed has-disabled:opacity-60"
-            >
-              <input
-                type="checkbox"
-                class="size-4 accent-primary"
-                [checked]="languages().includes(option.value)"
-                [disabled]="option.occupied"
-                (change)="toggleLanguage(option.value)"
-              />
-              {{ option.label }}
-              @if (option.occupied) {
-                <span class="text-xs text-muted-foreground">{{ t('occupied') }}</span>
-              }
-            </label>
+            <app-checkbox-choice
+              [label]="option.label"
+              [description]="option.occupied ? t('occupied') : ''"
+              [checked]="languages().includes(option.value)"
+              [disabled]="metadataLocked() || option.occupied"
+              (changed)="toggleLanguage(option.value)"
+            />
           }
         </div>
-        <p class="text-xs text-muted-foreground">{{ t('languagesHint') }}</p>
-        <div id="audio-language-error" class="text-sm text-destructive">
-          @if (submitted() && !languages().length) {
-            <p>{{ t('requiredLanguage') }}</p>
-          }
-          @for (message of languageErrors(); track $index) {
-            <p>{{ message }}</p>
-          }
-        </div>
-      </fieldset>
-    }
-    @if (!languageOnly && !state().uploaded) {
-      <div class="space-y-2">
-        <label for="audio-file" class="text-sm font-medium">{{ t('file') }}</label>
-        <input
-          id="audio-file"
-          type="file"
-          accept=".mp3,audio/mpeg"
-          [disabled]="busy() || checkingFile()"
-          (change)="chooseFile($event)"
-          aria-describedby="audio-file-hint audio-file-error"
-          [attr.aria-invalid]="fileInvalid()"
-          class="block w-full rounded-md border p-3 text-sm file:mr-3 file:rounded file:border-0 file:bg-muted file:px-3 file:py-2 file:text-foreground disabled:opacity-60"
+        <app-checkbox-choice
+          [label]="t('allLanguages')"
+          [outlined]="false"
+          [checked]="allSelected()"
+          [indeterminate]="languages().length > 0 && !allSelected()"
+          [disabled]="metadataLocked() || !available.length"
+          (changed)="selectAll()"
         />
-        <p id="audio-file-hint" class="text-xs text-muted-foreground">{{ t('fileHint') }}</p>
+        @if (submitted() && !languages().length) {
+          <p role="alert" class="text-sm text-destructive">{{ t('requiredLanguage') }}</p>
+        }
+        @for (message of languageErrors(); track $index) {
+          <p role="alert" class="text-sm text-destructive">{{ message }}</p>
+        }
+      </app-form-section>
+    }
+    @if (!languageOnly) {
+      <app-form-section [title]="t('file')" [description]="t('fileHint')">
+        @if (!state().uploaded) {
+          <app-file-dropzone
+            accept=".mp3,audio/mpeg"
+            [title]="t('dropTitle')"
+            [description]="t('dropDescription')"
+            [browseLabel]="t(fileName() ? 'replaceFile' : 'browseFiles')"
+            [disabled]="busy() || checkingFile()"
+            [invalid]="fileInvalid() || multipleFiles()"
+            describedBy="audio-file-feedback"
+            (selected)="chooseFile($event)"
+            (multipleRejected)="multipleFiles.set(true)"
+          />
+        }
         @if (fileName()) {
-          <p class="break-all text-sm">{{ fileName() }} · {{ fileSize() }} MB</p>
+          <app-file-attachment
+            [name]="fileName()"
+            [description]="
+              fileSize() + ' MB · ' + t(state().uploaded ? 'fileUploaded' : 'fileReady')
+            "
+            [state]="attachmentState()"
+            [removeLabel]="t('removeFile')"
+            [disabled]="busy()"
+            [removable]="!state().uploaded"
+            (removed)="removeFile()"
+          />
         }
-        @if (checkingFile()) {
-          <p role="status" class="text-sm text-muted-foreground">{{ t('checking') }}</p>
-        }
-        <p id="audio-file-error" class="text-sm text-destructive">
-          @if (fileInvalid()) {
-            {{ t('invalidMp3') }}
+        <div id="audio-file-feedback" aria-live="polite" class="space-y-2 text-sm">
+          @if (checkingFile()) {
+            <p class="text-muted-foreground">{{ t('checking') }}</p>
           }
-        </p>
-      </div>
-    }
-    @if (state().track && !languageOnly && !uploadOnly && !busy()) {
-      <p class="text-sm text-muted-foreground">{{ t('createdCheckpoint') }}</p>
-    }
-    @if (state().uploaded) {
-      <p role="status" class="text-sm text-muted-foreground">{{ t('uploadedCheckpoint') }}</p>
-    }
-    @if (state().uploaded && !busy()) {
-      <app-button variant="link" [text]="t('restartUpload')" (click)="restartUpload()" />
+          @if (fileInvalid()) {
+            <p role="alert" class="text-destructive">{{ t('invalidMp3') }}</p>
+          }
+          @if (multipleFiles()) {
+            <p role="alert" class="text-destructive">{{ t('multipleFiles') }}</p>
+          }
+        </div>
+      </app-form-section>
     }
     @if (busy()) {
-      <div class="space-y-2" role="status" aria-live="polite">
-        <p class="text-sm font-medium">{{ t('phase.' + state().phase) }}</p>
-        @if (state().phase === phases.Uploading) {
-          <div class="flex items-center gap-3">
-            <progress
-              class="h-2 w-full flex-1 overflow-hidden rounded-full accent-primary"
-              [value]="state().progress"
-              max="100"
-              [attr.aria-label]="t('phase.uploading')"
-            ></progress>
-            <span class="text-xs tabular-nums">{{ state().progress }}%</span>
-          </div>
-        }
-      </div>
+      <app-upload-progress
+        [label]="t('phase.' + state().phase)"
+        [value]="state().phase === phases.Uploading ? state().progress : null"
+      />
+    }
+    @if (state().track && !languageOnly && !uploadOnly && !busy()) {
+      <p class="text-sm leading-relaxed text-muted-foreground">{{ t('createdCheckpoint') }}</p>
+    }
+    @if (state().uploaded) {
+      <p role="status" class="text-sm leading-relaxed text-muted-foreground">
+        {{ t('uploadedCheckpoint') }}
+      </p>
     }
     @if (error(); as error) {
-      <p role="alert" class="text-sm text-destructive">{{ t('errors.' + error.code) }}</p>
+      <p
+        role="alert"
+        class="rounded-md bg-destructive/5 p-4 text-sm leading-relaxed text-destructive"
+      >
+        {{ t('errors.' + error.code) }}
+      </p>
     }
     @if (state().creationUncertain) {
-      <p role="alert" class="text-sm font-medium">{{ t('uncertain') }}</p>
+      <p role="alert" class="text-sm font-medium leading-relaxed">{{ t('uncertain') }}</p>
     }
-    <div class="flex flex-wrap justify-end gap-2 pt-2">
-      @if (busy() && state().phase === phases.Uploading) {
-        <app-button variant="outline" [text]="t('cancelUpload')" (click)="cancelUpload()" />
-      } @else {
-        <app-button variant="ghost" [text]="t('close')" [disabled]="busy()" (click)="ref.close()" />
-      }
+    <div class="grid gap-3 pt-2">
       <app-button
+        class="block"
         type="submit"
+        size="lg"
+        buttonClass="min-h-12 w-full whitespace-normal"
         [text]="
           t(
             state().uploaded
@@ -165,6 +138,36 @@
         [loading]="busy()"
         [disabled]="!canSubmit()"
       />
+      @if (busy() && state().phase === phases.Uploading) {
+        <app-button
+          class="block"
+          variant="outline"
+          size="lg"
+          buttonClass="min-h-12 w-full whitespace-normal"
+          [text]="t('cancelUpload')"
+          (click)="cancelUpload()"
+        />
+      } @else {
+        <app-button
+          class="block"
+          variant="outline"
+          size="lg"
+          buttonClass="min-h-12 w-full whitespace-normal"
+          [text]="t('close')"
+          [disabled]="busy()"
+          (click)="ref.close()"
+        />
+      }
+      @if (state().uploaded && !busy()) {
+        <app-button
+          class="block"
+          variant="ghost"
+          size="lg"
+          buttonClass="min-h-12 w-full whitespace-normal"
+          [text]="t('restartUpload')"
+          (click)="restartUpload()"
+        />
+      }
     </div>
   </form>
 </app-modal-frame>

@@ -90,7 +90,11 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
     this.audioRef = this.modals.open(
       MovieAudioModal,
       { mode, movieId: this.params.id, locale: this.locale(), soundtrack, track },
-      { viewContainerRef: this.viewContainerRef, disableClose: true },
+      {
+        viewContainerRef: this.viewContainerRef,
+        disableClose: true,
+        contentClass: 'w-[min(36rem,calc(100vw-2rem))] max-w-none p-6 sm:p-8',
+      },
     );
     this.audioRef.closed$.subscribe(() => {
       this.audioRef = undefined;

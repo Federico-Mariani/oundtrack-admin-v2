@@ -13,6 +13,9 @@ export class TextInput {
   private static nextId = 0;
   readonly formField = input.required<Field<string>>();
   readonly label = input.required<string>();
+  readonly hint = input('');
+  readonly comfortable = input(false);
+  readonly messages = input<ReadonlyArray<string>>([]);
   readonly placeholder = input('');
   readonly type = input<'text' | 'search'>('text');
   readonly inputMode = input<'text' | 'numeric' | 'search'>('text');
@@ -20,6 +23,9 @@ export class TextInput {
   protected readonly id = `text-input-${String(TextInput.nextId++)}`;
   protected readonly errors = computed(() => {
     const field = this.formField()();
-    return field.dirty() || field.touched() ? field.errors() : [];
+    return [
+      ...(field.dirty() || field.touched() ? field.errors() : []),
+      ...this.messages().map((message) => ({ kind: 'server', message })),
+    ];
   });
 }

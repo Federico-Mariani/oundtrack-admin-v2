@@ -1,3 +1,11 @@
+import { form, disabled } from '@angular/forms/signals';
+import { TextInput } from '@shared/ui/text-input/text-input';
+import { CheckboxChoice } from '@shared/ui/checkbox-choice/checkbox-choice';
+import { FormSection } from '@shared/ui/form-section/form-section';
+import { FileDropzone } from '@shared/ui/file-dropzone/file-dropzone';
+import { FileAttachment } from '@shared/ui/file-attachment/file-attachment';
+import { FileAttachmentState } from '@shared/ui/file-attachment/file-attachment-state';
+import { UploadProgress } from '@shared/ui/upload-progress/upload-progress';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,7 +35,17 @@ import type { MovieAudioModalParams } from './movie-audio-modal-params';
 @Component({
   selector: 'app-movie-audio-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslocoDirective, ModalFrame, Button],
+  imports: [
+    TranslocoDirective,
+    ModalFrame,
+    Button,
+    TextInput,
+    CheckboxChoice,
+    FormSection,
+    FileDropzone,
+    FileAttachment,
+    UploadProgress,
+  ],
   templateUrl: './movie-audio-modal.html',
 })
 export class MovieAudioModal implements ModalContent<MovieAudioModalParams, boolean> {
@@ -46,7 +64,8 @@ export class MovieAudioModal implements ModalContent<MovieAudioModalParams, bool
   protected readonly state = this.facade.data.audio;
   protected readonly busy = this.facade.requests.audio.isLoading;
   protected readonly error = this.facade.requests.audio.error;
-  protected readonly externalId = signal(this.params.track?.externalId ?? '');
+  private readonly externalModel = signal({ externalId: this.params.track?.externalId ?? '' });
+  protected readonly externalId = computed(() => this.externalModel().externalId);
   protected readonly languages = signal<Array<SupportedLocale>>([]);
   protected readonly fileName = signal('');
   protected readonly fileSize = signal('');
@@ -57,6 +76,24 @@ export class MovieAudioModal implements ModalContent<MovieAudioModalParams, bool
   protected readonly submitted = signal(false);
   protected readonly metadataLocked = computed(
     () => this.busy() || (this.params.mode !== MovieAudioMode.Languages && !!this.state().track),
+  );
+  protected readonly externalForm = form(this.externalModel, (path) => {
+    disabled(path.externalId, { when: () => this.metadataLocked() });
+  });
+  protected readonly externalMessages = computed(() =>
+    this.submitted() && !this.externalId().trim()
+      ? [this.transloco.translate('movies.audio.required')]
+      : this.externalErrors(),
+  );
+  protected readonly multipleFiles = signal(false);
+  protected readonly attachmentState = computed(() =>
+    this.busy()
+      ? this.state().phase === MovieAudioPhase.Uploading
+        ? FileAttachmentState.Uploading
+        : FileAttachmentState.Processing
+      : this.state().uploaded
+        ? FileAttachmentState.Done
+        : FileAttachmentState.Idle,
   );
   protected readonly languageOnly = this.params.mode === MovieAudioMode.Languages;
   protected readonly uploadOnly = this.params.mode === MovieAudioMode.Upload;
@@ -84,6 +121,12 @@ export class MovieAudioModal implements ModalContent<MovieAudioModalParams, bool
       (this.languageOnly || this.state().uploaded || !!this.fileName()),
   );
   constructor() {
+    effect(() => {
+      this.externalId();
+      untracked(() => {
+        this.externalErrors.set([]);
+      });
+    });
     this.facade.actions.openAudio(
       this.sessionId,
       this.params.soundtrack?.id ?? null,
@@ -126,12 +169,6 @@ export class MovieAudioModal implements ModalContent<MovieAudioModalParams, bool
       }
     });
   }
-  protected changeExternalId(event: Event): void {
-    if (event.target instanceof HTMLInputElement) {
-      this.externalId.set(event.target.value);
-      this.externalErrors.set([]);
-    }
-  }
   protected toggleLanguage(locale: SupportedLocale): void {
     if (this.metadataLocked() || !this.available.some((option) => option.value === locale)) {
       return;
@@ -147,14 +184,26 @@ export class MovieAudioModal implements ModalContent<MovieAudioModalParams, bool
       this.languages.set(this.allSelected() ? [] : this.available.map((option) => option.value));
     }
   }
-  protected async chooseFile(event: Event): Promise<void> {
-    if (!(event.target instanceof HTMLInputElement) || this.busy() || this.state().uploaded) {
+  protected removeFile(): void {
+    if (this.busy() || this.state().uploaded) {
       return;
     }
-    const file = event.target.files?.[0];
-    if (!file) {
+    this.selectionGeneration++;
+    if (this.fileKey) {
+      this.files.release(this.fileKey);
+      this.fileKey = null;
+    }
+    this.fileName.set('');
+    this.fileSize.set('');
+    this.fileInvalid.set(false);
+    this.multipleFiles.set(false);
+    this.checkingFile.set(false);
+  }
+  protected async chooseFile(file: File): Promise<void> {
+    if (this.busy() || this.checkingFile() || this.state().uploaded) {
       return;
     }
+    this.multipleFiles.set(false);
     const generation = ++this.selectionGeneration;
     if (this.fileKey) {
       this.files.release(this.fileKey);

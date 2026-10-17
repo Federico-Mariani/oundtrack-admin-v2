@@ -57,5 +57,14 @@
     "server": "The server could not complete the operation. Please try again.",
     "unknown": "The operation could not be completed. Please try again."
   },
-  "restartUpload": "Upload the file again"
+  "restartUpload": "Upload the file again",
+  "recording": "Selected recording",
+  "dropTitle": "Drop your audio file here",
+  "dropDescription": "One MP3 file per recording",
+  "browseFiles": "Browse files",
+  "replaceFile": "Choose a different file",
+  "removeFile": "Remove file",
+  "fileReady": "Ready to upload",
+  "fileUploaded": "Uploaded",
+  "multipleFiles": "Select one audio file at a time."
 }
