@@ -43,5 +43,11 @@
   "record": "Catalog record",
   "addLanguage": "Add a language",
   "allLanguages": "All languages are already available",
-  "copyId": "Copy ID"
+  "copyId": "Copy ID",
+  "addSoundtrack": "New soundtrack",
+  "showAllTracks": "Show all language versions",
+  "addVersion": "Add version",
+  "editTrackLanguages": "Change languages",
+  "replaceAudio": "Replace audio",
+  "uploadAudio": "Upload audio"
 }

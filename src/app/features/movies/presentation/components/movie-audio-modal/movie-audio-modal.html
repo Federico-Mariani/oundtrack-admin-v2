@@ -1,0 +1,173 @@
+<app-modal-frame
+  *transloco="let t; prefix: 'movies.audio'"
+  [title]="t('title.' + params.mode)"
+  [description]="t('description.' + params.mode)"
+  [closeDisabled]="busy()"
+>
+  <form novalidate class="space-y-8 pt-3" [attr.aria-busy]="busy()" (submit)="submit($event)">
+    @if (params.track; as track) {
+      <div class="space-y-1.5 rounded-lg bg-muted/50 px-4 py-3.5">
+        <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          {{ t('recording') }}
+        </p>
+        <p class="break-words text-base font-semibold">{{ track.name }}</p>
+        <p class="text-sm leading-relaxed text-muted-foreground">{{ track.artist }}</p>
+      </div>
+    }
+    @if (!languageOnly && !uploadOnly) {
+      <app-text-input
+        [formField]="externalForm.externalId"
+        [label]="t('externalId')"
+        [hint]="t('externalHint')"
+        [messages]="externalMessages()"
+        [comfortable]="true"
+      />
+    }
+    @if (!uploadOnly) {
+      <app-form-section [title]="t('languages')" [description]="t('languagesHint')">
+        <div class="grid gap-3 sm:grid-cols-2">
+          @for (option of options; track option.value) {
+            <app-checkbox-choice
+              [label]="option.label"
+              [description]="option.occupied ? t('occupied') : ''"
+              [checked]="languages().includes(option.value)"
+              [disabled]="metadataLocked() || option.occupied"
+              (changed)="toggleLanguage(option.value)"
+            />
+          }
+        </div>
+        <app-checkbox-choice
+          [label]="t('allLanguages')"
+          [outlined]="false"
+          [checked]="allSelected()"
+          [indeterminate]="languages().length > 0 && !allSelected()"
+          [disabled]="metadataLocked() || !available.length"
+          (changed)="selectAll()"
+        />
+        @if (submitted() && !languages().length) {
+          <p role="alert" class="text-sm text-destructive">{{ t('requiredLanguage') }}</p>
+        }
+        @for (message of languageErrors(); track $index) {
+          <p role="alert" class="text-sm text-destructive">{{ message }}</p>
+        }
+      </app-form-section>
+    }
+    @if (!languageOnly) {
+      <app-form-section [title]="t('file')" [description]="t('fileHint')">
+        @if (!state().uploaded) {
+          <app-file-dropzone
+            accept=".mp3,audio/mpeg"
+            [title]="t('dropTitle')"
+            [description]="t('dropDescription')"
+            [browseLabel]="t(fileName() ? 'replaceFile' : 'browseFiles')"
+            [disabled]="busy() || checkingFile()"
+            [invalid]="fileInvalid() || multipleFiles()"
+            describedBy="audio-file-feedback"
+            (selected)="chooseFile($event)"
+            (multipleRejected)="multipleFiles.set(true)"
+          />
+        }
+        @if (fileName()) {
+          <app-file-attachment
+            [name]="fileName()"
+            [description]="
+              fileSize() + ' MB · ' + t(state().uploaded ? 'fileUploaded' : 'fileReady')
+            "
+            [state]="attachmentState()"
+            [removeLabel]="t('removeFile')"
+            [disabled]="busy()"
+            [removable]="!state().uploaded"
+            (removed)="removeFile()"
+          />
+        }
+        <div id="audio-file-feedback" aria-live="polite" class="space-y-2 text-sm">
+          @if (checkingFile()) {
+            <p class="text-muted-foreground">{{ t('checking') }}</p>
+          }
+          @if (fileInvalid()) {
+            <p role="alert" class="text-destructive">{{ t('invalidMp3') }}</p>
+          }
+          @if (multipleFiles()) {
+            <p role="alert" class="text-destructive">{{ t('multipleFiles') }}</p>
+          }
+        </div>
+      </app-form-section>
+    }
+    @if (busy()) {
+      <app-upload-progress
+        [label]="t('phase.' + state().phase)"
+        [value]="state().phase === phases.Uploading ? state().progress : null"
+      />
+    }
+    @if (state().track && !languageOnly && !uploadOnly && !busy()) {
+      <p class="text-sm leading-relaxed text-muted-foreground">{{ t('createdCheckpoint') }}</p>
+    }
+    @if (state().uploaded) {
+      <p role="status" class="text-sm leading-relaxed text-muted-foreground">
+        {{ t('uploadedCheckpoint') }}
+      </p>
+    }
+    @if (error(); as error) {
+      <p
+        role="alert"
+        class="rounded-md bg-destructive/5 p-4 text-sm leading-relaxed text-destructive"
+      >
+        {{ t('errors.' + error.code) }}
+      </p>
+    }
+    @if (state().creationUncertain) {
+      <p role="alert" class="text-sm font-medium leading-relaxed">{{ t('uncertain') }}</p>
+    }
+    <div class="grid gap-3 pt-2">
+      <app-button
+        class="block"
+        type="submit"
+        size="lg"
+        buttonClass="min-h-12 w-full whitespace-normal"
+        [text]="
+          t(
+            state().uploaded
+              ? 'confirm'
+              : languageOnly
+                ? 'saveLanguages'
+                : state().track
+                  ? 'upload'
+                  : 'create'
+          )
+        "
+        [loading]="busy()"
+        [disabled]="!canSubmit()"
+      />
+      @if (busy() && state().phase === phases.Uploading) {
+        <app-button
+          class="block"
+          variant="outline"
+          size="lg"
+          buttonClass="min-h-12 w-full whitespace-normal"
+          [text]="t('cancelUpload')"
+          (click)="cancelUpload()"
+        />
+      } @else {
+        <app-button
+          class="block"
+          variant="outline"
+          size="lg"
+          buttonClass="min-h-12 w-full whitespace-normal"
+          [text]="t('close')"
+          [disabled]="busy()"
+          (click)="ref.close()"
+        />
+      }
+      @if (state().uploaded && !busy()) {
+        <app-button
+          class="block"
+          variant="ghost"
+          size="lg"
+          buttonClass="min-h-12 w-full whitespace-normal"
+          [text]="t('restartUpload')"
+          (click)="restartUpload()"
+        />
+      }
+    </div>
+  </form>
+</app-modal-frame>

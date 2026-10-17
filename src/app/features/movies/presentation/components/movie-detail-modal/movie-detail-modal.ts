@@ -1,3 +1,6 @@
+import { MovieAudioModal } from '../movie-audio-modal/movie-audio-modal';
+import { MovieAudioMode } from '../../../domain/models/movie-audio-mode.model';
+import type { MovieSoundtrackModel } from '../../../domain/models/movie-soundtrack.model';
 import { LANGUAGE_OPTIONS } from '@app/core/i18n/language/language-options';
 import { toSupportedLocale } from '@app/core/i18n/language/language-locale.mapper';
 import { IconButton } from '@shared/ui/icon-button/icon-button';
@@ -72,6 +75,33 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
   private readonly selectedLocale = signal<SupportedLocale | null>(null);
   private readonly modals = inject(ModalService);
   private readonly viewContainerRef = inject(ViewContainerRef);
+  protected readonly audioModes = MovieAudioMode;
+  protected readonly showAllTracks = signal(false);
+  private audioRef?: BrnDialogRef<boolean>;
+  protected manageAudio(
+    mode: MovieAudioMode,
+    soundtrack?: MovieSoundtrackModel,
+    track?: MovieSoundtrackTrackModel,
+  ): void {
+    if (this.audioRef || this.loading()) {
+      return;
+    }
+    this.playingAudio?.pause();
+    this.audioRef = this.modals.open(
+      MovieAudioModal,
+      { mode, movieId: this.params.id, locale: this.locale(), soundtrack, track },
+      {
+        viewContainerRef: this.viewContainerRef,
+        disableClose: true,
+        contentClass: 'w-[min(36rem,calc(100vw-2rem))] max-w-none p-6 sm:p-8',
+      },
+    );
+    this.audioRef.closed$.subscribe(() => {
+      this.audioRef = undefined;
+      this.showAllTracks.set(true);
+      this.reload();
+    });
+  }
   private createInfoRef?: BrnDialogRef<SupportedLocale>;
   protected readonly missingLanguages = computed(() =>
     LANGUAGE_OPTIONS.map((option) => toSupportedLocale(option.code)).filter(
@@ -149,7 +179,9 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
   protected localizedTracks(
     tracks: ReadonlyArray<MovieSoundtrackTrackModel>,
   ): ReadonlyArray<MovieSoundtrackTrackModel> {
-    return tracks.filter((track) => track.languages.includes(this.locale()));
+    return this.showAllTracks()
+      ? tracks
+      : tracks.filter((track) => track.languages.includes(this.locale()));
   }
   protected formatTimestamp(value: number): string {
     return Number.isFinite(new Date(value).getTime())

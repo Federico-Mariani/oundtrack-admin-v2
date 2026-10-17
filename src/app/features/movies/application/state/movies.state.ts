@@ -1,3 +1,4 @@
+import { initialMoviesAudioState, type MoviesAudioState } from './movies-audio.state';
 import type { CreateMovieInfoModel } from '../../domain/models/create-movie-info.model';
 import {
   DEFAULT_MOVIES_LIST_QUERY,
@@ -12,6 +13,8 @@ import type { MovieDetailModel } from '../../domain/models/movie-detail.model';
 import type { Id } from '@shared/types/id';
 
 export interface MoviesState {
+  readonly audio: MoviesAudioState;
+  readonly audioRequest: RequestState<RequestError>;
   readonly createInfoTarget: CreateMovieInfoModel | null;
   readonly createInfoRequest: RequestState<RequestError>;
   readonly detailId: Id | null;
@@ -25,6 +28,8 @@ export interface MoviesState {
 }
 
 export const initialMoviesState: MoviesState = {
+  audio: initialMoviesAudioState,
+  audioRequest: idleRequest(),
   createInfoTarget: null,
   createInfoRequest: idleRequest(),
   detailId: null,

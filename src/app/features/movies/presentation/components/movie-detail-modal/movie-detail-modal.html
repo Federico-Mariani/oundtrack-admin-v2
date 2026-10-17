@@ -126,17 +126,26 @@
           </div>
         </div>
         <section class="space-y-4">
-          <h3 class="text-lg font-semibold tracking-tight">{{ t('soundtracks') }}</h3>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <h3 class="text-lg font-semibold tracking-tight">{{ t('soundtracks') }}</h3>
+            <app-button
+              variant="outline"
+              size="sm"
+              icon="lucidePlus"
+              [text]="t('addSoundtrack')"
+              (click)="manageAudio(audioModes.Soundtrack)"
+            />
+          </div>
           @for (soundtrack of movie.soundtracks; track soundtrack.id; let index = $index) {
             <div class="space-y-3">
-              @if (movie.soundtracks.length > 1) {
-                <h4 class="text-sm text-muted-foreground">{{ t('soundtrack') }} {{ index + 1 }}</h4>
-              }
               @for (track of localizedTracks(soundtrack.tracks); track track.id) {
                 <app-movie-track-player
                   [track]="track"
                   [soundtrackId]="soundtrack.id"
                   (playbackStarted)="play($event)"
+                  (editLanguages)="manageAudio(audioModes.Languages, soundtrack, track)"
+                  (uploadAudio)="manageAudio(audioModes.Upload, soundtrack, track)"
+                  (manageAudio)="manageAudio(audioModes.Version, soundtrack)"
                   (reload)="reload()"
                 />
               } @empty {
@@ -174,7 +183,9 @@
                   <dt>{{ t('externalId') }}</dt>
                   <dd class="font-mono">{{ movie.externalMovieId }}</dd>
                 </div>
-                <div class="grid gap-[0.4rem] py-2">
+                <div
+                  class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-[0.35rem] py-2"
+                >
                   <dt>{{ t('movieId') }}</dt>
                   <dd class="select-all wrap-anywhere font-mono text-xs leading-normal">
                     {{ movie.id }}

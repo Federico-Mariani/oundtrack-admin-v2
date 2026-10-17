@@ -227,3 +227,5 @@ import { AuthFacade } from '@features/auth'; // shared → feature
 `shared/state/ngrx/` contains the existing request action factories and is the narrow NgRx import exception enforced by `eslint/restricted-imports.mjs`. It cannot depend on concrete features. `shared/state/request/` remains framework-free; Angular signal projections live separately in `shared/state/request-signals.ts`.
 
 Each feature owns its identity and operation definitions in `application/state/`. Actions, reducers and feature registration import those dependency-free definitions rather than importing the feature object from action files. Facades compose `data`, `requests`, and `actions`; request projections belong to `XStoreRequestsFacade`, not separate loading/error facades. See `ngrx.md` for exact filenames and lifecycle rules.
+
+The state-root filename gate also permits `*-state-definition.ts` and `*-request-operation.ts` for every feature, matching the dependency-free definitions described in `ngrx.md`.

@@ -151,11 +151,13 @@ export const projectStructure = [
     'ngrx-state-root',
     ['src/app/features/*/application/state/*.ts'],
     [
+      'src/app/features/*/application/state/*-state-definition.ts',
+      'src/app/features/*/application/state/*-request-operation.ts',
       'src/app/features/*/application/state/*.state.ts',
       'src/app/features/*/application/state/*.feature.ts',
       'src/app/features/*/application/state/*.reducer.ts',
     ],
-    'Files directly under application/state/ must be "*.state.ts", "*.feature.ts" or "*.reducer.ts".',
+    'Files directly under application/state/ must be state, feature, reducer, feature identity or request operation definitions.',
   ),
 
   // ---------------------------------------------------------------- infrastructure naming

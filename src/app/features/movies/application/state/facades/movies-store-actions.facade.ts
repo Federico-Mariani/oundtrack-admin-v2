@@ -1,3 +1,6 @@
+import type { MovieSoundtrackTrackModel } from '../../../domain/models/movie-soundtrack-track.model';
+import type { MovieAudioInputModel } from '../../../domain/models/movie-audio-input.model';
+import { MoviesAudioEvents, MoviesAudioSaveActions } from '../actions/movies-audio.actions';
 import type { CreateMovieInfoModel } from '../../../domain/models/create-movie-info.model';
 import { MoviesInfoCreateActions } from '../actions/movies-info-create.actions';
 import type { Id } from '@shared/types/id';
@@ -13,6 +16,25 @@ import { MoviesGetAllActions } from '../actions/movies-get-all.actions';
 export class MoviesStoreActionsFacade {
   private readonly store = inject(Store);
 
+  openAudio(
+    sessionId: string,
+    soundtrackId: string | null,
+    track: MovieSoundtrackTrackModel | null,
+  ): void {
+    this.store.dispatch(MoviesAudioEvents.opened({ sessionId, soundtrackId, track }));
+  }
+  closeAudio(sessionId: string): void {
+    this.store.dispatch(MoviesAudioEvents.closed({ sessionId }));
+  }
+  restartAudioUpload(sessionId: string): void {
+    this.store.dispatch(MoviesAudioEvents.restartUpload({ sessionId }));
+  }
+  cancelAudio(sessionId: string): void {
+    this.store.dispatch(MoviesAudioEvents.cancelled({ sessionId }));
+  }
+  saveAudio(sessionId: string, input: MovieAudioInputModel): void {
+    this.store.dispatch(MoviesAudioSaveActions.requested({ sessionId, input }));
+  }
   createInfo(request: CreateMovieInfoModel): void {
     this.store.dispatch(MoviesInfoCreateActions.requested({ request }));
   }

@@ -1,3 +1,4 @@
+import { moviesAudioReducer } from './reducers/movies-audio.reducer';
 import { moviesInfoCreateReducer } from './reducers/movies-info-create.reducer';
 import { moviesCreateReducer } from './reducers/movies-create.reducer';
 import { moviesDetailReducer } from './reducers/movies-detail.reducer';
@@ -11,6 +12,7 @@ import { moviesGetAllReducer } from './reducers/movies-get-all.reducer';
  */
 export const moviesReducer = createReducer(
   initialMoviesState,
+  ...moviesAudioReducer,
   ...moviesGetAllReducer,
   ...moviesCreateReducer,
   ...moviesDetailReducer,
