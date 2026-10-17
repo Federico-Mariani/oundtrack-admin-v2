@@ -126,6 +126,21 @@
       {{ t('reload') }}
     </button>
   }
+  <div class="col-span-3 flex flex-wrap items-center justify-between gap-2 pt-1">
+    <div class="flex flex-wrap gap-1.5">
+      @for (language of track().languages; track language) {
+        <span class="rounded bg-muted px-2 py-1 text-xs font-medium">{{ language }}</span>
+      }
+    </div>
+    <div class="flex flex-wrap gap-1">
+      <button hlmBtn type="button" variant="ghost" size="sm" (click)="editLanguages.emit()">
+        {{ t('editTrackLanguages') }}
+      </button>
+      <button hlmBtn type="button" variant="outline" size="sm" (click)="uploadAudio.emit()">
+        {{ t(track().path ? 'replaceAudio' : 'uploadAudio') }}
+      </button>
+    </div>
+  </div>
   @if (showInfo()) {
     <dl
       [id]="'track-info-' + soundtrackId() + '-' + track().id"

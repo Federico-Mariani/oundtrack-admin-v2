@@ -47,6 +47,8 @@ export class MovieTrackPlayer {
   readonly soundtrackId = input.required<string>();
   readonly playbackStarted = output<HTMLAudioElement>();
   readonly reload = output();
+  readonly editLanguages = output();
+  readonly uploadAudio = output();
   private readonly destroyRef = inject(DestroyRef);
   private readonly audio = viewChild<ElementRef<HTMLAudioElement>>('audio');
   protected readonly failed = signal(false);

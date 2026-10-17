@@ -43,5 +43,11 @@
   "record": "Scheda del catalogo",
   "addLanguage": "Aggiungi una lingua",
   "allLanguages": "Tutte le lingue sono già disponibili",
-  "copyId": "Copia ID"
+  "copyId": "Copia ID",
+  "addSoundtrack": "Nuova colonna sonora",
+  "showAllTracks": "Mostra le versioni in tutte le lingue",
+  "addVersion": "Aggiungi versione",
+  "editTrackLanguages": "Modifica lingue",
+  "replaceAudio": "Sostituisci audio",
+  "uploadAudio": "Carica audio"
 }

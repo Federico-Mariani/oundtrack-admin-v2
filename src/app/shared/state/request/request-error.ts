@@ -1,13 +1,15 @@
-export type RequestErrorCode =
-  | 'network'
-  | 'bad-request'
-  | 'unauthorized'
-  | 'forbidden'
-  | 'not-found'
-  | 'conflict'
-  | 'validation'
-  | 'server'
-  | 'unknown';
+export const RequestErrorCode = {
+  Network: 'network',
+  BadRequest: 'bad-request',
+  Unauthorized: 'unauthorized',
+  Forbidden: 'forbidden',
+  NotFound: 'not-found',
+  Conflict: 'conflict',
+  Validation: 'validation',
+  Server: 'server',
+  Unknown: 'unknown',
+} as const;
+export type RequestErrorCode = (typeof RequestErrorCode)[keyof typeof RequestErrorCode];
 
 export interface RequestError {
   readonly status?: number;

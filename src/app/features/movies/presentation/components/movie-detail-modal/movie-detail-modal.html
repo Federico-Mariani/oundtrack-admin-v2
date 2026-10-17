@@ -126,17 +126,42 @@
           </div>
         </div>
         <section class="space-y-4">
-          <h3 class="text-lg font-semibold tracking-tight">{{ t('soundtracks') }}</h3>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <h3 class="text-lg font-semibold tracking-tight">{{ t('soundtracks') }}</h3>
+            <app-button
+              variant="outline"
+              size="sm"
+              icon="lucidePlus"
+              [text]="t('addSoundtrack')"
+              (click)="manageAudio(audioModes.Soundtrack)"
+            />
+          </div>
+          <label class="flex items-center gap-2 text-sm text-muted-foreground"
+            ><input
+              type="checkbox"
+              class="size-4 accent-primary"
+              [checked]="showAllTracks()"
+              (change)="showAllTracks.set(!showAllTracks())"
+            />{{ t('showAllTracks') }}</label
+          >
           @for (soundtrack of movie.soundtracks; track soundtrack.id; let index = $index) {
             <div class="space-y-3">
-              @if (movie.soundtracks.length > 1) {
-                <h4 class="text-sm text-muted-foreground">{{ t('soundtrack') }} {{ index + 1 }}</h4>
-              }
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <h4 class="text-sm font-medium">{{ t('soundtrack') }} {{ index + 1 }}</h4>
+                <app-button
+                  variant="ghost"
+                  size="sm"
+                  [text]="t('addVersion')"
+                  (click)="manageAudio(audioModes.Version, soundtrack)"
+                />
+              </div>
               @for (track of localizedTracks(soundtrack.tracks); track track.id) {
                 <app-movie-track-player
                   [track]="track"
                   [soundtrackId]="soundtrack.id"
                   (playbackStarted)="play($event)"
+                  (editLanguages)="manageAudio(audioModes.Languages, soundtrack, track)"
+                  (uploadAudio)="manageAudio(audioModes.Upload, soundtrack, track)"
                   (reload)="reload()"
                 />
               } @empty {

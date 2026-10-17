@@ -1,0 +1,61 @@
+{
+  "title": {
+    "soundtrack": "Nuova colonna sonora",
+    "version": "Aggiungi una versione",
+    "upload": "Carica audio",
+    "languages": "Modifica le lingue del brano"
+  },
+  "description": {
+    "soundtrack": "Crea una colonna sonora e carica la prima registrazione.",
+    "version": "Aggiungi una registrazione diversa nelle lingue non ancora assegnate a questa colonna sonora.",
+    "upload": "Carica o sostituisci il file MP3 di questa registrazione.",
+    "languages": "Scegli tutte le lingue che devono utilizzare questa registrazione."
+  },
+  "externalId": "ID del brano su Spotify",
+  "externalHint": "Inserisci l’ID del brano, non un URL Spotify. Titolo e artista vengono recuperati dal server.",
+  "required": "Inserisci un ID del brano Spotify.",
+  "languages": "Lingue della registrazione",
+  "allLanguages": "Seleziona tutte le lingue disponibili",
+  "occupied": "Già assegnata",
+  "languagesHint": "La stessa registrazione può essere usata in più lingue. Ogni lingua può appartenere a una sola registrazione della colonna sonora.",
+  "requiredLanguage": "Seleziona almeno una lingua.",
+  "file": "File audio (.mp3)",
+  "fileHint": "È accettato solo un file MP3 non vuoto. Il caricamento inizia quando confermi.",
+  "checking": "Controllo del file…",
+  "invalidMp3": "Scegli un file audio .mp3 valido e non vuoto.",
+  "createdCheckpoint": "La registrazione è stata creata. Riprova il caricamento qui, oppure riprendilo in seguito dalla sua card.",
+  "uploadedCheckpoint": "Audio caricato. Manca solo la conferma del server: il file non verrà caricato di nuovo.",
+  "phase": {
+    "creating": "Creazione della registrazione…",
+    "uploading": "Caricamento audio…",
+    "confirming": "Conferma audio sul server…",
+    "languages": "Salvataggio lingue…",
+    "ready": "Pronto",
+    "done": "Completato"
+  },
+  "uncertain": "Il server potrebbe aver creato la registrazione prima della perdita di connessione. Chiudi questa finestra e controlla il film aggiornato prima di crearne un’altra.",
+  "cancelUpload": "Interrompi caricamento",
+  "close": "Chiudi",
+  "confirm": "Riprova conferma",
+  "saveLanguages": "Salva lingue",
+  "upload": "Carica audio",
+  "create": "Crea e carica",
+  "success": {
+    "soundtrack": "Colonna sonora creata e audio caricato.",
+    "version": "Versione aggiunta e audio caricato.",
+    "upload": "Audio caricato e confermato.",
+    "languages": "Lingue del brano aggiornate."
+  },
+  "errors": {
+    "network": "Connessione interrotta. Controlla la connessione e riprova.",
+    "bad-request": "Controlla ID del brano, lingue e file audio.",
+    "unauthorized": "La sessione è scaduta. Accedi di nuovo.",
+    "forbidden": "Non hai i permessi per eseguire questa operazione.",
+    "not-found": "Il brano o il servizio di upload non è disponibile. Ricarica il film; se il problema persiste, contatta l’amministratore.",
+    "conflict": "L’operazione è in conflitto con i dati attuali. Una lingua potrebbe essere già assegnata, oppure l’audio non è ancora pronto per la conferma.",
+    "validation": "Controlla i campi indicati.",
+    "server": "Il server non ha completato l’operazione. Riprova.",
+    "unknown": "Non è stato possibile completare l’operazione. Riprova."
+  },
+  "restartUpload": "Carica di nuovo il file"
+}
