@@ -1,0 +1,12 @@
+{
+  "yearFrom": "Anno da",
+  "yearTo": "Anno a",
+  "externalId": "ID esterno",
+  "sort": "Ordina per",
+  "newest": "Aggiunti più di recente",
+  "oldest": "Aggiunti meno di recente",
+  "recentlyUpdated": "Aggiornati più di recente",
+  "leastRecentlyUpdated": "Aggiornati meno di recente",
+  "idAscending": "ID esterno crescente",
+  "idDescending": "ID esterno decrescente"
+}

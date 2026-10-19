@@ -83,7 +83,7 @@ export class MoviesNavigationService {
   parallel `FeatureRouter` / `FeatureRouteService` / `FeatureRoutingFacade` doing the same thing.
 - It hides the Router from consumers, exposes semantically clear methods, accepts `NavigationExtras`
   and can build URLs via `createUrlTree` / `serializeUrl`. It contains **no** business logic.
-- It must **not** know the Store, actions or `moviesFeature`. Navigation decisions that need state are
+- It must **not** know the Store, actions or `tvSeriesFeature`. Navigation decisions that need state are
   taken by the consumer / guard / orchestrator.
 - `inject()` only, `private readonly`, no constructor injection.
 - Return the Router's `Promise<boolean>` / a `UrlTree`; never swallow it (`void this.router.navigate(...)`
@@ -125,7 +125,7 @@ export const authGuard: CanActivateFn = (_route, state) => {
 - Functional guards (`CanActivateFn` / `CanMatchFn`) in `routing/guards/`, close to the routes.
 - Prefer returning a `UrlTree` (or `RedirectCommand`) to describe a redirect instead of an imperative
   `router.navigate(...)` + `return false`.
-- Guards consume the feature facade only — never `Store`, actions or `moviesFeature` internals. They
+- Guards consume the feature facade only — never `Store`, actions or `tvSeriesFeature` internals. They
   control access/navigation; they are not business services.
 
 ## `app.routes.ts` — composition only

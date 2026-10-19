@@ -1,0 +1,11 @@
+import type { Id } from '@shared/types/id';
+
+export interface TvSeriesInfoModel {
+  readonly id: Id;
+  readonly title: string;
+  readonly releaseDate: number;
+  readonly posterUrl: string;
+  readonly backdropUrl: string;
+  readonly createdAt: number;
+  readonly updatedAt: number;
+}

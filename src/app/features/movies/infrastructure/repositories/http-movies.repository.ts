@@ -21,6 +21,7 @@ import type { MovieResponseDto } from '../api/movie-response.dto';
 import { toMovie } from '../mappers/movie.mapper';
 import type { MovieModel } from '../../domain/models/movie.model';
 import { toRequestError } from '../../../../core/http/http-error.mapper';
+import type { MovieInfoResponseDto } from '../api/movie-info-response.dto';
 
 @Injectable()
 export class HttpMoviesRepository implements MoviesRepositoryPort {
@@ -29,9 +30,12 @@ export class HttpMoviesRepository implements MoviesRepositoryPort {
 
   createInfo(request: CreateMovieInfoModel): Observable<void> {
     return this.http
-      .post<unknown>(`${this.baseUrl}/${encodeURIComponent(request.id)}/info`, {
-        language: toApiLocale(request.language),
-      })
+      .post<ApiResponse<MovieInfoResponseDto>>(
+        `${this.baseUrl}/${encodeURIComponent(request.id)}/info`,
+        {
+          language: toApiLocale(request.language),
+        },
+      )
       .pipe(
         map(() => undefined),
         catchError((error: HttpErrorResponse) => throwError(() => toRequestError(error))),

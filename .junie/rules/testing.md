@@ -35,7 +35,7 @@ Test every piece of **our** logic, small and focused:
 
 ## Conventions
 
-- Fakes implement the **port interface** (`MoviesRepositoryPort`, `AuthSessionStoragePort`) — never mock
+- Fakes implement the **port interface** (`TvSeriesRepositoryPort`, `AuthSessionStoragePort`) — never mock
   `HttpClient` inside application tests.
 - Fixtures are functions returning fresh objects (`validSession()`, `authRootState()`), never
   shared mutable constants.

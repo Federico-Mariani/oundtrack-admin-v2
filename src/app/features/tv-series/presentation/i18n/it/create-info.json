@@ -1,0 +1,20 @@
+{
+  "title": "Aggiungi una lingua",
+  "description": "Crea i dati della serie tv in una delle lingue ancora mancanti.",
+  "language": "Lingua da creare",
+  "submit": "Crea traduzione",
+  "cancel": "Annulla",
+  "pending": "Creazione dei dati in corso…",
+  "success": "Dati della serie tv creati nella nuova lingua.",
+  "errors": {
+    "network": "Connessione non disponibile. Riprova.",
+    "bad-request": "Non è stato possibile creare i dati con la lingua selezionata.",
+    "unauthorized": "Sessione scaduta. Accedi di nuovo.",
+    "forbidden": "Non hai i permessi per creare questi dati.",
+    "not-found": "La serie tv non è più disponibile.",
+    "conflict": "I dati in questa lingua sono già presenti. Ricarica il dettaglio.",
+    "validation": "Controlla la lingua selezionata.",
+    "server": "Il server non ha completato la creazione. Riprova.",
+    "unknown": "Impossibile creare la traduzione. Riprova."
+  }
+}

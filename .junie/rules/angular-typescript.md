@@ -41,18 +41,18 @@ state. Business logic lives in domain / application.
 
 - **One primary concept per file.** A file exports one main thing and is named after it.
 - kebab-case filenames with a role suffix when it adds clarity:
-  `movies-get-all.actions.ts`, `movies-get-all.reducer.ts`, `movies-load.effects.ts`,
-  `game-categories-store-data.facade.ts`, `http-movies.repository.ts`, `local-storage-auth-session.storage.ts`,
+  `tv-series-get-all.actions.ts`, `tv-series-get-all.reducer.ts`, `movies-load.effects.ts`,
+  `game-categories-store-data.facade.ts`, `http-tv-series.repository.ts`, `local-storage-auth-session.storage.ts`,
   `auth-session.mapper.ts`, `tokens-response.dto.ts`, `movies-repository.token.ts`,
-  `create-one-movie-page.ts`, `auth.guard.ts`, `movies.routes.ts`.
-- Domain models and ports are plain nouns without suffix: `movie.model.ts`, `auth-session.model.ts`,
-  `movies-repository.port.ts`, `auth-session-storage.port.ts`.
+  `create-one-tv-series-page.ts`, `auth.guard.ts`, `movies.routes.ts`.
+- Domain models and ports are plain nouns without suffix: `tv-series.model.ts`, `auth-session.model.ts`,
+  `tv-series-repository.port.ts`, `auth-session-storage.port.ts`.
 - Spec files sit next to the code they test: `x.ts` → `x.spec.ts`.
 - Forbidden: generic catch-all files such as `utils.ts`, `helpers.ts`, `common.ts`, `types.ts`,
   `interfaces.ts`, `models.ts`, `constants.ts`, `*-api.dto.ts`, `*-api.mappers.ts` that aggregate
   independent concepts. Split them. (Not ESLint-enforced — reviewers and agents must refuse them.)
 - Forbidden names: `Manager`, `Handler`, `Helper`, `Util`, `Base`, `Data`, `Service` when a precise
-  domain name exists (`AuthApi`, `HttpMoviesRepository`, `AuthSessionStoragePort`).
+  domain name exists (`AuthApi`, `HttpTvSeriesRepository`, `AuthSessionStoragePort`).
 - No barrel `index.ts` except `features/<feature>/index.ts` (public API).
 - Folder structure is ⚙ enforced (`eslint/project-structure.mjs`): see `architecture.md`.
 

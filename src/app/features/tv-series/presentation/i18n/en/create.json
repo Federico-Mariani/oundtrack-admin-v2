@@ -1,0 +1,23 @@
+{
+  "title": "Create tv series",
+  "description": "Add a tv series to the catalog.",
+  "fields": {
+    "title": "Title",
+    "year": "Year",
+    "language": "Language"
+  },
+  "submit": "Create tv series",
+  "reset": "Reset",
+  "backToTvSeries": "Back to tv series",
+  "errors": {
+    "network": "Unable to connect to the server. Please try again.",
+    "bad-request": "Invalid request. Check the form.",
+    "unauthorized": "Your session has expired. Please sign in again.",
+    "forbidden": "You do not have permission to create tv series.",
+    "not-found": "No matching tv series was found. Check the title and year.",
+    "conflict": "This tv series already exists in the catalog.",
+    "validation": "Check the highlighted fields.",
+    "server": "The server could not create the tv series. Please try again later.",
+    "unknown": "Unable to create the tv series. Please try again."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Serie tv",
+  "genres": "Generi",
+  "releaseDate": "Data di uscita",
+  "externalId": "ID esterno",
+  "actions": "Azioni",
+  "copyId": "Copia ID della serie tv",
+  "copyExternalId": "Copia ID esterno",
+  "viewDetail": "Apri dettaglio",
+  "languages": "Lingue"
+}

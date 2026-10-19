@@ -1,0 +1,8 @@
+{
+  "title": "Tv series",
+  "description": "Browse and search your tv series catalog.",
+  "refresh": "Refresh",
+  "loadFailed": "Could not load tv series. Please try again.",
+  "copied": "Identifier copied.",
+  "copyFailed": "Could not copy the identifier."
+}

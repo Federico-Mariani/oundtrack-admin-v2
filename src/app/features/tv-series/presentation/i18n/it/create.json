@@ -1,0 +1,23 @@
+{
+  "title": "Crea serie tv",
+  "description": "Aggiungi una serie tv al catalogo.",
+  "fields": {
+    "title": "Titolo",
+    "year": "Anno",
+    "language": "Lingua"
+  },
+  "submit": "Crea serie tv",
+  "reset": "Reimposta",
+  "backToTvSeries": "Torna alle serie tv",
+  "errors": {
+    "network": "Impossibile connettersi al server. Riprova.",
+    "bad-request": "Richiesta non valida. Controlla il modulo.",
+    "unauthorized": "La sessione è scaduta. Accedi nuovamente.",
+    "forbidden": "Non hai i permessi per creare la serie tv.",
+    "not-found": "Nessuna serie tv trovata. Controlla titolo e anno.",
+    "conflict": "La serie tv è già presente nel catalogo.",
+    "validation": "Controlla i campi evidenziati.",
+    "server": "Il server non è riuscito a creare la serie tv. Riprova più tardi.",
+    "unknown": "Impossibile creare la serie tv. Riprova."
+  }
+}
