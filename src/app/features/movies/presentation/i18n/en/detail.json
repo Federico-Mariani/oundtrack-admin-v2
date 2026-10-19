@@ -49,5 +49,6 @@
   "addVersion": "Add version",
   "editTrackLanguages": "Change languages",
   "replaceAudio": "Replace audio",
-  "uploadAudio": "Upload audio"
+  "uploadAudio": "Upload audio",
+  "refreshFailed": "Unable to refresh. Previously loaded data is still displayed."
 }

@@ -3,6 +3,7 @@
   [title]="t('title.' + params.mode)"
   [description]="t('description.' + params.mode)"
   [closeDisabled]="busy()"
+  [closeResult]="hasChanges()"
 >
   <form novalidate class="space-y-8 pt-3" [attr.aria-busy]="busy()" (submit)="submit($event)">
     @if (params.track; as track) {
@@ -36,13 +37,12 @@
             />
           }
         </div>
-        <app-checkbox-choice
-          [label]="t('allLanguages')"
-          [outlined]="false"
-          [checked]="allSelected()"
-          [indeterminate]="languages().length > 0 && !allSelected()"
+        <app-button
+          variant="link"
+          buttonClass="h-auto justify-start px-0 py-1 text-sm"
+          [text]="t(allSelected() ? 'clearLanguages' : 'allLanguages')"
           [disabled]="metadataLocked() || !available.length"
-          (changed)="selectAll()"
+          (click)="selectAll()"
         />
         @if (submitted() && !languages().length) {
           <p role="alert" class="text-sm text-destructive">{{ t('requiredLanguage') }}</p>
@@ -54,7 +54,7 @@
     }
     @if (!languageOnly) {
       <app-form-section [title]="t('file')" [description]="t('fileHint')">
-        @if (!state().uploaded) {
+        @if (!state().uploaded && !fileName()) {
           <app-file-dropzone
             accept=".mp3,audio/mpeg"
             [title]="t('dropTitle')"
@@ -155,7 +155,7 @@
           buttonClass="min-h-12 w-full whitespace-normal"
           [text]="t('close')"
           [disabled]="busy()"
-          (click)="ref.close()"
+          (click)="ref.close(hasChanges())"
         />
       }
       @if (state().uploaded && !busy()) {

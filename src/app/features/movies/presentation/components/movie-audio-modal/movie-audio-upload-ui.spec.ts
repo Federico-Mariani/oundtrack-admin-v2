@@ -9,7 +9,10 @@ import { NotificationService } from '@app/core/notifications/notification.servic
 import { ModalFrame } from '@shared/ui/modal/modal-frame';
 import type { RequestError } from '@shared/state/request/request-error';
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
-import { initialMoviesAudioState } from '../../../application/state/movies-audio.state';
+import {
+  initialMoviesAudioState,
+  type MoviesAudioState,
+} from '../../../application/state/movies-audio.state';
 import { MovieAudioMode } from '../../../domain/models/movie-audio-mode.model';
 import { moviesTranslationsLoader } from '../../i18n/movies-translations.loader';
 import { MovieAudioModal } from './movie-audio-modal';
@@ -23,6 +26,7 @@ class TestFrame {
   readonly title = input('');
   readonly description = input('');
   readonly closeDisabled = input(false);
+  readonly closeResult = input<unknown>(undefined);
 }
 class TranslationLoader {
   getTranslation() {
@@ -34,7 +38,7 @@ async function setup() {
   const busy = signal(false);
   const success = signal(false);
   const error = signal<RequestError | null>(null);
-  const audio = signal({ ...initialMoviesAudioState });
+  const audio = signal<MoviesAudioState>({ ...initialMoviesAudioState });
   const save = vi.fn<MoviesStoreActionsFacade['saveAudio']>();
   const close = vi.fn();
   const notify = { success: vi.fn(), error: vi.fn() };
@@ -94,7 +98,7 @@ async function setup() {
     input.dispatchEvent(new Event('change', { bubbles: true }));
     await fixture.whenStable();
   };
-  return { fixture, element, submit, choose, busy, success, error, save, close, notify };
+  return { fixture, element, submit, choose, busy, success, error, save, close, notify, audio };
 }
 describe('Movie audio editor', () => {
   it('validates the file before creating anything and prevents duplicate submissions while pending', async () => {
@@ -116,10 +120,12 @@ describe('Movie audio editor', () => {
       }),
     );
     expect(save.mock.calls[0][1].fileKey).toEqual(expect.any(String));
+    expect(element.querySelector('app-file-dropzone')).toBeNull();
     const remove = element.querySelector<HTMLButtonElement>('app-file-attachment button')!;
     remove.click();
     await fixture.whenStable();
     expect(element.querySelector('app-file-attachment')).toBeNull();
+    expect(element.querySelector('app-file-dropzone')).not.toBeNull();
     await submit();
     expect(save).toHaveBeenCalledTimes(1);
     await choose(new File(['ID3audio'], 'recording.mp3'));
@@ -127,8 +133,47 @@ describe('Movie audio editor', () => {
     await fixture.whenStable();
     await submit();
     expect(save).toHaveBeenCalledTimes(1);
-    expect(element.querySelector<HTMLInputElement>('input[type=file]')?.disabled).toBe(true);
+    expect(element.querySelector('app-file-dropzone')).toBeNull();
+    expect(element.querySelector<HTMLButtonElement>('app-file-attachment button')?.disabled).toBe(
+      true,
+    );
     expect(element.querySelector('app-file-attachment')?.textContent).toContain('recording.mp3');
+  });
+  it('closes without changes for a local selection, but reports a partially created track', async () => {
+    const { element, fixture, choose, close, audio } = await setup();
+    await choose(new File(['ID3audio'], 'recording.mp3'));
+    const closeButton = Array.from(element.querySelectorAll<HTMLButtonElement>('button')).find(
+      (button) => button.textContent.trim() === 'Close',
+    )!;
+    closeButton.click();
+    expect(close).toHaveBeenLastCalledWith(false);
+    audio.set({
+      ...initialMoviesAudioState,
+      track: {
+        id: 'created',
+        externalId: 'spotify',
+        path: null,
+        name: 'Track',
+        artist: 'Artist',
+        languages: ['en-US'],
+      },
+    });
+    await fixture.whenStable();
+    closeButton.click();
+    expect(close).toHaveBeenLastCalledWith(true);
+  });
+  it('uses a text action for select-all without an indeterminate master checkbox', async () => {
+    const { element, fixture } = await setup();
+    expect(element.querySelectorAll('app-checkbox-choice')).toHaveLength(2);
+    const action = Array.from(element.querySelectorAll<HTMLButtonElement>('button')).find(
+      (button) => button.textContent.trim() === 'Clear selection',
+    )!;
+    action.click();
+    await fixture.whenStable();
+    expect(action.textContent).toContain('Select all available languages');
+    action.click();
+    await fixture.whenStable();
+    expect(action.textContent).toContain('Clear selection');
   });
   it('shows field errors and notifications, and closes only on completed success', async () => {
     const { error, success, fixture, element, close, notify } = await setup();

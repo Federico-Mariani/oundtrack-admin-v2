@@ -22,7 +22,7 @@
       <button hlmDropdownMenuItem type="button" (triggered)="copyId(id)">{{ t('copyId') }}</button>
     </div>
   </ng-template>
-  @if (!loading() && !error() && movie()) {
+  @if (movie()) {
     <div
       class="absolute left-5 top-5 z-20 flex max-w-[calc(100%-8rem)] items-center gap-2 sm:left-8 sm:top-8 sm:max-w-[calc(100%-10rem)]"
     >
@@ -38,7 +38,7 @@
         icon="lucidePlus"
         [ariaLabel]="t('addLanguage')"
         [title]="t(missingLanguages().length ? 'addLanguage' : 'allLanguages')"
-        [disabled]="!missingLanguages().length"
+        [disabled]="loading() || !missingLanguages().length"
         (click)="addLanguage()"
       />
     </div>
@@ -48,10 +48,24 @@
     class="max-h-[calc(100dvh-2rem)] overflow-y-auto bg-popover text-popover-foreground"
     [attr.aria-busy]="loading()"
   >
-    @if (loading()) {
+    @if (error() && movie()) {
+      <div
+        class="relative z-10 mt-20 flex items-center justify-between gap-4 px-5 py-3 text-sm sm:px-8"
+        role="alert"
+      >
+        <p>{{ t('refreshFailed') }}</p>
+        <app-button
+          [text]="t('retry')"
+          variant="outline"
+          [disabled]="loading()"
+          (click)="reload()"
+        />
+      </div>
+    }
+    @if (loading() && !movie()) {
       <span role="status" class="sr-only">{{ t('loading') }}</span>
       <app-movie-detail-skeleton />
-    } @else if (error()) {
+    } @else if (error() && !movie()) {
       <div class="flex min-h-96 flex-col items-center justify-center gap-4 p-8 text-center">
         <p role="alert">{{ t(error()?.status === 404 ? 'notFound' : 'failed') }}</p>
         <app-button [text]="t('retry')" variant="outline" (click)="reload()" />

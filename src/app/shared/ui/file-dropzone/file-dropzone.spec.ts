@@ -57,7 +57,7 @@ describe('Reusable file dropzone', () => {
     const { fixture, element, input, selected, drop } = await setup();
     element.querySelector('div')!.dispatchEvent(new Event('dragenter', { cancelable: true }));
     await fixture.whenStable();
-    expect(element.querySelector('button')!.classList.contains('border-primary')).toBe(true);
+    expect(element.querySelector('div')!.classList.contains('border-primary')).toBe(true);
     fixture.componentRef.setInput('disabled', true);
     await fixture.whenStable();
     const file = new File(['ID3audio'], 'track.mp3');
@@ -68,6 +68,6 @@ describe('Reusable file dropzone', () => {
     expect(element.querySelector('button')!.disabled).toBe(true);
     fixture.componentRef.setInput('disabled', false);
     await fixture.whenStable();
-    expect(element.querySelector('button')!.classList.contains('border-primary')).toBe(false);
+    expect(element.querySelector('div')!.classList.contains('border-primary')).toBe(false);
   });
 });

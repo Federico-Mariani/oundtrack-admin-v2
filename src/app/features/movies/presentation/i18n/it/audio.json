@@ -66,5 +66,6 @@
   "removeFile": "Rimuovi file",
   "fileReady": "Pronto per il caricamento",
   "fileUploaded": "Caricato",
-  "multipleFiles": "Seleziona un solo file audio alla volta."
+  "multipleFiles": "Seleziona un solo file audio alla volta.",
+  "clearLanguages": "Deseleziona tutte"
 }

@@ -96,10 +96,12 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
         contentClass: 'w-[min(36rem,calc(100vw-2rem))] max-w-none p-6 sm:p-8',
       },
     );
-    this.audioRef.closed$.subscribe(() => {
+    this.audioRef.closed$.subscribe((changed) => {
       this.audioRef = undefined;
-      this.showAllTracks.set(true);
-      this.reload();
+      if (changed) {
+        this.showAllTracks.set(true);
+        this.reload();
+      }
     });
   }
   private createInfoRef?: BrnDialogRef<SupportedLocale>;

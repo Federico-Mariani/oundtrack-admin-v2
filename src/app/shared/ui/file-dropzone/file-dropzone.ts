@@ -18,6 +18,10 @@ import { lucideUpload } from '@ng-icons/lucide';
   host: { class: 'block min-w-0' },
   template: `
     <div
+      class="rounded-lg border-2 border-dashed border-border focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
+      [class.border-primary]="dragDepth() > 0 && !disabled()"
+      [class.bg-primary/5]="dragDepth() > 0 && !disabled()"
+      [class.border-destructive]="invalid()"
       (dragenter)="enter($event)"
       (dragover)="over($event)"
       (dragleave)="leave($event)"
@@ -36,10 +40,7 @@ import { lucideUpload } from '@ng-icons/lucide';
         hlmBtn
         type="button"
         variant="ghost"
-        class="h-auto min-h-40 w-full flex-col gap-3 whitespace-normal rounded-lg border-2 border-dashed p-6 text-center hover:bg-muted/40 disabled:opacity-60"
-        [class.border-primary]="dragDepth() > 0 && !disabled()"
-        [class.bg-primary/5]="dragDepth() > 0 && !disabled()"
-        [class.border-destructive]="invalid()"
+        class="h-auto min-h-40 w-full flex-col gap-3 whitespace-normal rounded-md border-0 p-6 text-center hover:bg-muted/40 disabled:opacity-60"
         [attr.aria-invalid]="invalid()"
         [attr.aria-describedby]="describedBy()"
         [disabled]="disabled()"

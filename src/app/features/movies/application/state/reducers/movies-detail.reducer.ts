@@ -12,7 +12,7 @@ export const moviesDetailReducer: Array<ReducerTypes<MoviesState, ReadonlyArray<
   on(MoviesDetailActions.requested, (state, { id }): MoviesState => ({
     ...state,
     detailId: id,
-    detail: null,
+    detail: state.detailId === id ? state.detail : null,
     detailRequest: pendingRequest(),
   })),
   on(MoviesDetailActions.closed, (state, { id }): MoviesState =>
@@ -31,6 +31,6 @@ export const moviesDetailReducer: Array<ReducerTypes<MoviesState, ReadonlyArray<
       : state,
   ),
   on(MoviesDetailApiActions.failed, (state, { id, error }): MoviesState =>
-    state.detailId === id ? { ...state, detail: null, detailRequest: failedRequest(error) } : state,
+    state.detailId === id ? { ...state, detailRequest: failedRequest(error) } : state,
   ),
 ];

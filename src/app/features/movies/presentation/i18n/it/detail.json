@@ -49,5 +49,6 @@
   "addVersion": "Aggiungi versione",
   "editTrackLanguages": "Modifica lingue",
   "replaceAudio": "Sostituisci audio",
-  "uploadAudio": "Carica audio"
+  "uploadAudio": "Carica audio",
+  "refreshFailed": "Impossibile aggiornare. Sono ancora visibili i dati caricati in precedenza."
 }

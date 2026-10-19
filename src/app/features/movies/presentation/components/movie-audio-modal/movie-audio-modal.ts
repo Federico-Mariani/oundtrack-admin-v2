@@ -74,6 +74,13 @@ export class MovieAudioModal implements ModalContent<MovieAudioModalParams, bool
   protected readonly externalErrors = signal<ReadonlyArray<string>>([]);
   protected readonly languageErrors = signal<ReadonlyArray<string>>([]);
   protected readonly submitted = signal(false);
+  protected readonly hasChanges = computed(
+    () =>
+      (!!this.state().track && this.state().track?.id !== this.params.track?.id) ||
+      this.state().uploaded ||
+      this.state().creationUncertain ||
+      this.state().phase === MovieAudioPhase.Done,
+  );
   protected readonly metadataLocked = computed(
     () => this.busy() || (this.params.mode !== MovieAudioMode.Languages && !!this.state().track),
   );
