@@ -45,7 +45,7 @@ import { IconButton } from '../icon-button/icon-button';
           size="icon-sm"
           [ariaLabel]="t('close')"
           [disabled]="closeDisabled()"
-          (click)="ref.close()"
+          (click)="ref.close(closeResult())"
         />
       </div>
     </div>
@@ -54,6 +54,7 @@ import { IconButton } from '../icon-button/icon-button';
 })
 export class ModalFrame {
   protected readonly ref = inject<BrnDialogRef>(BrnDialogRef);
+  readonly closeResult = input<unknown>(undefined);
   readonly closeDisabled = input(false);
   readonly overlayHeader = input(false);
   readonly title = input.required<string>();

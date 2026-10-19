@@ -13,21 +13,27 @@ import {
 import { TranslocoDirective } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
+  lucideCloudUpload,
   lucideInfo,
+  lucideLanguages,
+  lucideListPlus,
   lucideLoaderCircle,
   lucideMusic2,
   lucidePause,
   lucidePlay,
+  lucideReplace,
   lucideVolume2,
   lucideVolumeX,
 } from '@ng-icons/lucide';
 import { HlmButton } from '@spartan-ng/helm/button';
 import type { MovieSoundtrackTrackModel } from '../../../domain/models/movie-soundtrack-track.model';
+import { IconButton } from '@shared/ui/icon-button/icon-button';
+import { HlmSlider } from '@spartan-ng/helm/slider';
 
 @Component({
   selector: 'app-movie-track-player',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslocoDirective, NgIcon, HlmButton],
+  imports: [TranslocoDirective, NgIcon, HlmButton, IconButton, HlmSlider],
   providers: [
     provideIcons({
       lucidePlay,
@@ -37,23 +43,29 @@ import type { MovieSoundtrackTrackModel } from '../../../domain/models/movie-sou
       lucideVolumeX,
       lucideLoaderCircle,
       lucideMusic2,
+      lucideLanguages,
+      lucideReplace,
+      lucideCloudUpload,
+      lucideListPlus,
     }),
   ],
   templateUrl: './movie-track-player.html',
-  styleUrl: './movie-track-player.css',
 })
 export class MovieTrackPlayer {
   readonly track = input.required<MovieSoundtrackTrackModel>();
   readonly soundtrackId = input.required<string>();
   readonly playbackStarted = output<HTMLAudioElement>();
   readonly reload = output();
+  readonly editLanguages = output();
+  readonly uploadAudio = output();
+  readonly manageAudio = output();
   private readonly destroyRef = inject(DestroyRef);
   private readonly audio = viewChild<ElementRef<HTMLAudioElement>>('audio');
   protected readonly failed = signal(false);
   protected readonly playing = signal(false);
   protected readonly buffering = signal(false);
   protected readonly playPending = signal(false);
-  protected readonly currentTime = signal(0);
+  protected readonly currentTime = signal([0]);
   protected readonly duration = signal(0);
   protected readonly muted = signal(false);
   protected readonly showInfo = signal(false);
@@ -63,7 +75,7 @@ export class MovieTrackPlayer {
       this.failed.set(!path);
       this.playing.set(false);
       this.buffering.set(false);
-      this.currentTime.set(0);
+      this.currentTime.set([0]);
       this.duration.set(0);
     });
     this.destroyRef.onDestroy(() => {
@@ -107,7 +119,7 @@ export class MovieTrackPlayer {
     this.buffering.set(false);
   }
   protected updateTime(audio: HTMLAudioElement): void {
-    this.currentTime.set(Number.isFinite(audio.currentTime) ? audio.currentTime : 0);
+    this.currentTime.set([Number.isFinite(audio.currentTime) ? audio.currentTime : 0]);
     this.duration.set(Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0);
   }
   protected seek(event: Event): void {

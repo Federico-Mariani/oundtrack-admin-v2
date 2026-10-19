@@ -1,0 +1,72 @@
+{
+  "title": {
+    "soundtrack": "New soundtrack",
+    "version": "Add a recording",
+    "upload": "Upload audio",
+    "languages": "Change track languages"
+  },
+  "description": {
+    "soundtrack": "Create a soundtrack and upload its first recording.",
+    "version": "Add a different recording in languages not yet assigned to this soundtrack.",
+    "upload": "Upload or replace the MP3 for this recording.",
+    "languages": "Choose every language that should use this recording."
+  },
+  "externalId": "Spotify track ID",
+  "externalHint": "Enter the track ID, not a Spotify URL. The server retrieves the title and artist.",
+  "required": "Enter a Spotify track ID.",
+  "languages": "Recording languages",
+  "allLanguages": "Select all available languages",
+  "occupied": "Already assigned",
+  "languagesHint": "The same recording can serve multiple languages. Each language belongs to one recording per soundtrack.",
+  "requiredLanguage": "Select at least one language.",
+  "file": "Audio file (.mp3)",
+  "fileHint": "Only a non-empty MP3 file is accepted. Upload starts when you submit.",
+  "checking": "Checking the file…",
+  "invalidMp3": "Choose a valid, non-empty .mp3 audio file.",
+  "createdCheckpoint": "The recording has been created. Retry the upload here, or resume later from its card.",
+  "uploadedCheckpoint": "Audio uploaded. Only server confirmation remains; the file will not be uploaded again.",
+  "phase": {
+    "creating": "Creating the recording…",
+    "uploading": "Uploading audio…",
+    "confirming": "Confirming audio on the server…",
+    "languages": "Saving languages…",
+    "ready": "Ready",
+    "done": "Completed"
+  },
+  "uncertain": "The server may have created the recording before the connection failed. Close this window and check the refreshed movie before creating another one.",
+  "cancelUpload": "Stop upload",
+  "close": "Close",
+  "confirm": "Retry confirmation",
+  "saveLanguages": "Save languages",
+  "upload": "Upload audio",
+  "create": "Create and upload",
+  "success": {
+    "soundtrack": "Soundtrack created and audio uploaded.",
+    "version": "Recording added and audio uploaded.",
+    "upload": "Audio uploaded and confirmed.",
+    "languages": "Track languages updated."
+  },
+  "errors": {
+    "network": "Connection failed. Check your connection and try again.",
+    "bad-request": "Check the track ID, languages and audio file.",
+    "unauthorized": "Your session has expired. Sign in again.",
+    "forbidden": "You do not have permission to perform this operation.",
+    "not-found": "The track or upload endpoint is unavailable. Reload the movie; contact your administrator if the issue persists.",
+    "conflict": "The requested operation conflicts with current data. A language may already be assigned, or the audio may not be ready for confirmation.",
+    "validation": "Check the highlighted fields.",
+    "server": "The server could not complete the operation. Please try again.",
+    "unknown": "The operation could not be completed. Please try again."
+  },
+  "restartUpload": "Upload the file again",
+  "recording": "Selected recording",
+  "dropTitle": "Drop your audio file here",
+  "dropDescription": "One MP3 file per recording",
+  "browseFiles": "Browse files",
+  "replaceFile": "Choose a different file",
+  "removeFile": "Remove file",
+  "fileReady": "Ready to upload",
+  "fileUploaded": "Uploaded",
+  "multipleFiles": "Select one audio file at a time.",
+  "clearLanguages": "Clear selection",
+  "occupiedLanguages": "Already assigned to another recording: {{languages}}."
+}
