@@ -32,7 +32,7 @@ export class HttpTvSeriesSoundtracksRepository implements TvSeriesSoundtracksRep
   ): Observable<TvSeriesSoundtrackModel> {
     return this.http
       .post<ApiResponse<TvSeriesSoundtrackResponseDto>>(this.baseUrl, {
-        ownerType: 'tv-series',
+        ownerType: 'tv_series',
         ownerId: tvSeriesId,
         trackExternalId: externalId,
         languages: toApiLocales(languages),
