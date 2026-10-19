@@ -30,13 +30,18 @@
           @for (option of options; track option.value) {
             <app-checkbox-choice
               [label]="option.label"
-              [description]="option.occupied ? t('occupied') : ''"
+              [unavailableReason]="option.occupied ? t('occupied') : ''"
               [checked]="languages().includes(option.value)"
               [disabled]="metadataLocked() || option.occupied"
               (changed)="toggleLanguage(option.value)"
             />
           }
         </div>
+        @if (occupiedLanguageNames) {
+          <p class="text-xs leading-relaxed text-muted-foreground">
+            {{ t('occupiedLanguages', { languages: occupiedLanguageNames }) }}
+          </p>
+        }
         <app-button
           variant="link"
           buttonClass="h-auto justify-start px-0 py-1 text-sm"

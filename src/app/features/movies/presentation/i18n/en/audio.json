@@ -67,5 +67,6 @@
   "fileReady": "Ready to upload",
   "fileUploaded": "Uploaded",
   "multipleFiles": "Select one audio file at a time.",
-  "clearLanguages": "Clear selection"
+  "clearLanguages": "Clear selection",
+  "occupiedLanguages": "Already assigned to another recording: {{languages}}."
 }

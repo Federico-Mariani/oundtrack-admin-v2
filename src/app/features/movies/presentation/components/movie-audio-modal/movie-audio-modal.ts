@@ -114,6 +114,10 @@ export class MovieAudioModal implements ModalContent<MovieAudioModalParams, bool
       ),
     };
   });
+  protected readonly occupiedLanguageNames = this.options
+    .filter((option) => option.occupied)
+    .map((option) => option.label)
+    .join(', ');
   protected readonly available = this.options.filter((option) => !option.occupied);
   protected readonly allSelected = computed(
     () =>

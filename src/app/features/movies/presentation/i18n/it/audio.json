@@ -67,5 +67,6 @@
   "fileReady": "Pronto per il caricamento",
   "fileUploaded": "Caricato",
   "multipleFiles": "Seleziona un solo file audio alla volta.",
-  "clearLanguages": "Deseleziona tutte"
+  "clearLanguages": "Deseleziona tutte",
+  "occupiedLanguages": "Già assegnate a un’altra versione: {{languages}}."
 }
