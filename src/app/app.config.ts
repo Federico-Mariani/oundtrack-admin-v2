@@ -15,6 +15,7 @@ import { provideAppTheme } from '@app/core/theme/theme.providers';
 import { provideMovies } from '@features/movies';
 import { languageInterceptor } from './core/interceptors/language.interceptor';
 import { provideGameCategories } from '@features/game-categories';
+import { provideTvSeries } from '@features/tv-series';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,6 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideAppTheme(),
     provideAuth(),
     provideMovies(),
+    provideTvSeries(),
     provideGameCategories(),
   ],
 };

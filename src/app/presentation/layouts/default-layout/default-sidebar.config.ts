@@ -1,6 +1,7 @@
 import { MOVIES_NAVIGATION } from '@features/movies';
 import type { SidebarGroup } from '../../ui/sidebar/sidebar-group';
 import { GAME_CATEGORIES_NAVIGATION } from '@features/game-categories';
+import { TV_SERIES_NAVIGATION } from '@features/tv-series';
 
 /** Shell menu composition only. Feature paths remain owned by their routing APIs. */
 export const DEFAULT_SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
@@ -42,6 +43,25 @@ export const DEFAULT_SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
             id: 'movies-create',
             labelKey: 'sidebar.menu.movies.createOne',
             commands: MOVIES_NAVIGATION.create(),
+          },
+        ],
+      },
+      {
+        id: 'tv-series',
+        labelKey: 'sidebar.menu.tvSeries.label',
+        icon: 'lucideFilm',
+        commands: TV_SERIES_NAVIGATION.root(),
+        exact: false,
+        children: [
+          {
+            id: 'tv-series-all',
+            labelKey: 'sidebar.menu.tvSeries.all',
+            commands: TV_SERIES_NAVIGATION.root(),
+          },
+          {
+            id: 'tv-series-create',
+            labelKey: 'sidebar.menu.tvSeries.createOne',
+            commands: TV_SERIES_NAVIGATION.create(),
           },
         ],
       },

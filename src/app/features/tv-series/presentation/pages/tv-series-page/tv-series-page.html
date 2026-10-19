@@ -11,4 +11,25 @@
       <p class="mt-1 text-sm text-muted-foreground">{{ t('description') }}</p>
     </div>
   </header>
+  <ng-template #controls>
+    <app-tv-series-filters
+      [query]="query()"
+      (filtersChange)="applyFilters($event)"
+      (resetFilters)="resetQuery()"
+    />
+  </ng-template>
+  <app-tv-series-table
+    [remote]="remote()"
+    (pageChange)="changePage($event)"
+    [controls]="controls"
+    (resetQuery)="resetQuery()"
+    [tvSeries]="tvSeries()"
+    [caption]="t('title')"
+    [loading]="loading()"
+    [errorMessage]="loadError() ? t('loadFailed') : null"
+    (retry)="reload()"
+    (viewDetail)="openDetail($event)"
+    (copyId)="copyIdentifier($event)"
+    (copyExternalId)="copyIdentifier($event)"
+  />
 </div>

@@ -1,0 +1,16 @@
+@if (columns().length > 0) {
+  <app-data-table
+    [columns]="columns()"
+    [remote]="remote()"
+    (pageChange)="pageChange.emit($event)"
+    [controls]="controls()"
+    (resetQuery)="resetQuery.emit()"
+    [initialColumnVisibility]="initialColumnVisibility"
+    [data]="rows()"
+    [getRowId]="rowId"
+    [caption]="caption()"
+    [loading]="loading()"
+    [errorMessage]="errorMessage()"
+    (retry)="retry.emit()"
+  />
+}
