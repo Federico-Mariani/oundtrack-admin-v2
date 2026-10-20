@@ -7,7 +7,6 @@ import { moviesFeature } from '../movies.feature';
 export class MoviesStoreRequestsFacade {
   private readonly store = inject(Store);
 
-  readonly audio = createRequestSignals(this.store.selectSignal(moviesFeature.selectAudioRequest));
   readonly getAll = createRequestSignals(this.store.selectSignal(moviesFeature.selectLoadRequest));
 
   readonly getById = createRequestSignals(

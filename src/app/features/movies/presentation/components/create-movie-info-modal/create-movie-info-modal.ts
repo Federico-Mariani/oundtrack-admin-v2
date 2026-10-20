@@ -19,7 +19,7 @@ import type { ModalContent } from '@shared/ui/modal/modal-content';
 import { Button } from '@shared/ui/button/button';
 import { SelectField } from '@shared/ui/select-field/select-field';
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
-import type { CreateMovieInfoFormModel } from '../../models/create-movie-info-form.model';
+import type { CreateMovieInfoForm } from '../../forms/create-movie-info.form';
 import type { CreateMovieInfoModalParams } from './create-movie-info-modal-params';
 
 @Component({
@@ -83,7 +83,7 @@ export class CreateMovieInfoModal implements ModalContent<
     label: value === 'it-IT' ? 'Italiano' : 'English',
   }));
   private readonly fieldErrors = computed(() => this.error()?.fieldErrors);
-  protected readonly controller = new AppFormController<CreateMovieInfoFormModel>(
+  protected readonly controller = new AppFormController<CreateMovieInfoForm>(
     [new AppFormField('language', [new RequiredInputRule()])],
     () => {
       this.submit();

@@ -3,10 +3,10 @@ import { AppFormField } from '@app/core/forms/app-form-field';
 import { IntegerInputRule } from '@app/core/forms/rules/integer-input-rule';
 import { RangeEndInputRule } from '@app/core/forms/rules/range-end-input-rule';
 import { MaxLengthInputRule } from '@app/core/forms/rules/max-length-input-rule';
-import type { TvSeriesFilterFormModel } from '../../models/tv-series-filter-form.model';
+import type { TvSeriesFilterForm } from '../../forms/tv-series-filter.form';
 
-export function createTvSeriesFilterForm(): AppFormController<TvSeriesFilterFormModel> {
-  return new AppFormController<TvSeriesFilterFormModel>([
+export function createTvSeriesFilterForm(): AppFormController<TvSeriesFilterForm> {
+  return new AppFormController<TvSeriesFilterForm>([
     new AppFormField('search', [new MaxLengthInputRule(200)]),
     new AppFormField('releaseYearFrom', [new IntegerInputRule(1, 9998)]),
     new AppFormField('releaseYearTo', [

@@ -1,41 +1,19 @@
 import type { Id } from '@shared/types/id';
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import type { TvSeriesSoundtrackTrackModel } from '../../../domain/models/tv-series-soundtrack-track.model';
-import { TvSeriesAudioEvents, TvSeriesAudioSaveActions } from '../actions/tv-series-audio.actions';
 import { TvSeriesInfoCreateActions } from '../actions/tv-series-info-create.actions';
 import { TvSeriesDetailActions } from '../actions/tv-series-detail.actions';
 import { TvSeriesCreateActions } from '../actions/tv-series-create.actions';
 import { TvSeriesGetAllActions } from '../actions/tv-series-get-all.actions';
-import type { CreateTvSeriesModel } from '../../../domain/models/create-tv-series.model';
-import type { TvSeriesListQuery } from '../../../domain/models/tv-series-list-query.model';
-import type { CreateTvSeriesInfoModel } from '../../../domain/models/create-tv-series-info.model';
-import type { TvSeriesAudioInputModel } from '../../../domain/models/tv-series-audio-input.model';
+import type { CreateTvSeriesCommand } from '../../commands/create-tv-series.command';
+import type { TvSeriesListQuery } from '../../queries/tv-series-list.query';
+import type { CreateTvSeriesInfoCommand } from '../../commands/create-tv-series-info.command';
 
 @Injectable({ providedIn: 'root' })
 export class TvSeriesStoreActionsFacade {
   private readonly store = inject(Store);
 
-  openAudio(
-    sessionId: string,
-    soundtrackId: string | null,
-    track: TvSeriesSoundtrackTrackModel | null,
-  ): void {
-    this.store.dispatch(TvSeriesAudioEvents.opened({ sessionId, soundtrackId, track }));
-  }
-  closeAudio(sessionId: string): void {
-    this.store.dispatch(TvSeriesAudioEvents.closed({ sessionId }));
-  }
-  restartAudioUpload(sessionId: string): void {
-    this.store.dispatch(TvSeriesAudioEvents.restartUpload({ sessionId }));
-  }
-  cancelAudio(sessionId: string): void {
-    this.store.dispatch(TvSeriesAudioEvents.cancelled({ sessionId }));
-  }
-  saveAudio(sessionId: string, input: TvSeriesAudioInputModel): void {
-    this.store.dispatch(TvSeriesAudioSaveActions.requested({ sessionId, input }));
-  }
-  createInfo(request: CreateTvSeriesInfoModel): void {
+  createInfo(request: CreateTvSeriesInfoCommand): void {
     this.store.dispatch(TvSeriesInfoCreateActions.requested({ request }));
   }
   resetCreateInfo(): void {
@@ -47,7 +25,7 @@ export class TvSeriesStoreActionsFacade {
   closeDetail(id: Id): void {
     this.store.dispatch(TvSeriesDetailActions.closed({ id }));
   }
-  createTvSeries(tvSeries: CreateTvSeriesModel): void {
+  createTvSeries(tvSeries: CreateTvSeriesCommand): void {
     this.store.dispatch(TvSeriesCreateActions.requested({ tvSeries }));
   }
   resetCreateTvSeries(): void {

@@ -1,13 +1,13 @@
 import { resolveLocalized } from '@shared/localization/localized.queries';
 import { SUPPORTED_LOCALES, type SupportedLocale } from '@shared/localization/supported-locale';
 import type { TvSeriesModel } from '../../domain/models/tv-series.model';
-import type { TvSeriesTableRowModel } from '../models/tv-series-table-row.model';
+import type { TvSeriesTableRowViewModel } from '../view-models/tv-series-table-row.view-model';
 
 export function toTvSeriesTableRow(
   tvSeries: TvSeriesModel,
   locale: SupportedLocale,
   dateFormatter: Intl.DateTimeFormat,
-): TvSeriesTableRowModel {
+): TvSeriesTableRowViewModel {
   const info = resolveLocalized(tvSeries.info, locale);
   const genres = tvSeries.genres.flatMap((genre) => {
     const genreInfo = resolveLocalized(genre.info, locale);

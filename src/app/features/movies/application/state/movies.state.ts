@@ -1,9 +1,5 @@
-import { initialMoviesAudioState, type MoviesAudioState } from './movies-audio.state';
-import type { CreateMovieInfoModel } from '../../domain/models/create-movie-info.model';
-import {
-  DEFAULT_MOVIES_LIST_QUERY,
-  type MoviesListQuery,
-} from '../../domain/models/movies-list-query.model';
+import type { CreateMovieInfoCommand } from '../commands/create-movie-info.command';
+import { DEFAULT_MOVIES_LIST_QUERY, type MoviesListQuery } from '../queries/movies-list.query';
 import type { RequestState } from '@shared/state/request/request-state';
 import { idleRequest } from '@shared/state/request/request-state.transitions';
 import type { MovieModel } from '../../domain/models/movie.model';
@@ -13,9 +9,7 @@ import type { MovieDetailModel } from '../../domain/models/movie-detail.model';
 import type { Id } from '@shared/types/id';
 
 export interface MoviesState {
-  readonly audio: MoviesAudioState;
-  readonly audioRequest: RequestState<RequestError>;
-  readonly createInfoTarget: CreateMovieInfoModel | null;
+  readonly createInfoTarget: CreateMovieInfoCommand | null;
   readonly createInfoRequest: RequestState<RequestError>;
   readonly detailId: Id | null;
   readonly detail: MovieDetailModel | null;
@@ -28,8 +22,6 @@ export interface MoviesState {
 }
 
 export const initialMoviesState: MoviesState = {
-  audio: initialMoviesAudioState,
-  audioRequest: idleRequest(),
   createInfoTarget: null,
   createInfoRequest: idleRequest(),
   detailId: null,

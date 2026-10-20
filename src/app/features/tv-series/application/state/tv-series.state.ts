@@ -2,19 +2,16 @@ import type { RequestState } from '@shared/state/request/request-state';
 import { idleRequest } from '@shared/state/request/request-state.transitions';
 import type { RequestError } from '@shared/state/request/request-error';
 import type { Id } from '@shared/types/id';
-import type { CreateTvSeriesInfoModel } from '../../domain/models/create-tv-series-info.model';
+import type { CreateTvSeriesInfoCommand } from '../commands/create-tv-series-info.command';
 import type { TvSeriesDetailModel } from '../../domain/models/tv-series-detail.model';
 import type { TvSeriesModel } from '../../domain/models/tv-series.model';
 import {
   DEFAULT_TV_SERIES_LIST_QUERY,
   type TvSeriesListQuery,
-} from '../../domain/models/tv-series-list-query.model';
-import { initialTvSeriesAudioState, type TvSeriesAudioState } from './tv-series-audio.state';
+} from '../queries/tv-series-list.query';
 
 export interface TvSeriesState {
-  readonly audio: TvSeriesAudioState;
-  readonly audioRequest: RequestState<RequestError>;
-  readonly createInfoTarget: CreateTvSeriesInfoModel | null;
+  readonly createInfoTarget: CreateTvSeriesInfoCommand | null;
   readonly createInfoRequest: RequestState<RequestError>;
   readonly detailId: Id | null;
   readonly detail: TvSeriesDetailModel | null;
@@ -27,8 +24,6 @@ export interface TvSeriesState {
 }
 
 export const initialTvSeriesState: TvSeriesState = {
-  audio: initialTvSeriesAudioState,
-  audioRequest: idleRequest(),
   createInfoTarget: null,
   createInfoRequest: idleRequest(),
   detailId: null,

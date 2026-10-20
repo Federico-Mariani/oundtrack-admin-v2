@@ -1,11 +1,11 @@
 import type { FieldTree } from '@angular/forms/signals';
 import type { ListFilterField } from '@shared/ui/list-filters/list-filter-field';
 import type { TvSeriesFilterLabels } from './tv-series-filter-labels';
-import type { TvSeriesFilterFormModel } from '../../models/tv-series-filter-form.model';
+import type { TvSeriesFilterForm } from '../../forms/tv-series-filter.form';
 
 export function tvSeriesFilterFields(
   labels: TvSeriesFilterLabels,
-  form: FieldTree<TvSeriesFilterFormModel>,
+  form: FieldTree<TvSeriesFilterForm>,
 ): ReadonlyArray<ListFilterField> {
   return [
     { key: 'releaseYearFrom', label: labels.yearFrom, kind: 'number', field: form.releaseYearFrom },

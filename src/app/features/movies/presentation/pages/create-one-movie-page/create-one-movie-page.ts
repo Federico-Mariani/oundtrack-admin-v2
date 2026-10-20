@@ -24,7 +24,7 @@ import { LanguageService } from '@app/core/i18n/language/language.service';
 import { toSupportedLocale } from '@app/core/i18n/language/language-locale.mapper';
 import { isSupportedLocale } from '@shared/localization/supported-locale';
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
-import type { CreateMovieFormModel } from '../../models/create-movie-form.model';
+import type { CreateMovieForm } from '../../forms/create-movie.form';
 import { MOVIES_NAVIGATION } from '../../routing/movies.navigation';
 import { NgIcon } from '@ng-icons/core';
 
@@ -56,7 +56,7 @@ export class CreateOneMoviePage {
     value: toSupportedLocale(option.code),
   }));
   private readonly fieldErrors = computed(() => this.movies.requests.create.error()?.fieldErrors);
-  protected readonly controller = new AppFormController<CreateMovieFormModel>(
+  protected readonly controller = new AppFormController<CreateMovieForm>(
     [
       new AppFormField('title', [new RequiredInputRule(), new NonBlankInputRule()]),
       new AppFormField('year', [new RequiredInputRule(), new IntegerInputRule(1, 9998)]),
@@ -88,7 +88,7 @@ export class CreateOneMoviePage {
     this.controller.form().reset(this.emptyForm());
   }
 
-  private emptyForm(): CreateMovieFormModel {
+  private emptyForm(): CreateMovieForm {
     return { title: '', year: '', language: this.language.activeLocale() };
   }
 

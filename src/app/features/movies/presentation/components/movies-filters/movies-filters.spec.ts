@@ -3,8 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { provideTransloco, provideTranslocoScope, TranslocoDirective } from '@jsverse/transloco';
 import { of } from 'rxjs';
 import validation from '@app/core/i18n/translations/en/validation.json';
-import { DEFAULT_MOVIES_LIST_QUERY } from '../../../domain/models/movies-list-query.model';
-import type { MoviesFilterFormModel } from '../../models/movies-filter-form.model';
+import { DEFAULT_MOVIES_LIST_QUERY } from '../../../application/queries/movies-list.query';
+import type { MoviesFilterForm } from '../../forms/movies-filter.form';
 import { applyMovieFilterValues } from '../../mappers/movie-filter-values.mapper';
 import { moviesTranslationsLoader } from '../../i18n/movies-translations.loader';
 import { MoviesFilters } from './movies-filters';
@@ -23,8 +23,8 @@ import { MoviesFilters } from './movies-filters';
 })
 class FilterTestHost {
   readonly query = signal({ ...DEFAULT_MOVIES_LIST_QUERY, page: 3 });
-  readonly changes: Array<MoviesFilterFormModel> = [];
-  change(values: MoviesFilterFormModel): void {
+  readonly changes: Array<MoviesFilterForm> = [];
+  change(values: MoviesFilterForm): void {
     this.changes.push(values);
     this.query.set(applyMovieFilterValues(this.query(), values));
   }
