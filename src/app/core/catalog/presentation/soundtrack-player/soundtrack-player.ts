@@ -124,12 +124,14 @@ export class SoundtrackPlayer {
     this.currentTime.set([Number.isFinite(audio.currentTime) ? audio.currentTime : 0]);
     this.duration.set(Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0);
   }
-  protected seek(event: Event): void {
+  protected seek(values: ReadonlyArray<number>): void {
     const audio = this.audio()?.nativeElement;
-    if (audio && this.duration() > 0 && event.target instanceof HTMLInputElement) {
-      audio.currentTime = Math.max(0, Math.min(this.duration(), event.target.valueAsNumber));
-      this.updateTime(audio);
+    const position = values[0];
+    if (!audio || this.duration() <= 0 || !Number.isFinite(position)) {
+      return;
     }
+    audio.currentTime = Math.max(0, Math.min(this.duration(), position));
+    this.updateTime(audio);
   }
   protected toggleMute(): void {
     const audio = this.audio()?.nativeElement;
