@@ -16,13 +16,14 @@ import { ModalService } from '@shared/ui/modal/modal.service';
 import { TvSeriesFacade } from '../../../application/state/facades/tv-series.facade';
 import { CreateTvSeriesInfoModal } from '../create-tv-series-info-modal/create-tv-series-info-modal';
 import type { TvSeriesDetailModalParams } from './tv-series-detail-modal-params';
+
 @Component({
   selector: 'app-tv-series-detail-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CatalogDetail],
   template: `
     <app-catalog-detail
-      translationScope="tv-series"
+      translationScope="tvSeries"
       [detail]="detail()"
       [owner]="owner"
       [loading]="facade.requests.getById.isLoading()"
