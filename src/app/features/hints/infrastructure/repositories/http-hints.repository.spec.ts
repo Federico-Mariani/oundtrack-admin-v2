@@ -36,7 +36,7 @@ describe('HTTP hints contract', () => {
         ownerType: type,
         type: HintType.Plot,
         icon: 'hints/icons/plot.svg',
-        cost: 0,
+        cost: 300,
         language: 'en-EN',
         text: 'A clue',
       });
@@ -49,6 +49,26 @@ describe('HTTP hints contract', () => {
       expect(result.mock.calls.at(0)?.[0]?.info.at(0)?.language).toBe(SupportedLocale.English);
     },
   );
+  it.each([
+    [HintType.Actor, 200],
+    [HintType.Plot, 300],
+    [HintType.Frame, 300],
+    [HintType.Quote, 200],
+    [HintType.Year, 100],
+  ] as const)('derives the fixed price for %s', (type, cost) => {
+    repository
+      .save({
+        mode: HintEditorMode.Create,
+        owner: createHintCommand().owner,
+        type,
+        language: SupportedLocale.English,
+        text: 'Clue',
+      })
+      .subscribe();
+    const request = http.expectOne(url);
+    expect(request.request.body).toEqual(expect.objectContaining({ type, cost }));
+    request.flush({ data: hintFixture() });
+  });
   it('lists every translation and normalizes API locales', () => {
     const result = vi.fn();
     repository.getByOwner('owner').subscribe(result);
@@ -96,7 +116,6 @@ describe('HTTP hints contract', () => {
         owner: createHintCommand().owner,
         hintId: 'hint',
         type: HintType.Plot,
-        cost: 5,
         language: SupportedLocale.English,
         text: 'Changed',
       })
@@ -106,7 +125,7 @@ describe('HTTP hints contract', () => {
     expect(request.request.body).toEqual({
       type: HintType.Plot,
       icon: 'hints/icons/plot.svg',
-      cost: 5,
+      cost: 300,
       language: 'en-EN',
       text: 'Changed',
     });

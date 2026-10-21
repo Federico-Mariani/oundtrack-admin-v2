@@ -1,3 +1,4 @@
+import { HINT_COSTS } from '../../../domain/values/hint-cost';
 import type { SelectItem } from '@shared/interfaces/select-item';
 import {
   ChangeDetectionStrategy,
@@ -24,12 +25,11 @@ import { ModalFrame } from '@shared/ui/modal/modal-frame';
 import type { ModalContent } from '@shared/ui/modal/modal-content';
 import { Button } from '@shared/ui/button/button';
 import { Select } from '@shared/ui/select/select';
-import { TextInput } from '@shared/ui/text-input/text-input';
 import { Textarea } from '@shared/ui/textarea/textarea';
 @Component({
   selector: 'app-hint-editor',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslocoDirective, ModalFrame, Button, Select, TextInput, Textarea],
+  imports: [TranslocoDirective, ModalFrame, Button, Select, Textarea],
   providers: [provideTranslocoScope({ scope: 'hints', loader: hintsTranslationsLoader })],
   templateUrl: './hint-editor.html',
 })
@@ -56,7 +56,6 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
     this.languages.includes(this.params.locale) ? this.params.locale : this.languages.at(0),
   );
   private readonly values = signal({
-    cost: String(this.params.hint?.cost ?? 0),
     text: this.params.hint?.info.find((info) => info.language === this.locale())?.text ?? '',
   });
   protected readonly fields = form(this.values, (path) => {
@@ -79,11 +78,10 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
       ? [this.transloco.translate('hints.editor.required')]
       : (this.error()?.fieldErrors?.['text'] ?? []),
   );
-  protected readonly costErrors = computed(() =>
-    this.submitted() && !this.validCost()
-      ? [this.transloco.translate('hints.editor.invalidCost')]
-      : (this.error()?.fieldErrors?.['cost'] ?? []),
-  );
+  protected readonly cost = computed(() => {
+    const type = this.type();
+    return type ? HINT_COSTS[type] : null;
+  });
   protected readonly errorMessage = computed(() => {
     const error = this.error();
     const key =
@@ -114,10 +112,6 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
         });
     });
   }
-  private validCost(): boolean {
-    const cost = this.values().cost;
-    return !!cost.trim() && Number.isSafeInteger(Number(cost)) && Number(cost) >= 0;
-  }
   protected changeType(value: string): void {
     if (!this.busy() && isHintType(value) && this.params.availableTypes.includes(value))
       this.type.set(value);
@@ -143,12 +137,7 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
     if (mode === HintEditorMode.Delete && hint)
       command = { mode, owner: this.params.owner, hintId: hint.id };
     else {
-      if (
-        !language ||
-        !this.values().text.trim() ||
-        (mode !== HintEditorMode.Translate && !this.validCost())
-      )
-        return;
+      if (!language || !this.values().text.trim()) return;
       const content = { owner: this.params.owner, language, text: this.values().text.trim() };
       if (mode === HintEditorMode.Translate && hint)
         command = { ...content, mode, hintId: hint.id };
@@ -158,10 +147,8 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
           mode,
           hintId: hint.id,
           type: hint.type,
-          cost: Number(this.values().cost),
         };
-      else if (mode === HintEditorMode.Create && type)
-        command = { ...content, mode, type, cost: Number(this.values().cost) };
+      else if (mode === HintEditorMode.Create && type) command = { ...content, mode, type };
       else return;
     }
     const requestId = crypto.randomUUID();

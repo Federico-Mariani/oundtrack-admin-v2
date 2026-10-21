@@ -90,32 +90,30 @@ describe('Hint editor', () => {
     });
     const form = document.querySelector<HTMLFormElement>('app-hint-editor form')!;
     const text = form.querySelector<HTMLTextAreaElement>('textarea')!;
-    const cost = form.querySelector<HTMLInputElement>('input')!;
-    return { fixture, closed, form, text, cost };
+    return { fixture, closed, form, text };
   }
   function fill(input: HTMLInputElement | HTMLTextAreaElement, value: string) {
     input.value = value;
     input.dispatchEvent(new Event('input', { bubbles: true }));
   }
-  it('requires meaningful content and a nonnegative integer cost, accepting zero', async () => {
-    const { fixture, form, text, cost } = await open();
+  it('requires content and displays a fixed price without accepting a price input', async () => {
+    const { fixture, form, text } = await open();
+    expect(form.querySelector('input')).toBeNull();
+    expect(form.textContent).toContain('300');
     fill(text, '   ');
     form.dispatchEvent(new Event('submit', { cancelable: true }));
     fixture.detectChanges();
     expect(save).not.toHaveBeenCalled();
     fill(text, ' A clue ');
-    fill(cost, '1.5');
     form.dispatchEvent(new Event('submit', { cancelable: true }));
     fixture.detectChanges();
-    expect(save).not.toHaveBeenCalled();
-    fill(cost, '0');
-    form.dispatchEvent(new Event('submit', { cancelable: true }));
-    fixture.detectChanges();
-    expect(save).toHaveBeenCalledWith(
-      'panel',
-      expect.any(String),
-      expect.objectContaining({ mode: HintEditorMode.Create, text: 'A clue', cost: 0 }),
-    );
+    expect(save).toHaveBeenCalledWith('panel', expect.any(String), {
+      mode: HintEditorMode.Create,
+      owner: createHintCommand().owner,
+      type: HintType.Plot,
+      language: SupportedLocale.English,
+      text: 'A clue',
+    });
     expect(text.disabled).toBe(true);
   });
   it('retains entered content and shows an error when edit is unavailable', async () => {

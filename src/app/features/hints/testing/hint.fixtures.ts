@@ -20,7 +20,6 @@ export function createHintCommand(): SaveHintCommand {
     mode: HintEditorMode.Create,
     owner: { id: 'movie', type: HintOwnerType.Movie },
     type: HintType.Plot,
-    cost: 0,
     language: SupportedLocale.English,
     text: ' A clue ',
   };

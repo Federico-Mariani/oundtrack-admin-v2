@@ -14,7 +14,6 @@
   "text": "Hint content",
   "imageNote": "The illustration is assigned automatically to the hint type.",
   "required": "Enter the hint content.",
-  "invalidCost": "Enter a whole number greater than or equal to zero.",
   "cancel": "Cancel",
   "save": "Save hint",
   "allTypes": "All hint types have been created.",
@@ -45,5 +44,6 @@
   "availableLanguages": "Available languages",
   "visualHint": "Visual clue",
   "textHint": "Text clue",
-  "imageUnavailable": "Image unavailable"
+  "imageUnavailable": "Image unavailable",
+  "fixedCost": "Fixed cost assigned to this hint type."
 }

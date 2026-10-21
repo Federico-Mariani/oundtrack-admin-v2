@@ -14,7 +14,7 @@ Verified against `oundtrack-api-v2` master, `src/modules/hints`.
 | Delete hint                                 | `DELETE /hints/{id}`         | None; 204                                                          |
 | Edit (proposed, not implemented by backend) | `PATCH /hints/{id}`          | `type`, `cost`, `icon`, `language`, `text`                         |
 
-Owner types are `movie` and `tv_series`. A type can occur only once per owner. Costs are nonnegative integers. The UI normalizes `en-US` to the backend's `en-EN`. A translation cannot be added twice. Create and translation responses contain the updated hint and are applied to the local list without another GET.
+Owner types are `movie` and `tv_series`. A type can occur only once per owner. Costs are fixed by type: Actor 200, Plot 300, Frame 300, Quote 200 and Year 100. The domain HINT_COSTS map is shared by the editor and HTTP request mapping; commands never accept a caller-provided cost. Existing records continue to display the stored API cost until updated; adding a translation does not change it. The UI normalizes `en-US` to the backend's `en-EN`. A translation cannot be added twice. Create and translation responses contain the updated hint and are applied to the local list without another GET.
 
 The editor requires text content. Existing image content is displayed when supplied by the API. The illustration identifying a hint type is separate from its clue content: a frame illustration is not a film still. There is no image upload control. Image-only hint creation is not part of this text-based editor.
 
@@ -36,4 +36,4 @@ No live backend or storage mutation is performed by automated checks. HTTP contr
 
 The detail tabs now use Spartan's Line variant. Hint cards separate the clue content from cost and actions, use a reusable action menu, and display existing clue images without cropping.
 
-Image upload and fixed per-type pricing are not implemented yet. The current backend accepts a supplied cost and an existing storage object key, but has no hint-image upload endpoint or authoritative per-type price catalog. The five costs must be supplied before replacing the editable cost with a fixed policy. Actor and Frame require a visual-content editor and an end-to-end upload contract; a local file preview must not be presented as a completed upload.
+Image upload is not implemented yet. The current backend accepts a supplied cost and an existing storage object key, but has no hint-image upload endpoint or authoritative per-type price catalog. The user-supplied costs now replace the editable price field. The API still needs its own enforcement to prevent other clients from sending arbitrary prices. Actor and Frame require a visual-content editor and an end-to-end upload contract; a local file preview must not be presented as a completed upload.

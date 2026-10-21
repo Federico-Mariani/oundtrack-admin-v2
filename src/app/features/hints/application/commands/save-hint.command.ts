@@ -10,13 +10,11 @@ export type SaveHintCommand = { readonly owner: HintOwner } & (
   | ({
       readonly mode: typeof HintEditorMode.Create;
       readonly type: HintType;
-      readonly cost: number;
     } & HintContent)
   | ({
       readonly mode: typeof HintEditorMode.Edit;
       readonly hintId: string;
       readonly type: HintType;
-      readonly cost: number;
     } & HintContent)
   | ({ readonly mode: typeof HintEditorMode.Translate; readonly hintId: string } & HintContent)
   | { readonly mode: typeof HintEditorMode.Delete; readonly hintId: string }

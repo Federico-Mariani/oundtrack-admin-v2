@@ -38,13 +38,11 @@
           />
         </div>
         @if (params.mode !== modes.Translate) {
-          <app-text-input
-            [formField]="fields.cost"
-            [label]="t('cost')"
-            inputMode="numeric"
-            [comfortable]="true"
-            [messages]="costErrors()"
-          />
+          <div class="space-y-2.5">
+            <p class="text-sm font-medium">{{ t('cost') }}</p>
+            <p class="text-lg font-semibold tabular-nums" aria-live="polite">{{ cost() }}</p>
+            <p class="text-xs leading-relaxed text-muted-foreground">{{ t('fixedCost') }}</p>
+          </div>
         }
       </div>
       <app-textarea [formField]="fields.text" [label]="t('text')" [messages]="textErrors()" />

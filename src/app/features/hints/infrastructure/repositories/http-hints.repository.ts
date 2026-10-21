@@ -1,3 +1,4 @@
+import { HINT_COSTS } from '../../domain/values/hint-cost';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, throwError, type Observable } from 'rxjs';
@@ -45,7 +46,7 @@ export class HttpHintsRepository implements HintsRepositoryPort {
       const body = {
         ...content,
         type: command.type,
-        cost: command.cost,
+        cost: HINT_COSTS[command.type],
         icon: HINT_ICONS[command.type],
       };
       request =

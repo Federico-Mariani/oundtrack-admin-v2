@@ -14,7 +14,6 @@
   "text": "Contenuto dell’indizio",
   "imageNote": "L’illustrazione viene assegnata automaticamente in base al tipo.",
   "required": "Inserisci il contenuto dell’indizio.",
-  "invalidCost": "Inserisci un numero intero maggiore o uguale a zero.",
   "cancel": "Annulla",
   "save": "Salva indizio",
   "allTypes": "Sono stati creati tutti i tipi di indizio.",
@@ -45,5 +44,6 @@
   "availableLanguages": "Lingue disponibili",
   "visualHint": "Indizio visivo",
   "textHint": "Indizio testuale",
-  "imageUnavailable": "Immagine non disponibile"
+  "imageUnavailable": "Immagine non disponibile",
+  "fixedCost": "Costo fisso associato al tipo di indizio."
 }
