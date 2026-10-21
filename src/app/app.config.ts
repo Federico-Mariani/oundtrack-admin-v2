@@ -1,3 +1,4 @@
+import { provideSoundtracks } from '@features/soundtracks';
 import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
@@ -13,7 +14,7 @@ import { authTokenInterceptor, provideAuth } from '@features/auth';
 import { provideAppTransloco } from '@app/core/i18n/transloco/transloco.providers';
 import { provideAppTheme } from '@app/core/theme/theme.providers';
 import { provideMovies } from '@features/movies';
-import { languageInterceptor } from './core/interceptors/language.interceptor';
+import { languageInterceptor } from '@app/core/interceptors/language.interceptor';
 import { provideGameCategories } from '@features/game-categories';
 import { provideTvSeries } from '@features/tv-series';
 
@@ -29,6 +30,7 @@ export const appConfig: ApplicationConfig = {
     provideAppTheme(),
     provideAuth(),
     provideMovies(),
+    provideSoundtracks(),
     provideTvSeries(),
     provideGameCategories(),
   ],

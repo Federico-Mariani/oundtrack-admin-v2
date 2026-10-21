@@ -4,7 +4,6 @@ export const MOVIES_I18N_SCOPE = 'movies';
 
 export const moviesTranslationsLoader = createTranslationLoader({
   en: {
-    audio: () => import('./en/audio.json'),
     table: () => import('./en/table.json'),
     catalog: () => import('./en/catalog.json'),
     filters: () => import('./en/filters.json'),
@@ -13,7 +12,6 @@ export const moviesTranslationsLoader = createTranslationLoader({
     createInfo: () => import('./en/create-info.json'),
   },
   it: {
-    audio: () => import('./it/audio.json'),
     table: () => import('./it/table.json'),
     catalog: () => import('./it/catalog.json'),
     filters: () => import('./it/filters.json'),

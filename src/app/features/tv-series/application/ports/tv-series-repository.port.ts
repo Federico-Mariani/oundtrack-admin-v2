@@ -1,15 +1,15 @@
 import type { Id } from '@shared/types/id';
 import type { Observable } from 'rxjs';
 import type { PageResult } from '@shared/types/pagination/page-result';
-import type { CreateTvSeriesInfoModel } from '../../domain/models/create-tv-series-info.model';
+import type { CreateTvSeriesInfoCommand } from '../commands/create-tv-series-info.command';
 import type { TvSeriesModel } from '../../domain/models/tv-series.model';
 import type { TvSeriesDetailModel } from '../../domain/models/tv-series-detail.model';
-import type { TvSeriesListQuery } from '../../domain/models/tv-series-list-query.model';
-import type { CreateTvSeriesModel } from '../../domain/models/create-tv-series.model';
+import type { TvSeriesListQuery } from '../queries/tv-series-list.query';
+import type { CreateTvSeriesCommand } from '../commands/create-tv-series.command';
 
 export interface TvSeriesRepositoryPort {
-  createInfo(request: CreateTvSeriesInfoModel): Observable<void>;
+  createInfo(request: CreateTvSeriesInfoCommand): Observable<void>;
   getOne(id: Id): Observable<TvSeriesDetailModel>;
-  create(tv: CreateTvSeriesModel): Observable<TvSeriesModel>;
+  create(tv: CreateTvSeriesCommand): Observable<TvSeriesModel>;
   getAll(query: TvSeriesListQuery): Observable<PageResult<TvSeriesModel>>;
 }

@@ -1,21 +1,21 @@
-import { MovieLanguagesCell } from '../movie-languages-cell/movie-languages-cell';
+import { LanguageTags } from '@shared/ui/language-tags/language-tags';
 import { type ColumnDef, createColumnHelper, flexRenderComponent } from '@tanstack/angular-table';
 import type { DataTableFeatures } from '@shared/ui/data-table/data-table-features';
 import type { Id } from '@shared/types/id';
-import type { MovieTableRowModel } from '../../models/movie-table-row.model';
-import { MovieGenresCell } from '../movie-genres-cell/movie-genres-cell';
-import { MovieTitleCell } from '../movie-title-cell/movie-title-cell';
+import type { MovieTableRowViewModel } from '../../view-models/movie-table-row.view-model';
+import { GenreTags } from '@shared/ui/genre-tags/genre-tags';
+import { MediaTitleCell } from '@shared/ui/media-title-cell/media-title-cell';
 import { MovieActionsCell } from '../movie-actions-cell/movie-actions-cell';
 import type { MoviesTableLabels } from './movies-table-labels';
 
-const columnHelper = createColumnHelper<DataTableFeatures, MovieTableRowModel>();
+const columnHelper = createColumnHelper<DataTableFeatures, MovieTableRowViewModel>();
 
 export function createMoviesTableColumns(
   labels: MoviesTableLabels,
   copyId: (id: Id) => void,
   copyExternalId: (id: number) => void,
   viewDetail: (id: Id) => void,
-): Array<ColumnDef<DataTableFeatures, MovieTableRowModel>> {
+): Array<ColumnDef<DataTableFeatures, MovieTableRowViewModel>> {
   return columnHelper.columns([
     columnHelper.accessor('title', {
       header: labels.title,
@@ -24,7 +24,7 @@ export function createMoviesTableColumns(
       maxSize: 10000,
       enableHiding: false,
       cell: (context) =>
-        flexRenderComponent(MovieTitleCell, {
+        flexRenderComponent(MediaTitleCell, {
           inputs: {
             title: context.row.original.title,
             posterUrl: context.row.original.posterUrl,
@@ -39,7 +39,7 @@ export function createMoviesTableColumns(
       size: 280,
       minSize: 180,
       cell: (context) =>
-        flexRenderComponent(MovieGenresCell, { inputs: { genres: context.row.original.genres } }),
+        flexRenderComponent(GenreTags, { inputs: { genres: context.row.original.genres } }),
     }),
     columnHelper.accessor((row) => row.languages.join(', '), {
       id: 'languages',
@@ -47,7 +47,7 @@ export function createMoviesTableColumns(
       size: 160,
       minSize: 120,
       cell: (context) =>
-        flexRenderComponent(MovieLanguagesCell, {
+        flexRenderComponent(LanguageTags, {
           inputs: { languages: context.row.original.languages },
         }),
     }),

@@ -1,6 +1,6 @@
-import type { CreateMovieInfoModel } from '../../domain/models/create-movie-info.model';
+import type { CreateMovieInfoCommand } from '../../application/commands/create-movie-info.command';
 import { toApiLocale } from '@app/core/http/api-locale.mapper';
-import type { CreateMovieModel } from '../../domain/models/create-movie.model';
+import type { CreateMovieCommand } from '../../application/commands/create-movie.command';
 import type { ApiResponse } from '@app/core/http/api-response';
 import { toCreateMovieRequest } from '../mappers/create-movie-request.mapper';
 import type { Id } from '@shared/types/id';
@@ -15,12 +15,12 @@ import type { PaginatedApiResponse } from '@app/core/http/paginated-api-response
 import { mapPaginatedResponse } from '@app/core/http/paginated-response.mapper';
 import { listHttpParams } from '@app/core/http/list-http-params';
 import type { PageResult } from '@shared/types/pagination/page-result';
-import type { MoviesListQuery } from '../../domain/models/movies-list-query.model';
+import type { MoviesListQuery } from '../../application/queries/movies-list.query';
 import type { MoviesRepositoryPort } from '../../application/ports/movies-repository.port';
 import type { MovieResponseDto } from '../api/movie-response.dto';
 import { toMovie } from '../mappers/movie.mapper';
 import type { MovieModel } from '../../domain/models/movie.model';
-import { toRequestError } from '../../../../core/http/http-error.mapper';
+import { toRequestError } from '@app/core/http/http-error.mapper';
 import type { MovieInfoResponseDto } from '../api/movie-info-response.dto';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class HttpMoviesRepository implements MoviesRepositoryPort {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl + '/movies';
 
-  createInfo(request: CreateMovieInfoModel): Observable<void> {
+  createInfo(request: CreateMovieInfoCommand): Observable<void> {
     return this.http
       .post<ApiResponse<MovieInfoResponseDto>>(
         `${this.baseUrl}/${encodeURIComponent(request.id)}/info`,
@@ -51,7 +51,7 @@ export class HttpMoviesRepository implements MoviesRepositoryPort {
       );
   }
 
-  create(movie: CreateMovieModel): Observable<MovieModel> {
+  create(movie: CreateMovieCommand): Observable<MovieModel> {
     return this.http
       .post<ApiResponse<MovieResponseDto>>(this.baseUrl, toCreateMovieRequest(movie))
       .pipe(

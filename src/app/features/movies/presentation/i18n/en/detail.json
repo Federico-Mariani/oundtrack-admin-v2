@@ -18,7 +18,6 @@
   "audioUnavailable": "Audio unavailable. Reload the details to try again.",
   "reload": "Reload details",
   "metadata": "Movie information",
-  "movieId": "Movie ID",
   "externalId": "External movie ID",
   "createdAt": "Created",
   "updatedAt": "Updated",
@@ -50,5 +49,6 @@
   "editTrackLanguages": "Change languages",
   "replaceAudio": "Replace audio",
   "uploadAudio": "Upload audio",
-  "refreshFailed": "Unable to refresh. Previously loaded data is still displayed."
+  "refreshFailed": "Unable to refresh. Previously loaded data is still displayed.",
+  "recordId": "Movie ID"
 }

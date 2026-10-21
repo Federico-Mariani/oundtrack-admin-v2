@@ -1,6 +1,8 @@
 export const MoviesRequestOperation = {
-  AudioSave: 'Save Audio',
-  AudioEditor: 'Audio Editor',
+  Create: 'Create',
+  GetAll: 'Get All',
+  GetById: 'Get By Id',
+  CreateInfo: 'Create Info',
 } as const;
 export type MoviesRequestOperation =
   (typeof MoviesRequestOperation)[keyof typeof MoviesRequestOperation];

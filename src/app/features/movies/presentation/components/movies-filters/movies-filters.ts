@@ -14,9 +14,9 @@ import { ListControls } from '@shared/ui/list-controls/list-controls';
 import {
   DEFAULT_MOVIES_LIST_QUERY,
   type MoviesListQuery,
-} from '../../../domain/models/movies-list-query.model';
+} from '../../../application/queries/movies-list.query';
 import { toMovieFilterValues } from '../../mappers/movie-filter-values.mapper';
-import type { MoviesFilterFormModel } from '../../models/movies-filter-form.model';
+import type { MoviesFilterForm } from '../../forms/movies-filter.form';
 import type { MoviesFilterLabels } from './movies-filter-labels';
 import { moviesFilterFields } from './movies-filter-fields';
 import { createMoviesFilterForm } from './movies-filter-form';
@@ -30,7 +30,7 @@ import { createMoviesFilterForm } from './movies-filter-form';
 export class MoviesFilters {
   private readonly transloco = inject(TranslocoService);
   readonly query = input.required<MoviesListQuery>();
-  readonly filtersChange = output<MoviesFilterFormModel>();
+  readonly filtersChange = output<MoviesFilterForm>();
   readonly resetFilters = output();
   private readonly labels = toSignal(
     this.transloco.selectTranslateObject<MoviesFilterLabels>('filters', {}, 'movies'),

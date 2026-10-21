@@ -1,0 +1,14 @@
+{
+  "audioUnavailable": "Audio unavailable. Reload the details to try again.",
+  "reload": "Reload details",
+  "trackId": "Track ID",
+  "externalTrackId": "External track ID",
+  "soundtrackId": "Soundtrack ID",
+  "translation": "Translation",
+  "play": "Play",
+  "pause": "Pause",
+  "seek": "Playback position",
+  "mute": "Mute",
+  "unmute": "Unmute",
+  "buffering": "Loading audio…"
+}

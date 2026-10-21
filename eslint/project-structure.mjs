@@ -43,6 +43,49 @@ function requireFileName(name, files, validFiles, message) {
 }
 
 export const projectStructure = [
+  requireFileName(
+    'application-command',
+    ['src/app/features/*/application/commands/**/*.ts'],
+    ['src/app/features/*/application/commands/**/*.command.ts'],
+    'Files in application/commands must identify their role with *.command.ts.',
+  ),
+  requireFileName(
+    'application-query',
+    ['src/app/features/*/application/queries/**/*.ts'],
+    [
+      'src/app/features/*/application/queries/**/*.query.ts',
+      'src/app/features/*/application/queries/**/*.filters.ts',
+    ],
+    'Files in application/queries must identify their role with *.query.ts, *.filters.ts.',
+  ),
+  requireFileName(
+    'application-workflow',
+    ['src/app/features/*/application/workflows/**/*.ts'],
+    [
+      'src/app/features/*/application/workflows/**/*.workflow.ts',
+      'src/app/features/*/application/workflows/**/*.mode.ts',
+      'src/app/features/*/application/workflows/**/*.phase.ts',
+    ],
+    'Files in application/workflows must identify their role with *.workflow.ts, *.mode.ts, *.phase.ts.',
+  ),
+  requireFileName(
+    'state-workflow',
+    ['src/app/features/*/application/state/workflows/**/*.ts'],
+    ['src/app/features/*/application/state/workflows/**/*.workflow.ts'],
+    'Files in application/state/workflows must identify their role with *.workflow.ts.',
+  ),
+  requireFileName(
+    'presentation-form',
+    ['src/app/features/*/presentation/forms/**/*.ts'],
+    ['src/app/features/*/presentation/forms/**/*.form.ts'],
+    'Files in presentation/forms must identify their role with *.form.ts.',
+  ),
+  requireFileName(
+    'presentation-view-model',
+    ['src/app/features/*/presentation/view-models/**/*.ts'],
+    ['src/app/features/*/presentation/view-models/**/*.view-model.ts'],
+    'Files in presentation/view-models must identify their role with *.view-model.ts.',
+  ),
   // ---------------------------------------------------------------- app
 
   forbidLocation(
@@ -83,8 +126,11 @@ export const projectStructure = [
       'src/app/features/*/application/ports/**',
       'src/app/features/*/application/tokens/**',
       'src/app/features/*/application/state/**',
+      'src/app/features/*/application/commands/**',
+      'src/app/features/*/application/queries/**',
+      'src/app/features/*/application/workflows/**',
     ],
-    'Unknown folder inside application/. Allowed: ports/, tokens/, state/.',
+    'Unknown folder inside application/. Allowed: ports/, tokens/, state/, commands/, queries/, workflows/.',
   ),
 
   // ---------------------------------------------------------------- domain naming

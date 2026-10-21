@@ -1,6 +1,6 @@
-import type { MoviesListQuery } from '../../domain/models/movies-list-query.model';
-import type { MoviesFilterFormModel } from '../models/movies-filter-form.model';
-export function toMovieFilterValues(query: MoviesListQuery): MoviesFilterFormModel {
+import type { MoviesListQuery } from '../../application/queries/movies-list.query';
+import type { MoviesFilterForm } from '../forms/movies-filter.form';
+export function toMovieFilterValues(query: MoviesListQuery): MoviesFilterForm {
   return {
     search: query.search,
     releaseYearFrom: String(query.filters.releaseYearFrom ?? ''),
@@ -11,7 +11,7 @@ export function toMovieFilterValues(query: MoviesListQuery): MoviesFilterFormMod
 }
 export function applyMovieFilterValues(
   query: MoviesListQuery,
-  values: MoviesFilterFormModel,
+  values: MoviesFilterForm,
 ): MoviesListQuery {
   const [field, direction] = values.sort.split(':');
   return {

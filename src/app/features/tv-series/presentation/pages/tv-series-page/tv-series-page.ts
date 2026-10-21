@@ -11,15 +11,15 @@ import { NgIcon } from '@ng-icons/core';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { ModalService } from '@shared/ui/modal/modal.service';
 import type { BrnDialogRef } from '@spartan-ng/brain/dialog';
-import { LanguageService } from '../../../../../core/i18n/language/language.service';
+import { LanguageService } from '@app/core/i18n/language/language.service';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { NotificationService } from '../../../../../core/notifications/notification.service';
+import { NotificationService } from '@app/core/notifications/notification.service';
 import type { DataTableRemoteState } from '@shared/ui/data-table/data-table-remote-state';
 import type { Id } from '@shared/types/id';
 import type { PageRequest } from '@shared/types/pagination/page-request';
 import { TvSeriesFacade } from '../../../application/state/facades/tv-series.facade';
-import type { TvSeriesFilterFormModel } from '../../models/tv-series-filter-form.model';
-import { DEFAULT_TV_SERIES_LIST_QUERY } from '../../../domain/models/tv-series-list-query.model';
+import type { TvSeriesFilterForm } from '../../forms/tv-series-filter.form';
+import { DEFAULT_TV_SERIES_LIST_QUERY } from '../../../application/queries/tv-series-list.query';
 import { applyTvSeriesFilterValues } from '../../mappers/tv-series-filter-values.mapper';
 import { TvSeriesFilters } from '../../components/tv-series-filters/tv-series-filters';
 import { TvSeriesTable } from '../../components/tv-series-table/tv-series-table';
@@ -90,7 +90,7 @@ export class TvSeriesPage {
   protected changePage(page: PageRequest): void {
     this.tvSeriesFacade.actions.getAllTvSeries({ ...this.query(), ...page });
   }
-  protected applyFilters(values: TvSeriesFilterFormModel): void {
+  protected applyFilters(values: TvSeriesFilterForm): void {
     this.tvSeriesFacade.actions.getAllTvSeries(
       applyTvSeriesFilterValues(this.query(), values),
       true,

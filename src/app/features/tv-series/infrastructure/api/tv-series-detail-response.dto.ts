@@ -1,8 +1,8 @@
 import type { TvSeriesResponseDto } from './tv-series-response.dto';
-import type { TvSeriesGameCategoryResponseDto } from './tv-series-game-category-response.dto';
-import type { TvSeriesSoundtrackResponseDto } from './tv-series-soundtrack-response.dto';
+import type { GameCategoryResponseDto } from '@app/core/catalog/api/game-category-response.dto';
+import type { SoundtrackResponseDto } from '@app/core/catalog/api/soundtrack-response.dto';
 
 export interface TvSeriesDetailResponseDto extends TvSeriesResponseDto {
-  readonly gameCategories: ReadonlyArray<TvSeriesGameCategoryResponseDto>;
-  readonly soundtracks: ReadonlyArray<TvSeriesSoundtrackResponseDto>;
+  readonly gameCategories: ReadonlyArray<GameCategoryResponseDto>;
+  readonly soundtracks: ReadonlyArray<SoundtrackResponseDto>;
 }

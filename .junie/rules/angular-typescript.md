@@ -81,3 +81,23 @@ state. Business logic lives in domain / application.
 Define finite statuses, codes, modes and discriminants once in a semantically named file owned by the appropriate layer. Export a runtime `as const` object and derive the value union from it. Use named members in assignments and comparisons; do not repeat raw strings or maintain a second independent union. Prefer existing semantic queries at consumers. External strings must still be validated at boundaries. Free-form text, display content and arbitrary identifiers do not need enum-like wrappers.
 
 Keep feature identities and request operation labels feature-local, following `.junie/rules/ngrx.md`. Shared definitions are only for truly domain-neutral concepts; do not create generic constants buckets or global feature registries. This convention is mandatory in review and is not claimed to be universally enforced by ESLint.
+
+## Readability standard
+
+- Name functions with a verb and object (`saveSoundtrackWorkflow`, `toggleLanguage`);
+  name values with their meaning (`soundtrackId`, `selectedLocale`, `uploadProgress`).
+  Avoid `data`, `item`, `value`, `result` when the domain meaning is available; short names
+  are acceptable for trivial local transformations.
+- Prefer early returns, explicit typed boundaries and one responsibility per function.
+  Keep components focused on rendering and interaction. Extract resource lifecycles,
+  mapping and ordered async workflows into named files at the appropriate layer.
+- Aim for production TypeScript files below 250 lines and functions below 40 lines.
+  These are review triggers, not lint limits: split by responsibility, never mechanically
+  into arbitrary fragments. Declarative templates and exhaustive tests may be longer.
+- Use Prettier as the only formatting authority; do not maintain manual alignment.
+- Before adding a second implementation, search existing components, capabilities and
+  contracts. Share behavior at its owner; do not create generic base CRUD classes,
+  configuration-driven feature frameworks or feature-to-feature internal imports.
+- Keep local files beside their owner. Extract into shared only when both the semantics
+  and lifecycle are shared. Independent CRUD reducers may remain explicit; common
+  request transitions already belong to shared/state/request.
