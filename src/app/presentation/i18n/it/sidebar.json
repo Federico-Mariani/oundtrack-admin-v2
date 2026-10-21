@@ -12,6 +12,11 @@
     "all": "Tutti",
     "createOne": "Creane uno"
   },
+  "tvSeries": {
+    "label": "Serie tv",
+    "all": "Tutte",
+    "createOne": "Creane una"
+  },
   "logout": "Esci",
   "navigation": "Navigazione principale",
   "toggleSection": "Apri o chiudi il menu {{section}}"
