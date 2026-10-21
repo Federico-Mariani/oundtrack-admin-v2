@@ -1,6 +1,3 @@
-import * as moviesAudioEffects from './application/state/effects/movies-audio.effects';
-import { MOVIE_SOUNDTRACKS_REPOSITORY } from './application/tokens/movie-soundtracks-repository.token';
-import { HttpMovieSoundtracksRepository } from './infrastructure/repositories/http-movie-soundtracks.repository';
 import * as moviesInfoCreateEffects from './application/state/effects/movies-info-create.effects';
 import * as moviesInfoCreateFeedbackEffects from './application/state/effects/feedback/movies-info-create-feedback.effects';
 import * as moviesCreateEffect from './application/state/effects/movies-create.effects';
@@ -19,7 +16,6 @@ import { MOVIES_FEEDBACK_PORT } from './application/tokens/movies-feedback.token
 
 export function provideMovies(): EnvironmentProviders {
   return makeEnvironmentProviders([
-    { provide: MOVIE_SOUNDTRACKS_REPOSITORY, useClass: HttpMovieSoundtracksRepository },
     { provide: MOVIES_REPOSITORY, useClass: HttpMoviesRepository },
     {
       provide: MOVIES_FEEDBACK_PORT,
@@ -27,7 +23,6 @@ export function provideMovies(): EnvironmentProviders {
     },
     provideState(moviesFeature),
     provideEffects(
-      moviesAudioEffects,
       moviesInfoCreateEffects,
       moviesInfoCreateFeedbackEffects,
       moviesDetailEffects,

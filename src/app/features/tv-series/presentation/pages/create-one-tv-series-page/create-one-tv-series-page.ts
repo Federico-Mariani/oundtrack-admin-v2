@@ -15,17 +15,17 @@ import { HlmCard, HlmCardContent, HlmCardFooter } from '@spartan-ng/helm/card';
 import { NumberInput } from '@shared/ui/number-input/number-input';
 import { SelectField } from '@shared/ui/select-field/select-field';
 import { TextInput } from '@shared/ui/text-input/text-input';
-import { LanguageService } from '../../../../../core/i18n/language/language.service';
-import { toSupportedLocale } from '../../../../../core/i18n/language/language-locale.mapper';
-import { AppFormController } from '../../../../../core/forms/app-form-controller';
-import { AppFormField } from '../../../../../core/forms/app-form-field';
-import { RequiredInputRule } from '../../../../../core/forms/rules/required-input-rule';
-import { NonBlankInputRule } from '../../../../../core/forms/rules/non-blank-input-rule';
-import { IntegerInputRule } from '../../../../../core/forms/rules/integer-input-rule';
+import { LanguageService } from '@app/core/i18n/language/language.service';
+import { toSupportedLocale } from '@app/core/i18n/language/language-locale.mapper';
+import { AppFormController } from '@app/core/forms/app-form-controller';
+import { AppFormField } from '@app/core/forms/app-form-field';
+import { RequiredInputRule } from '@app/core/forms/rules/required-input-rule';
+import { NonBlankInputRule } from '@app/core/forms/rules/non-blank-input-rule';
+import { IntegerInputRule } from '@app/core/forms/rules/integer-input-rule';
 import { isSupportedLocale } from '@shared/localization/supported-locale';
 import { TvSeriesFacade } from '../../../application/state/facades/tv-series.facade';
 import { TV_SERIES_NAVIGATION } from '../../routing/tv-series.navigation';
-import type { CreateTvSeriesFormModel } from '../../models/create-tv-series-form.model';
+import type { CreateTvSeriesForm } from '../../forms/create-tv-series.form';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -60,7 +60,7 @@ export class CreateOneTvSeriesPage {
   private readonly fieldErrors = computed(
     () => this.tvSeriesFacade.requests.create.error()?.fieldErrors,
   );
-  protected readonly controller = new AppFormController<CreateTvSeriesFormModel>(
+  protected readonly controller = new AppFormController<CreateTvSeriesForm>(
     [
       new AppFormField('title', [new RequiredInputRule(), new NonBlankInputRule()]),
       new AppFormField('year', [new RequiredInputRule(), new IntegerInputRule(1, 9998)]),
@@ -92,7 +92,7 @@ export class CreateOneTvSeriesPage {
     this.controller.form().reset(this.emptyForm());
   }
 
-  private emptyForm(): CreateTvSeriesFormModel {
+  private emptyForm(): CreateTvSeriesForm {
     return { title: '', year: '', language: this.language.activeLocale() };
   }
 

@@ -18,7 +18,6 @@
   "audioUnavailable": "Audio non disponibile. Ricarica il dettaglio per riprovare.",
   "reload": "Ricarica dettaglio",
   "metadata": "Informazioni della serie tv",
-  "tvSeriesId": "ID serie tv",
   "externalId": "ID esterno serie tv",
   "createdAt": "Creato il",
   "updatedAt": "Aggiornato il",
@@ -50,5 +49,6 @@
   "editTrackLanguages": "Modifica lingue",
   "replaceAudio": "Sostituisci audio",
   "uploadAudio": "Carica audio",
-  "refreshFailed": "Impossibile aggiornare. Sono ancora visibili i dati caricati in precedenza."
+  "refreshFailed": "Impossibile aggiornare. Sono ancora visibili i dati caricati in precedenza.",
+  "recordId": "ID serie tv"
 }

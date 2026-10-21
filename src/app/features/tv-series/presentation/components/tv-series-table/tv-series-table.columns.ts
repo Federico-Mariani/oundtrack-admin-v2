@@ -2,20 +2,20 @@ import { type ColumnDef, createColumnHelper, flexRenderComponent } from '@tansta
 import type { DataTableFeatures } from '@shared/ui/data-table/data-table-features';
 import type { Id } from '@shared/types/id';
 import type { TvSeriesTableLabels } from './tv-series-table-labels';
-import type { TvSeriesTableRowModel } from '../../models/tv-series-table-row.model';
+import type { TvSeriesTableRowViewModel } from '../../view-models/tv-series-table-row.view-model';
 import { TvSeriesActionsCell } from '../tv-series-actions-cell/tv-series-actions-cell';
-import { TvSeriesLanguagesCell } from '../tv-series-languages-cell/tv-series-languages-cell';
-import { TvSeriesTitleCell } from '../tv-series-title-cell/tv-series-title-cell';
-import { TvSeriesGenresCell } from '../tv-series-genres-cell/tv-series-genres-cell';
+import { LanguageTags } from '@shared/ui/language-tags/language-tags';
+import { MediaTitleCell } from '@shared/ui/media-title-cell/media-title-cell';
+import { GenreTags } from '@shared/ui/genre-tags/genre-tags';
 
-const columnHelper = createColumnHelper<DataTableFeatures, TvSeriesTableRowModel>();
+const columnHelper = createColumnHelper<DataTableFeatures, TvSeriesTableRowViewModel>();
 
 export function createTvSeriesTableColumns(
   labels: TvSeriesTableLabels,
   copyId: (id: Id) => void,
   copyExternalId: (id: number) => void,
   viewDetail: (id: Id) => void,
-): Array<ColumnDef<DataTableFeatures, TvSeriesTableRowModel>> {
+): Array<ColumnDef<DataTableFeatures, TvSeriesTableRowViewModel>> {
   return columnHelper.columns([
     columnHelper.accessor('title', {
       header: labels.title,
@@ -24,7 +24,7 @@ export function createTvSeriesTableColumns(
       maxSize: 10000,
       enableHiding: false,
       cell: (context) =>
-        flexRenderComponent(TvSeriesTitleCell, {
+        flexRenderComponent(MediaTitleCell, {
           inputs: {
             title: context.row.original.title,
             posterUrl: context.row.original.posterUrl,
@@ -39,7 +39,7 @@ export function createTvSeriesTableColumns(
       size: 280,
       minSize: 180,
       cell: (context) =>
-        flexRenderComponent(TvSeriesGenresCell, {
+        flexRenderComponent(GenreTags, {
           inputs: { genres: context.row.original.genres },
         }),
     }),
@@ -49,7 +49,7 @@ export function createTvSeriesTableColumns(
       size: 160,
       minSize: 120,
       cell: (context) =>
-        flexRenderComponent(TvSeriesLanguagesCell, {
+        flexRenderComponent(LanguageTags, {
           inputs: { languages: context.row.original.languages },
         }),
     }),

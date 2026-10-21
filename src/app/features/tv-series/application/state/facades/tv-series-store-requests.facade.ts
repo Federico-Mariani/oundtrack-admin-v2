@@ -7,9 +7,6 @@ import { tvSeriesFeature } from '../tv-series.feature';
 export class TvSeriesStoreRequestsFacade {
   private readonly store = inject(Store);
 
-  readonly audio = createRequestSignals(
-    this.store.selectSignal(tvSeriesFeature.selectAudioRequest),
-  );
   readonly getAll = createRequestSignals(
     this.store.selectSignal(tvSeriesFeature.selectLoadRequest),
   );

@@ -1,0 +1,14 @@
+{
+  "audioUnavailable": "Audio non disponibile. Ricarica il dettaglio per riprovare.",
+  "reload": "Ricarica dettaglio",
+  "trackId": "ID brano",
+  "externalTrackId": "ID esterno brano",
+  "soundtrackId": "ID colonna sonora",
+  "translation": "Traduzione",
+  "play": "Riproduci",
+  "pause": "Pausa",
+  "seek": "Posizione di riproduzione",
+  "mute": "Disattiva audio",
+  "unmute": "Attiva audio",
+  "buffering": "Caricamento audio…"
+}

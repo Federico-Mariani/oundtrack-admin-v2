@@ -1,8 +1,10 @@
-export const SUPPORTED_LOCALES = ['it-IT', 'en-US'] as const;
+export const SupportedLocale = { Italian: 'it-IT', English: 'en-US' } as const;
+
+export const SUPPORTED_LOCALES = [SupportedLocale.Italian, SupportedLocale.English] as const;
 
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
-export const DEFAULT_LOCALE: SupportedLocale = 'en-US';
+export const DEFAULT_LOCALE: SupportedLocale = SupportedLocale.English;
 
 export function isSupportedLocale(value: string): value is SupportedLocale {
   return SUPPORTED_LOCALES.some((locale) => locale === value);

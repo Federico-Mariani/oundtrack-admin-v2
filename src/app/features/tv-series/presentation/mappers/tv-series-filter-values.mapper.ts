@@ -1,7 +1,7 @@
-import type { TvSeriesFilterFormModel } from '../models/tv-series-filter-form.model';
-import type { TvSeriesListQuery } from '../../domain/models/tv-series-list-query.model';
+import type { TvSeriesFilterForm } from '../forms/tv-series-filter.form';
+import type { TvSeriesListQuery } from '../../application/queries/tv-series-list.query';
 
-export function toTvSeriesFilterValues(query: TvSeriesListQuery): TvSeriesFilterFormModel {
+export function toTvSeriesFilterValues(query: TvSeriesListQuery): TvSeriesFilterForm {
   return {
     search: query.search,
     releaseYearFrom: String(query.filters.releaseYearFrom ?? ''),
@@ -12,7 +12,7 @@ export function toTvSeriesFilterValues(query: TvSeriesListQuery): TvSeriesFilter
 }
 export function applyTvSeriesFilterValues(
   query: TvSeriesListQuery,
-  values: TvSeriesFilterFormModel,
+  values: TvSeriesFilterForm,
 ): TvSeriesListQuery {
   const [field, direction] = values.sort.split(':');
 

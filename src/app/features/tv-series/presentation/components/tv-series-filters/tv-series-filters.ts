@@ -12,12 +12,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoService } from '@jsverse/transloco';
 import { ListControls } from '@shared/ui/list-controls/list-controls';
 import { tvSeriesFilterFields } from './tv-series-filter-fields';
-import type { TvSeriesFilterFormModel } from '../../models/tv-series-filter-form.model';
+import type { TvSeriesFilterForm } from '../../forms/tv-series-filter.form';
 import type { TvSeriesFilterLabels } from './tv-series-filter-labels';
 import {
   DEFAULT_TV_SERIES_LIST_QUERY,
   type TvSeriesListQuery,
-} from '../../../domain/models/tv-series-list-query.model';
+} from '../../../application/queries/tv-series-list.query';
 import { createTvSeriesFilterForm } from './tv-series-filter-form';
 import { toTvSeriesFilterValues } from '../../mappers/tv-series-filter-values.mapper';
 
@@ -31,7 +31,7 @@ import { toTvSeriesFilterValues } from '../../mappers/tv-series-filter-values.ma
 export class TvSeriesFilters {
   private readonly transloco = inject(TranslocoService);
   readonly query = input.required<TvSeriesListQuery>();
-  readonly filtersChange = output<TvSeriesFilterFormModel>();
+  readonly filtersChange = output<TvSeriesFilterForm>();
   readonly resetFilters = output();
   private readonly labels = toSignal(
     this.transloco.selectTranslateObject<TvSeriesFilterLabels>('filters', {}, 'tvSeries'),

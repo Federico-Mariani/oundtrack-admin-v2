@@ -1,13 +1,3 @@
-import { MovieAudioModal } from '../movie-audio-modal/movie-audio-modal';
-import { MovieAudioMode } from '../../../domain/models/movie-audio-mode.model';
-import type { MovieSoundtrackModel } from '../../../domain/models/movie-soundtrack.model';
-import { LANGUAGE_OPTIONS } from '@app/core/i18n/language/language-options';
-import { toSupportedLocale } from '@app/core/i18n/language/language-locale.mapper';
-import { IconButton } from '@shared/ui/icon-button/icon-button';
-import { provideIcons } from '@ng-icons/core';
-import { lucidePlus, lucideRefreshCw } from '@ng-icons/lucide';
-import { ModalService } from '@shared/ui/modal/modal.service';
-import { CreateMovieInfoModal } from '../create-movie-info-modal/create-movie-info-modal';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,135 +8,60 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
-import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { LanguageService } from '@app/core/i18n/language/language.service';
-import { resolveLocalized } from '@shared/localization/localized.queries';
-import type { Localized } from '@shared/localization/localized';
+import { CatalogDetail } from '@app/core/catalog/presentation/catalog-detail';
+import { SoundtrackOwnerType } from '@features/soundtracks';
 import type { SupportedLocale } from '@shared/localization/supported-locale';
-import { ModalFrame } from '@shared/ui/modal/modal-frame';
 import type { ModalContent } from '@shared/ui/modal/modal-content';
-import { Select } from '@shared/ui/select/select';
-import { Clipboard } from '@angular/cdk/clipboard';
-import { NotificationService } from '@app/core/notifications/notification.service';
-import { HlmContextMenuTrigger } from '@spartan-ng/helm/context-menu';
-import { HlmDropdownMenu, HlmDropdownMenuItem } from '@spartan-ng/helm/dropdown-menu';
-import { Button } from '@shared/ui/button/button';
-import { MovieDetailSkeleton } from '../movie-detail-skeleton/movie-detail-skeleton';
+import { ModalService } from '@shared/ui/modal/modal.service';
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
-import { MovieDetailImage } from '../movie-detail-image/movie-detail-image';
-import { MovieTrackPlayer } from '../movie-track-player/movie-track-player';
-import type { MovieSoundtrackTrackModel } from '../../../domain/models/movie-soundtrack-track.model';
+import { CreateMovieInfoModal } from '../create-movie-info-modal/create-movie-info-modal';
 import type { MovieDetailModalParams } from './movie-detail-modal-params';
-
 @Component({
   selector: 'app-movie-detail-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    TranslocoDirective,
-    ModalFrame,
-    Button,
-    Select,
-    IconButton,
-    HlmContextMenuTrigger,
-    HlmDropdownMenu,
-    HlmDropdownMenuItem,
-    MovieDetailSkeleton,
-    MovieDetailImage,
-    MovieTrackPlayer,
-  ],
-  providers: [provideIcons({ lucidePlus, lucideRefreshCw })],
-  templateUrl: './movie-detail-modal.html',
+  imports: [CatalogDetail],
+  template: `
+    <app-catalog-detail
+      translationScope="movies"
+      [detail]="detail()"
+      [owner]="owner"
+      [loading]="facade.requests.getById.isLoading()"
+      [error]="facade.requests.getById.error()"
+      [(selectedLocale)]="selectedLocale"
+      (refresh)="reload()"
+      (createTranslation)="addLanguage($event)"
+    />
+  `,
 })
 export class MovieDetailModal implements ModalContent<MovieDetailModalParams, void> {
   readonly params = injectBrnDialogContext<{ params: MovieDetailModalParams }>().params;
   readonly ref = inject<BrnDialogRef<void>>(BrnDialogRef);
-  private readonly clipboard = inject(Clipboard);
-  private readonly notifications = inject(NotificationService);
-  private readonly transloco = inject(TranslocoService);
-  protected copyId(id: string): void {
-    if (this.clipboard.copy(id)) {
-      this.notifications.success(this.transloco.translate('movies.catalog.copied'));
-    } else {
-      this.notifications.error(this.transloco.translate('movies.catalog.copyFailed'));
-    }
-  }
-  private readonly facade = inject(MoviesFacade);
-  private readonly language = inject(LanguageService);
-  private readonly selectedLocale = signal<SupportedLocale | null>(null);
+  protected readonly facade = inject(MoviesFacade);
   private readonly modals = inject(ModalService);
   private readonly viewContainerRef = inject(ViewContainerRef);
-  protected readonly audioModes = MovieAudioMode;
-  protected readonly showAllTracks = signal(false);
-  private audioRef?: BrnDialogRef<boolean>;
-  protected manageAudio(
-    mode: MovieAudioMode,
-    soundtrack?: MovieSoundtrackModel,
-    track?: MovieSoundtrackTrackModel,
-  ): void {
-    if (this.audioRef || this.loading()) {
-      return;
-    }
-    this.playingAudio?.pause();
-    this.audioRef = this.modals.open(
-      MovieAudioModal,
-      { mode, movieId: this.params.id, locale: this.locale(), soundtrack, track },
-      {
-        viewContainerRef: this.viewContainerRef,
-        disableClose: true,
-        contentClass: 'w-[min(36rem,calc(100vw-2rem))] max-w-none p-6 sm:p-8',
-      },
-    );
-    this.audioRef.closed$.subscribe((changed) => {
-      this.audioRef = undefined;
-      if (changed) {
-        this.showAllTracks.set(true);
-        this.reload();
-      }
-    });
-  }
   private createInfoRef?: BrnDialogRef<SupportedLocale>;
-  protected readonly missingLanguages = computed(() =>
-    LANGUAGE_OPTIONS.map((option) => toSupportedLocale(option.code)).filter(
-      (locale) => !this.locales().includes(locale),
-    ),
-  );
-  private playingAudio?: HTMLAudioElement;
-  protected readonly loading = this.facade.requests.getById.isLoading;
-  protected readonly error = this.facade.requests.getById.error;
-  protected readonly movie = computed(() => {
-    const movie = this.facade.data.detail();
-    return movie?.id === this.params.id ? movie : null;
-  });
-  protected readonly locales = computed(() => {
-    const info = this.movie()?.info;
-    return (['it-IT', 'en-US'] as const).filter((locale) => info?.[locale]);
-  });
-  protected readonly languageItems = computed(() =>
-    this.locales().map((value) => ({ value, label: value === 'it-IT' ? 'Italiano' : 'English' })),
-  );
-  protected readonly locale = computed(() => {
-    const preferred = this.selectedLocale() ?? this.language.activeLocale();
-    return this.locales().includes(preferred) ? preferred : (this.locales()[0] ?? preferred);
-  });
-  protected readonly info = computed(() => {
-    const movie = this.movie();
-    return movie ? resolveLocalized(movie.info, this.locale()) : undefined;
+  protected readonly selectedLocale = signal<SupportedLocale | null>(null);
+  protected readonly owner = { type: SoundtrackOwnerType.Movie, id: this.params.id };
+  protected readonly detail = computed(() => {
+    const entity = this.facade.data.detail();
+    return entity?.id === this.params.id ? { ...entity, externalId: entity.externalMovieId } : null;
   });
   constructor() {
     this.reload();
     inject(DestroyRef).onDestroy(() => {
-      this.playingAudio?.pause();
       this.facade.actions.closeDetail(this.params.id);
     });
   }
-  protected addLanguage(): void {
-    if (this.createInfoRef || !this.missingLanguages().length || this.loading() || this.error()) {
+  protected reload(): void {
+    this.facade.actions.loadDetail(this.params.id);
+  }
+  protected addLanguage(languages: ReadonlyArray<SupportedLocale>): void {
+    if (this.createInfoRef) {
       return;
     }
-    this.playingAudio?.pause();
     this.createInfoRef = this.modals.open(
       CreateMovieInfoModal,
-      { id: this.params.id, languages: this.missingLanguages() },
+      { id: this.params.id, languages },
       { viewContainerRef: this.viewContainerRef, disableClose: true },
     );
     this.createInfoRef.closed$.subscribe((language) => {
@@ -156,47 +71,5 @@ export class MovieDetailModal implements ModalContent<MovieDetailModalParams, vo
         this.reload();
       }
     });
-  }
-  protected reload(): void {
-    this.playingAudio?.pause();
-    this.facade.actions.loadDetail(this.params.id);
-  }
-  protected changeLocale(value: string): void {
-    if (value === 'it-IT' || value === 'en-US') {
-      this.playingAudio?.pause();
-      this.selectedLocale.set(value);
-    }
-  }
-  protected localizedName(info: Localized<{ readonly name: string }>): string {
-    return resolveLocalized(info, this.locale())?.name ?? '—';
-  }
-  protected formatDate(value: number | undefined): string {
-    return value !== undefined && Number.isFinite(new Date(value).getTime())
-      ? new Intl.DateTimeFormat(this.language.activeLocale(), {
-          dateStyle: 'medium',
-          timeZone: 'UTC',
-        }).format(value)
-      : '—';
-  }
-  protected localizedTracks(
-    tracks: ReadonlyArray<MovieSoundtrackTrackModel>,
-  ): ReadonlyArray<MovieSoundtrackTrackModel> {
-    return this.showAllTracks()
-      ? tracks
-      : tracks.filter((track) => track.languages.includes(this.locale()));
-  }
-  protected formatTimestamp(value: number): string {
-    return Number.isFinite(new Date(value).getTime())
-      ? new Intl.DateTimeFormat(this.language.activeLocale(), {
-          dateStyle: 'medium',
-          timeStyle: 'short',
-        }).format(value)
-      : '—';
-  }
-  protected play(audio: HTMLAudioElement): void {
-    if (this.playingAudio !== audio) {
-      this.playingAudio?.pause();
-    }
-    this.playingAudio = audio;
   }
 }

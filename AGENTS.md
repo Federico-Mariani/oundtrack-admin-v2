@@ -24,8 +24,9 @@ effects / facades). The detailed, **mandatory** project rules live in `.junie/ru
   is acceptable only when local, rule-specific and explained
   in a comment.
 - Respect the dependency rule: `presentation → facade → application/state → domain`,
-  `infrastructure → domain / application ports`, `shared` and `core` never depend on
-  features, features talk to each other only through `@features/<feature>` (index.ts).
+  `infrastructure → domain / application ports`. `shared` never depends on features;
+  `core` may compose feature public APIs but never imports feature internals. Features
+  talk to each other only through `@features/<feature>` (index.ts).
 - Keep the NgRx architecture: no `@ngrx/signals` / SignalStore, no `createFeatureSelector`,
   no `Store` in presentation, no global loading/pending state.
 - Small focused files, one primary concept per file, kebab-case names, no `any`,
@@ -52,3 +53,14 @@ of them fails because of your changes.
 - Centralize each feature identity and operation labels in dependency-free feature-local definitions. Do not repeat raw feature names in action factory calls.
 - Model finite statuses, codes and discriminants with named `as const` definitions and derived union types. Use named members or semantic queries instead of raw-string comparisons.
 - These naming conventions guide new and migrated code; do not claim existing call sites have been migrated without changing and verifying them.
+
+## Purpose-driven architecture
+
+- Classify files by responsibility using the table in `.junie/rules/architecture.md`.
+  Commands, queries, form values, workflow phases and view models are not domain models.
+- Reuse the Soundtracks capability from Movies and TvSeries through its public API.
+  Do not duplicate its editor, repository, upload lifecycle or request state.
+- Use semantic names, focused files and Prettier formatting. Review files above 250 lines
+  for separable responsibilities; do not introduce generic frameworks just to reduce lines.
+- Update generic structure enforcement and architecture documentation together when adding
+  a legitimate folder category. Never add feature-specific lint exemptions.

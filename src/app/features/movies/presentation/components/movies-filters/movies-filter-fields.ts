@@ -1,10 +1,10 @@
 import type { FieldTree } from '@angular/forms/signals';
-import type { MoviesFilterFormModel } from '../../models/movies-filter-form.model';
+import type { MoviesFilterForm } from '../../forms/movies-filter.form';
 import type { ListFilterField } from '@shared/ui/list-filters/list-filter-field';
 import type { MoviesFilterLabels } from './movies-filter-labels';
 export function moviesFilterFields(
   labels: MoviesFilterLabels,
-  form: FieldTree<MoviesFilterFormModel>,
+  form: FieldTree<MoviesFilterForm>,
 ): ReadonlyArray<ListFilterField> {
   return [
     { key: 'releaseYearFrom', label: labels.yearFrom, kind: 'number', field: form.releaseYearFrom },

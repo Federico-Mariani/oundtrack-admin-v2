@@ -2,12 +2,12 @@ import type { Id } from '@shared/types/id';
 import type { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { ModalService } from '@shared/ui/modal/modal.service';
 import { MovieDetailModal } from '../../components/movie-detail-modal/movie-detail-modal';
-import type { MoviesFilterFormModel } from '../../models/movies-filter-form.model';
+import type { MoviesFilterForm } from '../../forms/movies-filter.form';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { MoviesFilters } from '../../components/movies-filters/movies-filters';
 import type { DataTableRemoteState } from '@shared/ui/data-table/data-table-remote-state';
 import type { PageRequest } from '@shared/types/pagination/page-request';
-import { DEFAULT_MOVIES_LIST_QUERY } from '../../../domain/models/movies-list-query.model';
+import { DEFAULT_MOVIES_LIST_QUERY } from '../../../application/queries/movies-list.query';
 import { applyMovieFilterValues } from '../../mappers/movie-filter-values.mapper';
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
@@ -91,7 +91,7 @@ export class MoviesPage {
   protected changePage(page: PageRequest): void {
     this.moviesFacade.actions.loadMovies({ ...this.query(), ...page });
   }
-  protected applyFilters(values: MoviesFilterFormModel): void {
+  protected applyFilters(values: MoviesFilterForm): void {
     this.moviesFacade.actions.loadMovies(applyMovieFilterValues(this.query(), values), true);
   }
   protected resetQuery(): void {

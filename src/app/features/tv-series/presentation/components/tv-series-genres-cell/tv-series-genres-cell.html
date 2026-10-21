@@ -1,9 +1,0 @@
-<div class="flex flex-wrap gap-1.5 whitespace-normal">
-  @for (genre of genres(); track $index) {
-    <span class="rounded-md bg-muted px-2 py-1 text-xs font-medium leading-4 text-foreground/80">{{
-      genre
-    }}</span>
-  } @empty {
-    <span class="text-muted-foreground">—</span>
-  }
-</div>

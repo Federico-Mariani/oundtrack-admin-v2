@@ -28,6 +28,7 @@ src/
             └── testing/                 # fakes and fixtures shared by the feature's specs
 ```
 
+Application also permits `commands/`, `queries/` and `workflows/` as specified below.
 No other folders are allowed at these levels (ESLint `project/structure/*`). A feature root may
 contain only `index.ts` and `<feature>.providers.ts`.
 
@@ -229,3 +230,50 @@ import { AuthFacade } from '@features/auth'; // shared → feature
 Each feature owns its identity and operation definitions in `application/state/`. Actions, reducers and feature registration import those dependency-free definitions rather than importing the feature object from action files. Facades compose `data`, `requests`, and `actions`; request projections belong to `XStoreRequestsFacade`, not separate loading/error facades. See `ngrx.md` for exact filenames and lifecycle rules.
 
 The state-root filename gate also permits `*-state-definition.ts` and `*-request-operation.ts` for every feature, matching the dependency-free definitions described in `ngrx.md`.
+
+## Catalog capability ownership
+
+Movies and TvSeries own their aggregate CRUD, list queries, request state and routes.
+Soundtracks owns creation, version creation, language changes, upload confirmation, its
+editor UI. Catalog presentation consumes `@features/soundtracks`; catalog
+stores never import the soundtrack store. Register its providers once in app.config.ts.
+Pass a typed `SoundtrackOwner` with an explicit owner type and identifier at the boundary.
+A new catalog owner must reuse this capability rather than copy its workflow or components.
+
+`shared/types/catalog/` is an explicit, pure shared kernel for embedded genre, category,
+soundtrack and track read contracts. These contracts have identical meaning across both
+catalogs; they contain no requests, state, transport fields or UI behavior. Changes require
+checking every consumer. `core/catalog/api/` and `core/catalog/mappers/` own the matching
+embedded API projections and normalization. Feature-specific aggregate DTOs remain local.
+Do not use these locations as generic dumping grounds or move feature commands into shared.
+
+## Classify by purpose before choosing a filename
+
+| Purpose                                 | Location                       | Filename / exported name                                   |
+| --------------------------------------- | ------------------------------ | ---------------------------------------------------------- |
+| Domain entity or value                  | `domain/models/`               | `movie.model.ts` / `MovieModel`                            |
+| Use-case input                          | `application/commands/`        | `create-movie.command.ts` / `CreateMovieCommand`           |
+| List selection criteria                 | `application/queries/`         | `movies-list.query.ts`, `movie-list.filters.ts`            |
+| Workflow discriminants                  | `application/workflows/`       | `soundtrack-editor.mode.ts`, `soundtrack-editor.phase.ts`  |
+| NgRx workflow orchestration             | `application/state/workflows/` | `save-soundtrack.workflow.ts`                              |
+| Transport schema                        | `infrastructure/api/`          | `movie-response.dto.ts` / `MovieResponseDto`               |
+| Form values                             | `presentation/forms/`          | `create-movie.form.ts` / `CreateMovieForm`                 |
+| Derived display data                    | `presentation/view-models/`    | `movie-table-row.view-model.ts` / `MovieTableRowViewModel` |
+| Editor-local browser resource lifecycle | `presentation/uploads/`        | `soundtrack-file-selection.ts`                             |
+
+A command describes an operation, not an entity. A form may contain incomplete strings;
+a domain model must not absorb form validation or UI-only fields. A view model contains
+formatted values for rendering. Do not use `Model` as a generic suffix for any interface.
+Application commands, queries and workflow contracts are framework-free. NgRx orchestration
+stays under state; file objects stay in the upload registry, outside store state.
+ESLint enforces the role suffixes in the listed command, query, workflow, form and view-model
+folders. Semantic correctness still requires review.
+
+`core/catalog/presentation/` composes the common application catalog detail experience.
+It accepts a `CatalogDetailViewModel` and typed owner, emits refresh and translation intents,
+and opens the Soundtracks editor via its public API. It does not know Movie/TvSeries stores
+or repositories. Feature modal wrappers adapt their aggregate and own their translation
+mutation. Reusable, translation-neutral images, skeletons and table cells live in shared/ui.
+
+The catalog playback card lives beside the shared detail view in `core/catalog/presentation/`.
+Load the Soundtracks editor through `loadSoundtrackEditor()` so its form dependencies remain lazy.

@@ -20,7 +20,7 @@ import { Button } from '@shared/ui/button/button';
 import { SelectField } from '@shared/ui/select-field/select-field';
 import type { CreateTvSeriesInfoModalParams } from './create-tv-series-info-modal-params';
 import { TvSeriesFacade } from '../../../application/state/facades/tv-series.facade';
-import type { CreateTvSeriesInfoFormModel } from '../../models/create-tv-series-info-form.model';
+import type { CreateTvSeriesInfoForm } from '../../forms/create-tv-series-info.form';
 
 @Component({
   selector: 'app-create-tv-series-info-modal',
@@ -83,7 +83,7 @@ export class CreateTvSeriesInfoModal implements ModalContent<
     label: value === 'it-IT' ? 'Italiano' : 'English',
   }));
   private readonly fieldErrors = computed(() => this.error()?.fieldErrors);
-  protected readonly controller = new AppFormController<CreateTvSeriesInfoFormModel>(
+  protected readonly controller = new AppFormController<CreateTvSeriesInfoForm>(
     [new AppFormField('language', [new RequiredInputRule()])],
     () => {
       this.submit();

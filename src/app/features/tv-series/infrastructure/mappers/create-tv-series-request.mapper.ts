@@ -1,8 +1,8 @@
 import { toApiLocale } from '@app/core/http/api-locale.mapper';
-import type { CreateTvSeriesModel } from '../../domain/models/create-tv-series.model';
+import type { CreateTvSeriesCommand } from '../../application/commands/create-tv-series.command';
 import type { CreateTvSeriesRequestDto } from '../api/create-tv-series-request.dto';
 
-export function toCreateTvSeriesRequest(tvSeries: CreateTvSeriesModel): CreateTvSeriesRequestDto {
+export function toCreateTvSeriesRequest(tvSeries: CreateTvSeriesCommand): CreateTvSeriesRequestDto {
   return {
     title: tvSeries.title.trim(),
     year: tvSeries.year,

@@ -6,7 +6,6 @@ import { tvSeriesFeature } from '../tv-series.feature';
 export class TvSeriesStoreDataFacade {
   private readonly store = inject(Store);
 
-  readonly audio = this.store.selectSignal(tvSeriesFeature.selectAudio);
   readonly detail = this.store.selectSignal(tvSeriesFeature.selectDetail);
   readonly query = this.store.selectSignal(tvSeriesFeature.selectQuery);
   readonly total = this.store.selectSignal(tvSeriesFeature.selectTotal);
