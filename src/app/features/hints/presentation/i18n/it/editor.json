@@ -40,5 +40,10 @@
   "languages": {
     "it-IT": "Italiano",
     "en-US": "English"
-  }
+  },
+  "actions": "Azioni",
+  "availableLanguages": "Lingue disponibili",
+  "visualHint": "Indizio visivo",
+  "textHint": "Indizio testuale",
+  "imageUnavailable": "Immagine non disponibile"
 }

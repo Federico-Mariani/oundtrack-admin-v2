@@ -44,67 +44,12 @@
   } @else {
     <div class="space-y-4">
       @for (hint of hints(); track hint.id) {
-        <article class="space-y-4 rounded-lg bg-muted/40 p-5">
-          <div class="flex items-start gap-4">
-            <img class="size-14 shrink-0" [src]="'/assets/hints/' + hint.type + '.svg'" alt="" />
-            <div class="min-w-0 flex-1 space-y-2">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <h4 class="font-semibold">{{ t('types.' + hint.type) }}</h4>
-                <span class="text-sm text-muted-foreground"
-                  >{{ t('cost') }}: <strong class="text-foreground">{{ hint.cost }}</strong></span
-                >
-              </div>
-              <p
-                class="whitespace-pre-wrap break-words text-sm leading-relaxed"
-                [class.text-muted-foreground]="!text(hint)"
-              >
-                {{ text(hint) || (image(hint) ? '' : t('missing')) }}
-              </p>
-            </div>
-          </div>
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <div class="flex flex-wrap gap-2">
-              @for (info of hint.info; track info.id) {
-                <span class="rounded-md bg-background px-2 py-1 text-xs">{{
-                  t('languages.' + info.language)
-                }}</span>
-              }
-            </div>
-            <div class="flex flex-wrap gap-1">
-              <app-button
-                variant="ghost"
-                size="sm"
-                [text]="t('modes.edit')"
-                [disabled]="loading()"
-                (click)="manage(modes.Edit, hint)"
-              />
-              @if (canTranslate(hint)) {
-                <app-button
-                  variant="ghost"
-                  size="sm"
-                  [text]="t('modes.translate')"
-                  [disabled]="loading()"
-                  (click)="manage(modes.Translate, hint)"
-                />
-              }
-              <app-button
-                variant="ghost"
-                size="sm"
-                buttonClass="text-destructive"
-                [text]="t('modes.delete')"
-                [disabled]="loading()"
-                (click)="manage(modes.Delete, hint)"
-              />
-            </div>
-          </div>
-          @if (image(hint); as image) {
-            <app-media-image
-              class="block aspect-video max-w-md rounded-lg"
-              [src]="image"
-              [alt]="t('types.' + hint.type)"
-            />
-          }
-        </article>
+        <app-hint-card
+          [hint]="hint"
+          [locale]="locale()"
+          [disabled]="loading()"
+          (manage)="manage($event, hint)"
+        />
       } @empty {
         @if (loaded()) {
           <p class="rounded-lg bg-muted/40 px-6 py-12 text-center text-sm text-muted-foreground">

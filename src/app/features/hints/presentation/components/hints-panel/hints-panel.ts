@@ -1,4 +1,4 @@
-import { MediaImage } from '@shared/ui/media-image/media-image';
+import { HintCard } from '../hint-card/hint-card';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +17,7 @@ import { HintEditorMode } from '../../../application/workflows/hint-editor.mode'
 import { HINT_TYPES } from '../../../domain/values/hint-type';
 import type { HintModel } from '../../../domain/models/hint.model';
 import type { HintOwner } from '../../../domain/values/hint-owner';
-import { SUPPORTED_LOCALES, type SupportedLocale } from '@shared/localization/supported-locale';
+import type { SupportedLocale } from '@shared/localization/supported-locale';
 import { ModalService } from '@shared/ui/modal/modal.service';
 import { Button } from '@shared/ui/button/button';
 import { Shimmer } from '@shared/ui/shimmer/shimmer';
@@ -25,7 +25,7 @@ import { HintEditor } from '../hint-editor/hint-editor';
 @Component({
   selector: 'app-hints-panel',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslocoDirective, Button, Shimmer, MediaImage],
+  imports: [TranslocoDirective, Button, Shimmer, HintCard],
   providers: [provideTranslocoScope({ scope: 'hints', loader: hintsTranslationsLoader })],
   templateUrl: './hints-panel.html',
 })
@@ -63,15 +63,6 @@ export class HintsPanel {
   }
   protected reload(): void {
     this.facade.actions.load(this.sessionId, this.owner().id);
-  }
-  protected image(hint: HintModel): string | null {
-    return hint.info.find((info) => info.language === this.locale())?.image ?? null;
-  }
-  protected text(hint: HintModel): string | undefined {
-    return hint.info.find((info) => info.language === this.locale())?.text ?? undefined;
-  }
-  protected canTranslate(hint: HintModel): boolean {
-    return SUPPORTED_LOCALES.some((locale) => !hint.info.some((info) => info.language === locale));
   }
   protected manage(mode: HintEditorMode, hint?: HintModel): void {
     if (this.editorOpen || this.loading() || !this.loaded()) return;

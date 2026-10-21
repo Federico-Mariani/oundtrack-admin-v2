@@ -22,7 +22,7 @@ Edit intentionally issues PATCH and retains the form on failure. A 404/405 expla
 
 ## Fixed illustrations and storage prerequisite
 
-Five bundled SVG illustrations live in `public/assets/hints/`: actor, year, frame, quote and plot. The UI always uses these predefined illustrations. `HINT_ICONS` centralizes the corresponding backend object keys: `hints/icons/{type}.svg`.
+Five bundled SVG illustrations live in `public/assets/hints/`: actor, year, frame, quote and plot. The editor previews these illustrations; list cards use theme-aware Lucide icons and the shared language tags. `HINT_ICONS` centralizes the corresponding backend object keys: `hints/icons/{type}.svg`.
 
 The backend signs `icon` as a storage object key. **Before production use, publish these five SVG files into the backend's media storage at those keys**, with `image/svg+xml` content type and the existing media access configuration. These keys are a new convention, not verified existing storage objects. Update the centralized mapping if deployment uses different keys. The Admin does not upload them during hint creation. Signed response URLs are never sent back as object keys.
 
@@ -31,3 +31,9 @@ The backend signs `icon` as a storage object key. **Before production use, publi
 The feature owns domain values/models, command and repository port, HTTP DTO mapping, NgRx requests/effects/facades, and presentation. Every load and mutation is correlated with panel session and request ID. Duplicate submissions and requests for the wrong owner are ignored; closing a session invalidates outstanding results. Mutations cancel older reads so stale data cannot replace a successful write. API errors remain separate per operation and preserve the editor's input. A delete requires an explicit confirmation dialog.
 
 No live backend or storage mutation is performed by automated checks. HTTP contract tests and workflow tests exercise both owner types, locale mapping, future edit errors, conflicts, deletion, retry, stale responses and duplicate submissions.
+
+## Requested follow-up
+
+The detail tabs now use Spartan's Line variant. Hint cards separate the clue content from cost and actions, use a reusable action menu, and display existing clue images without cropping.
+
+Image upload and fixed per-type pricing are not implemented yet. The current backend accepts a supplied cost and an existing storage object key, but has no hint-image upload endpoint or authoritative per-type price catalog. The five costs must be supplied before replacing the editable cost with a fixed policy. Actor and Frame require a visual-content editor and an end-to-end upload contract; a local file preview must not be presented as a completed upload.

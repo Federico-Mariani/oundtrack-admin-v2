@@ -40,5 +40,10 @@
   "languages": {
     "it-IT": "Italiano",
     "en-US": "English"
-  }
+  },
+  "actions": "Actions",
+  "availableLanguages": "Available languages",
+  "visualHint": "Visual clue",
+  "textHint": "Text clue",
+  "imageUnavailable": "Image unavailable"
 }

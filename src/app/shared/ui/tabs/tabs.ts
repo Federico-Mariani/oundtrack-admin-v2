@@ -7,9 +7,16 @@ import { TabContent } from './tab-content';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [HlmTabs, HlmTabsList, HlmTabsTrigger, HlmTabsContent, NgTemplateOutlet],
   template: ` <div hlmTabs [tab]="value()" (tabActivated)="value.set($event)" class="space-y-5">
-    <div hlmTabsList class="w-full sm:w-auto" [attr.aria-label]="label()">
+    <div
+      hlmTabsList
+      variant="line"
+      class="w-full justify-start gap-5 sm:w-auto"
+      [attr.aria-label]="label()"
+    >
       @for (tab of tabs(); track tab.value()) {
-        <button type="button" [hlmTabsTrigger]="tab.value()">{{ tab.label() }}</button>
+        <button type="button" class="flex-none px-1 pb-2" [hlmTabsTrigger]="tab.value()">
+          {{ tab.label() }}
+        </button>
       }
     </div>
     @for (tab of tabs(); track tab.value()) {
