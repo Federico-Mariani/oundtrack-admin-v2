@@ -1,0 +1,44 @@
+{
+  "title": "Indizi",
+  "description": "Crea gli indizi per questo titolo. Puoi aggiungere un indizio per ciascun tipo.",
+  "add": "Crea indizio",
+  "refresh": "Ricarica indizi",
+  "empty": "Non ci sono ancora indizi. Crea il primo per questo titolo.",
+  "loading": "Caricamento indizi",
+  "loadError": "Impossibile caricare gli indizi. Riprova.",
+  "retry": "Riprova",
+  "missing": "Indizio non disponibile nella lingua selezionata.",
+  "cost": "Costo",
+  "type": "Tipo di indizio",
+  "language": "Lingua",
+  "text": "Contenuto dell’indizio",
+  "imageNote": "L’illustrazione viene assegnata automaticamente in base al tipo.",
+  "required": "Inserisci il contenuto dell’indizio.",
+  "invalidCost": "Inserisci un numero intero maggiore o uguale a zero.",
+  "cancel": "Annulla",
+  "save": "Salva indizio",
+  "allTypes": "Sono stati creati tutti i tipi di indizio.",
+  "deleteDescription": "L’indizio e tutte le sue traduzioni verranno eliminati definitivamente.",
+  "failed": "Operazione non riuscita. I dati inseriti sono stati conservati.",
+  "editUnavailable": "La modifica non è ancora disponibile. I dati inseriti sono stati conservati.",
+  "conflict": "Questo tipo di indizio o questa lingua esiste già. Ricarica gli indizi per vedere i dati aggiornati.",
+  "success": "Indizio salvato.",
+  "deleted": "Indizio eliminato.",
+  "modes": {
+    "create": "Crea indizio",
+    "edit": "Modifica indizio",
+    "translate": "Aggiungi traduzione",
+    "delete": "Elimina indizio"
+  },
+  "types": {
+    "actor": "Attore",
+    "year": "Anno",
+    "frame": "Fotogramma",
+    "quote": "Citazione",
+    "plot": "Trama"
+  },
+  "languages": {
+    "it-IT": "Italiano",
+    "en-US": "English"
+  }
+}

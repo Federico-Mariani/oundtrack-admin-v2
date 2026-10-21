@@ -50,5 +50,7 @@
   "replaceAudio": "Replace audio",
   "uploadAudio": "Upload audio",
   "refreshFailed": "Unable to refresh. Previously loaded data is still displayed.",
-  "recordId": "Tv series ID"
+  "recordId": "Tv series ID",
+  "hints": "Hints",
+  "content": "Content"
 }

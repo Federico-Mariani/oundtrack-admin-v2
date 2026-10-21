@@ -50,6 +50,7 @@ describe('Catalog detail interactions', () => {
           template: `<button (click)="manageAudio(audioModes.Soundtrack)">Audio</button><span>{{ locale() }}:{{ info()?.title }}</span>`,
         },
       });
+      await TestBed.compileComponents();
       const fixture = TestBed.createComponent(CatalogDetail);
       const owner = { type: ownerType, id: detail.id };
       fixture.componentRef.setInput('owner', owner);

@@ -136,37 +136,46 @@
             </div>
           </div>
         </div>
-        <section class="space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <h3 class="text-lg font-semibold tracking-tight">{{ t('soundtracks') }}</h3>
-            <app-button
-              variant="outline"
-              size="sm"
-              icon="lucidePlus"
-              [text]="t('addSoundtrack')"
-              (click)="manageAudio(audioModes.Soundtrack)"
-            />
-          </div>
-          @for (soundtrack of detail.soundtracks; track soundtrack.id; let index = $index) {
-            <div class="space-y-3">
-              @for (track of localizedTracks(soundtrack.tracks); track track.id) {
-                <app-soundtrack-player
-                  [track]="track"
-                  [soundtrackId]="soundtrack.id"
-                  (playbackStarted)="play($event)"
-                  (editLanguages)="manageAudio(audioModes.Languages, soundtrack, track)"
-                  (uploadAudio)="manageAudio(audioModes.Upload, soundtrack, track)"
-                  (manageAudio)="manageAudio(audioModes.Version, soundtrack)"
-                  (reload)="reload()"
+        <app-tabs [value]="activeTab()" (valueChange)="changeTab($event)" [label]="t('content')">
+          <ng-template [appTabContent]="tabs.Soundtracks" [label]="t('soundtracks')">
+            <section class="space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <h3 class="text-lg font-semibold tracking-tight">{{ t('soundtracks') }}</h3>
+                <app-button
+                  variant="outline"
+                  size="sm"
+                  icon="lucidePlus"
+                  [text]="t('addSoundtrack')"
+                  (click)="manageAudio(audioModes.Soundtrack)"
                 />
+              </div>
+              @for (soundtrack of detail.soundtracks; track soundtrack.id; let index = $index) {
+                <div class="space-y-3">
+                  @for (track of localizedTracks(soundtrack.tracks); track track.id) {
+                    <app-soundtrack-player
+                      [track]="track"
+                      [soundtrackId]="soundtrack.id"
+                      (playbackStarted)="play($event)"
+                      (editLanguages)="manageAudio(audioModes.Languages, soundtrack, track)"
+                      (uploadAudio)="manageAudio(audioModes.Upload, soundtrack, track)"
+                      (manageAudio)="manageAudio(audioModes.Version, soundtrack)"
+                      (reload)="reload()"
+                    />
+                  } @empty {
+                    <p class="text-sm text-muted-foreground">{{ t('noLocalizedTracks') }}</p>
+                  }
+                </div>
               } @empty {
                 <p class="text-sm text-muted-foreground">{{ t('noLocalizedTracks') }}</p>
               }
-            </div>
-          } @empty {
-            <p class="text-sm text-muted-foreground">{{ t('noLocalizedTracks') }}</p>
-          }
-        </section>
+            </section>
+          </ng-template>
+          <ng-template [appTabContent]="tabs.Hints" [label]="t('hints')">
+            @defer (when activeTab() === tabs.Hints) {
+              <app-hints-outlet [owner]="owner()" [locale]="locale()" />
+            }
+          </ng-template>
+        </app-tabs>
         <section class="space-y-5 pt-3">
           <div>
             <h3 class="text-lg font-semibold tracking-tight">{{ t('metadata') }}</h3>

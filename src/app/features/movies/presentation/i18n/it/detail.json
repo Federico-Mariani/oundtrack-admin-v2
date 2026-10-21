@@ -50,5 +50,7 @@
   "replaceAudio": "Sostituisci audio",
   "uploadAudio": "Carica audio",
   "refreshFailed": "Impossibile aggiornare. Sono ancora visibili i dati caricati in precedenza.",
-  "recordId": "ID film"
+  "recordId": "ID film",
+  "hints": "Indizi",
+  "content": "Contenuti"
 }

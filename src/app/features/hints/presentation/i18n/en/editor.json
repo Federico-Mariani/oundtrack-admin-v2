@@ -1,0 +1,44 @@
+{
+  "title": "Hints",
+  "description": "Create clues for this title. Each hint type can be added once.",
+  "add": "Create hint",
+  "refresh": "Refresh hints",
+  "empty": "No hints yet. Create the first clue for this title.",
+  "loading": "Loading hints",
+  "loadError": "Hints could not be loaded. Try again.",
+  "retry": "Try again",
+  "missing": "No hint available in the selected language.",
+  "cost": "Cost",
+  "type": "Hint type",
+  "language": "Language",
+  "text": "Hint content",
+  "imageNote": "The illustration is assigned automatically to the hint type.",
+  "required": "Enter the hint content.",
+  "invalidCost": "Enter a whole number greater than or equal to zero.",
+  "cancel": "Cancel",
+  "save": "Save hint",
+  "allTypes": "All hint types have been created.",
+  "deleteDescription": "This permanently deletes the hint and all its translations.",
+  "failed": "The operation could not be completed. Your changes have been kept.",
+  "editUnavailable": "Editing is not available yet. Your changes have been kept.",
+  "conflict": "This hint type or language already exists. Refresh the hints to see the latest data.",
+  "success": "Hint saved successfully.",
+  "deleted": "Hint deleted successfully.",
+  "modes": {
+    "create": "Create hint",
+    "edit": "Edit hint",
+    "translate": "Add translation",
+    "delete": "Delete hint"
+  },
+  "types": {
+    "actor": "Actor",
+    "year": "Year",
+    "frame": "Frame",
+    "quote": "Quote",
+    "plot": "Plot"
+  },
+  "languages": {
+    "it-IT": "Italiano",
+    "en-US": "English"
+  }
+}

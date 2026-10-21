@@ -1,3 +1,4 @@
+import { provideHints } from '@features/hints';
 import { provideSoundtracks } from '@features/soundtracks';
 import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -31,6 +32,7 @@ export const appConfig: ApplicationConfig = {
     provideAuth(),
     provideMovies(),
     provideSoundtracks(),
+    provideHints(),
     provideTvSeries(),
     provideGameCategories(),
   ],

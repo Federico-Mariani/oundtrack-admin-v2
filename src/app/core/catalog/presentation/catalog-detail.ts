@@ -1,3 +1,7 @@
+import { TabContent } from '@shared/ui/tabs/tab-content';
+import { HintsOutlet } from '@features/hints';
+import { Tabs } from '@shared/ui/tabs/tabs';
+import { CatalogDetailTab } from './catalog-detail-tab';
 import { SoundtrackPlayer } from './soundtrack-player/soundtrack-player';
 import type { CatalogDetailViewModel } from './catalog-detail.view-model';
 import type { RequestError } from '@shared/state/request/request-error';
@@ -61,11 +65,20 @@ import type { SoundtrackTrackModel } from '@shared/types/catalog/soundtrack-trac
     MediaDetailSkeleton,
     MediaImage,
     SoundtrackPlayer,
+    HintsOutlet,
+    Tabs,
+    TabContent,
   ],
   providers: [provideIcons({ lucidePlus, lucideRefreshCw })],
   templateUrl: './catalog-detail.html',
 })
 export class CatalogDetail {
+  protected readonly tabs = CatalogDetailTab;
+  protected readonly activeTab = signal<string>(CatalogDetailTab.Soundtracks);
+  protected changeTab(tab: string): void {
+    this.playingAudio?.pause();
+    this.activeTab.set(tab);
+  }
   readonly detail = input<CatalogDetailViewModel | null>(null);
   readonly owner = input.required<SoundtrackOwner>();
   readonly translationScope = input.required<string>();
