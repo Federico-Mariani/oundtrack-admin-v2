@@ -2,7 +2,7 @@
   *transloco="let t; prefix: 'hints.editor'"
   class="overflow-hidden rounded-lg border border-border bg-card text-card-foreground"
 >
-  <header class="flex items-center gap-3 px-5 py-4 sm:px-6">
+  <header class="flex items-center gap-3 p-5">
     <span
       class="flex size-10 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground"
       ><ng-icon [name]="icon()" class="text-xl" aria-hidden="true"
@@ -13,15 +13,9 @@
         {{ t(info()?.image ? 'visualHint' : 'textHint') }}
       </p>
     </div>
-    <span
-      class="flex shrink-0 items-center gap-1.5 text-sm font-semibold tabular-nums"
-      [attr.aria-label]="t('cost') + ': ' + hint().cost"
-      ><ng-icon name="lucideCoins" class="text-base text-muted-foreground" aria-hidden="true" />{{
-        hint().cost
-      }}</span
-    >
     <app-icon-button
-      variant="ghost"
+      class="me-2"
+      variant="outline"
       size="icon-sm"
       icon="lucideEllipsis"
       [ariaLabel]="t('actions') + ': ' + t('types.' + hint().type)"
@@ -41,18 +35,23 @@
         />
       }
       @if (info.text) {
-        <p class="whitespace-pre-wrap break-words text-sm leading-7">{{ info.text }}</p>
+        <p class="whitespace-pre-wrap wrap-break-word text-sm leading-7">{{ info.text }}</p>
       }
     } @else {
       <p class="py-3 text-sm leading-relaxed text-muted-foreground">{{ t('missing') }}</p>
     }
     <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-      <span class="text-xs text-muted-foreground">{{ t('availableLanguages') }}</span
-      ><app-language-tags [languages]="languages()" />
+      <app-language-tags [languages]="languages()" />
+      <span
+        class="flex shrink-0 items-center gap-1.5 text-sm font-semibold tabular-nums"
+        [attr.aria-label]="t('cost') + ': ' + hint().cost"
+        ><ng-icon name="lucideCoins" class="text-base text-muted-foreground" aria-hidden="true" />
+        {{ hint().cost }}</span
+      >
     </div>
   </div>
-  <ng-template #actions
-    ><app-action-menu
+  <ng-template #actions>
+    <app-action-menu
       [items]="[
         { value: modes.Edit, label: t('modes.edit'), disabled: disabled() },
         {
@@ -63,5 +62,6 @@
         { value: modes.Delete, label: t('modes.delete'), disabled: disabled(), destructive: true },
       ]"
       (selected)="selectAction($event)"
-  /></ng-template>
+    />
+  </ng-template>
 </article>

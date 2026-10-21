@@ -22,11 +22,17 @@ import { ModalService } from '@shared/ui/modal/modal.service';
 import { Button } from '@shared/ui/button/button';
 import { Shimmer } from '@shared/ui/shimmer/shimmer';
 import { HintEditor } from '../hint-editor/hint-editor';
+import { provideIcons } from '@ng-icons/core';
+import { lucidePlus } from '@ng-icons/lucide';
+
 @Component({
   selector: 'app-hints-panel',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslocoDirective, Button, Shimmer, HintCard],
-  providers: [provideTranslocoScope({ scope: 'hints', loader: hintsTranslationsLoader })],
+  providers: [
+    provideTranslocoScope({ scope: 'hints', loader: hintsTranslationsLoader }),
+    provideIcons({ lucidePlus }),
+  ],
   templateUrl: './hints-panel.html',
 })
 export class HintsPanel {

@@ -49,7 +49,7 @@ export const DEFAULT_SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
       {
         id: 'tv-series',
         labelKey: 'sidebar.menu.tvSeries.label',
-        icon: 'lucideFilm',
+        icon: 'lucideTv',
         commands: TV_SERIES_NAVIGATION.root(),
         exact: false,
         children: [
