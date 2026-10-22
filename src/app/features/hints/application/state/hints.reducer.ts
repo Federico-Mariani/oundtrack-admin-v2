@@ -89,12 +89,16 @@ export const hintsReducer = createReducer(
     )
       return state;
     switch (event.kind) {
+      case HintSaveEventKind.Localized:
       case HintSaveEventKind.Prepared:
         return {
           ...state,
           preparedHint: event.hint,
           hints: [...state.hints.filter((hint) => hint.id !== event.hint.id), event.hint],
-          phase: HintSavePhase.Uploading,
+          phase:
+            event.kind === HintSaveEventKind.Localized
+              ? HintSavePhase.Localizing
+              : HintSavePhase.Uploading,
         };
       case HintSaveEventKind.Progress:
         return { ...state, progress: event.progress, phase: HintSavePhase.Uploading };

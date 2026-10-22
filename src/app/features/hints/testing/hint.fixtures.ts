@@ -15,7 +15,10 @@ export function hintFixture(): HintModel {
     updatedAt: 2,
   };
 }
-export function createHintCommand(): SaveHintCommand {
+export function createHintCommand(): Extract<
+  SaveHintCommand,
+  { mode: typeof HintEditorMode.Create }
+> {
   return {
     mode: HintEditorMode.Create,
     owner: { id: 'movie', type: HintOwnerType.Movie },

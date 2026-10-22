@@ -47,7 +47,7 @@
   "fixedCost": "Costo fisso associato al tipo di indizio.",
   "image": {
     "title": "Immagine dell’indizio",
-    "shared": "L’immagine è condivisa tra tutte le lingue di questo indizio. Sostituirla aggiorna tutte le traduzioni.",
+    "shared": "Questa immagine è automaticamente disponibile in tutte le lingue supportate. Sostituendola verrà aggiornata per tutte le lingue.",
     "preview": "Anteprima dell’indizio",
     "removeSelection": "Rimuovi il file selezionato",
     "replace": "Trascina qui una nuova immagine per sostituire quella attuale",
@@ -59,16 +59,24 @@
     "single": "Seleziona una sola immagine.",
     "required": "Seleziona l’immagine da caricare.",
     "description": "Carica un’immagine per questo indizio. Il testo non è richiesto.",
-    "resume": "L’indizio è già stato salvato. Riprova per completare il caricamento senza crearlo di nuovo.",
+    "resume": "Una parte dell’Hint è già stata salvata. Riprova per completare i passaggi rimanenti senza crearlo nuovamente.",
     "uncertain": "Non è stato possibile verificare il salvataggio. Chiudi questa finestra e controlla la lista aggiornata prima di riprovare.",
     "phases": {
       "preparing": "Preparazione del salvataggio…",
       "uploading": "Caricamento dell’immagine…",
       "confirming": "Conferma dell’immagine…",
       "done": "Caricamento completato",
-      "idle": "In attesa"
+      "idle": "In attesa",
+      "localizing": "Salvataggio delle lingue…"
     },
     "confirmFailed": "Impossibile confermare l’immagine. Riprova per completare il salvataggio.",
     "uploadFailed": "Caricamento non riuscito. Controlla la connessione e riprova."
-  }
+  },
+  "languageSelection": "Lingue",
+  "languagesHint": "Lo stesso testo verrà salvato per ogni lingua selezionata. Non viene eseguita una traduzione automatica.",
+  "editLanguagesHint": "Il testo mostrato sostituirà il contenuto di tutte le lingue selezionate. Le lingue non selezionate rimarranno invariate.",
+  "allLanguages": "Seleziona tutte le lingue",
+  "clearLanguages": "Deseleziona tutte",
+  "requiredLanguage": "Seleziona almeno una lingua.",
+  "localizationFailed": "Non è stato possibile salvare alcune lingue. Riprova per completare le modifiche rimanenti."
 }

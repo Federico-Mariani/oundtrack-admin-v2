@@ -47,7 +47,7 @@
   "fixedCost": "Fixed cost assigned to this hint type.",
   "image": {
     "title": "Hint image",
-    "shared": "This image is shared across every language of this hint. Replacing it updates all translations.",
+    "shared": "This image is automatically available in all supported languages. Replacing it updates every language.",
     "preview": "Hint preview",
     "removeSelection": "Remove selected file",
     "replace": "Drop a new image here to replace the current one",
@@ -59,16 +59,24 @@
     "single": "Select one image only.",
     "required": "Choose the image to upload.",
     "description": "Upload an image for this hint. No text is required.",
-    "resume": "The hint has already been saved. Retry to finish the upload without creating it again.",
+    "resume": "Part of the hint has already been saved. Retry to complete the remaining steps without creating it again.",
     "uncertain": "The save result could not be verified. Close this dialog and check the refreshed list before trying again.",
     "phases": {
       "preparing": "Preparing the save…",
       "uploading": "Uploading image…",
       "confirming": "Confirming image…",
       "done": "Upload complete",
-      "idle": "Waiting"
+      "idle": "Waiting",
+      "localizing": "Saving languages…"
     },
     "confirmFailed": "The image could not be confirmed. Retry to finish saving.",
     "uploadFailed": "Upload failed. Check your connection and retry."
-  }
+  },
+  "languageSelection": "Languages",
+  "languagesHint": "The same text will be saved for each selected language. No automatic translation is performed.",
+  "editLanguagesHint": "The text shown here will replace the content of every selected language. Unselected languages remain unchanged.",
+  "allLanguages": "Select all languages",
+  "clearLanguages": "Clear selection",
+  "requiredLanguage": "Select at least one language.",
+  "localizationFailed": "Some languages could not be saved. Retry to complete the remaining changes."
 }

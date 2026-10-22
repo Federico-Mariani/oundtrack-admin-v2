@@ -4,6 +4,7 @@ import { HintImageField } from '../hint-image-field/hint-image-field';
 import { isImageHint } from '../../../domain/values/hint-image-policy';
 import { UploadProgress } from '@shared/ui/upload-progress/upload-progress';
 import { HINT_COSTS } from '../../../domain/values/hint-cost';
+import { CheckboxChoice } from '@shared/ui/checkbox-choice/checkbox-choice';
 import type { SelectItem } from '@shared/interfaces/select-item';
 import {
   ChangeDetectionStrategy,
@@ -25,7 +26,7 @@ import { isHintType } from '../../../domain/values/hint-type';
 import type { HintEditorParams } from './hint-editor-params';
 import { NotificationService } from '@app/core/notifications/notification.service';
 import { RequestErrorCode } from '@shared/state/request/request-error';
-import { isSupportedLocale, SUPPORTED_LOCALES } from '@shared/localization/supported-locale';
+import { type SupportedLocale, SUPPORTED_LOCALES } from '@shared/localization/supported-locale';
 import { ModalFrame } from '@shared/ui/modal/modal-frame';
 import type { ModalContent } from '@shared/ui/modal/modal-content';
 import { Button } from '@shared/ui/button/button';
@@ -39,6 +40,7 @@ import { Textarea } from '@shared/ui/textarea/textarea';
     ModalFrame,
     Button,
     Select,
+    CheckboxChoice,
     Textarea,
     HintImageField,
     UploadProgress,
@@ -86,11 +88,17 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
   protected readonly locale = signal(
     this.languages.includes(this.params.locale) ? this.params.locale : this.languages.at(0),
   );
+  protected readonly selectedLanguages = signal<ReadonlyArray<SupportedLocale>>([
+    this.locale() ?? SUPPORTED_LOCALES[0],
+  ]);
+  protected readonly allSelected = computed(() =>
+    this.languages.every((language) => this.selectedLanguages().includes(language)),
+  );
   private readonly values = signal({
     text: this.params.hint?.info.find((info) => info.language === this.locale())?.text ?? '',
   });
   protected readonly fields = form(this.values, (path) => {
-    disabled(path, { when: () => this.busy() });
+    disabled(path, { when: () => this.metadataLocked() });
   });
   protected typeItems(): Array<SelectItem> {
     return this.params.availableTypes.map((value) => ({
@@ -98,11 +106,17 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
       label: this.transloco.translate('hints.editor.types.' + value),
     }));
   }
-  protected languageItems(): Array<SelectItem> {
-    return this.languages.map((value) => ({
-      value,
-      label: this.transloco.translate('hints.editor.languages.' + value),
-    }));
+  protected toggleLanguage(language: SupportedLocale): void {
+    if (this.metadataLocked() || !this.languages.includes(language)) return;
+    this.selectedLanguages.update((selected) =>
+      selected.includes(language)
+        ? selected.filter((item) => item !== language)
+        : [...selected, language],
+    );
+  }
+  protected selectAllLanguages(): void {
+    if (!this.metadataLocked())
+      this.selectedLanguages.set(this.allSelected() ? [] : [...this.languages]);
   }
   protected readonly textErrors = computed(() =>
     this.submitted() && !this.values().text.trim()
@@ -117,13 +131,15 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
     const error = this.error();
     const key = this.uncertain()
       ? 'image.uncertain'
-      : this.phase() === HintSavePhase.Confirming
-        ? 'image.confirmFailed'
-        : this.phase() === HintSavePhase.Uploading
-          ? 'image.uploadFailed'
-          : error?.code === RequestErrorCode.Conflict
-            ? 'conflict'
-            : 'failed';
+      : this.phase() === HintSavePhase.Localizing
+        ? 'localizationFailed'
+        : this.phase() === HintSavePhase.Confirming
+          ? 'image.confirmFailed'
+          : this.phase() === HintSavePhase.Uploading
+            ? 'image.uploadFailed'
+            : error?.code === RequestErrorCode.Conflict
+              ? 'conflict'
+              : 'failed';
     return this.transloco.translate('hints.editor.' + key);
   });
   constructor() {
@@ -153,16 +169,6 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
       this.submitted.set(false);
     }
   }
-  protected changeLanguage(value: string): void {
-    if (this.metadataLocked() || !isSupportedLocale(value) || !this.languages.includes(value))
-      return;
-    this.locale.set(value);
-    if (this.params.mode === HintEditorMode.Edit)
-      this.values.update((values) => ({
-        ...values,
-        text: this.params.hint?.info.find((info) => info.language === value)?.text ?? '',
-      }));
-  }
   protected submit(event: Event): void {
     event.preventDefault();
     this.submitted.set(true);
@@ -176,7 +182,8 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
       return;
     const mode = this.params.mode,
       hint = this.params.hint,
-      language = this.locale(),
+      languages = this.visual() ? SUPPORTED_LOCALES : this.selectedLanguages(),
+      language = languages.at(0),
       type = this.type();
     let command: SaveHintCommand;
     if (mode === HintEditorMode.Delete && hint)
@@ -191,6 +198,7 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
       const content = {
         owner: this.params.owner,
         language,
+        languages,
         ...(!this.visual() ? { text: this.values().text.trim() } : {}),
         ...(this.visual() && this.selection.fileKey()
           ? { fileKey: this.selection.fileKey() ?? undefined }
@@ -204,6 +212,7 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
           owner: this.params.owner,
           hintId: hint.id,
           type: hint.type,
+          languages,
           fileKey: this.selection.fileKey() ?? '',
         };
       else if (mode === HintEditorMode.Edit && hint)

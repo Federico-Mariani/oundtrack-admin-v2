@@ -4,6 +4,7 @@ import type { HintType } from '../../domain/values/hint-type';
 import type { HintEditorMode } from '../workflows/hint-editor.mode';
 interface HintContent {
   readonly language: SupportedLocale;
+  readonly languages?: ReadonlyArray<SupportedLocale>;
   readonly text?: string;
   readonly fileKey?: string;
 }
@@ -23,6 +24,7 @@ export type SaveHintCommand = { readonly owner: HintOwner } & (
       readonly hintId: string;
       readonly type: HintType;
       readonly fileKey: string;
+      readonly languages?: ReadonlyArray<SupportedLocale>;
     }
   | { readonly mode: typeof HintEditorMode.Delete; readonly hintId: string }
 );

@@ -4,7 +4,11 @@ Movies and TV series share the Hints feature in the catalog detail Line tabs. Hi
 
 ## Content by type
 
-Actor and Frame use one JPEG/PNG image and have no text input. Year, Quote and Plot require text and cannot select or upload files. The image is shared across every translation of a hint; adding a language inherits it. Replacing the image updates all translations. The editor explains this before selection.
+Actor and Frame use one JPEG/PNG image and have no text input. Year, Quote and Plot require text and cannot select or upload files. The image is shared across every translation of a hint; adding a language inherits it. Replacing the image updates all translations. Actor and Frame do not show a language selector: creation and image replacement ensure an info row exists for every supported locale before uploading the shared image. Legacy visual hints can add missing locales without selecting a language. The editor explains this before image selection.
+
+Text hints reuse the soundtrack CheckboxChoice controls for multi-language selection and select-all/clear actions. One text is saved into each selected locale, without automatic translation. Editing explicitly replaces the text in selected existing translations only. Translation creation offers only missing locales. Removing a selection does not delete existing translations.
+
+The API still accepts one language per mutation. The application serializes creation and additional translation requests on one hint identity, then uploads once if needed. Each successful response updates the checkpoint and visible hint list. Retrying a partial save first reloads the owner’s hints to reconcile a translation whose response may have been lost, then completes only missing translations or text changes. The editor locks the submitted text and languages after a checkpoint and reports success only after the full workflow succeeds. Closing after a partial failure refreshes the hint list.
 
 Image selection reuses FileDropzone and FileAttachment (Spartan Attachment). A selected file replaces the drop target, with a contained preview and a removal action. Validation checks a single file, extension, MIME type, signature, nonzero size, the 10 MiB limit and browser decoding. Object URLs and files held outside NgRx are released when replaced or when the editor is destroyed.
 

@@ -109,7 +109,7 @@ describe('Hint editor', () => {
   }
   it('requires content and displays a fixed price without accepting a price input', async () => {
     const { fixture, form, text } = await open();
-    expect(form.querySelector('input')).toBeNull();
+    expect(form.querySelector('input[type="number"]')).toBeNull();
     expect(form.textContent).toContain('300');
     fill(text, '   ');
     form.dispatchEvent(new Event('submit', { cancelable: true }));
@@ -124,8 +124,33 @@ describe('Hint editor', () => {
       type: HintType.Plot,
       language: SupportedLocale.English,
       text: 'A clue',
+      languages: [SupportedLocale.English],
     });
     expect(text.disabled).toBe(true);
+  });
+  it('selects all languages for the same text and rejects an empty selection', async () => {
+    const { fixture, form, text } = await open();
+    fill(text, 'Shared clue');
+    const choices = form.querySelectorAll<HTMLElement>('app-checkbox-choice button');
+    expect(choices).toHaveLength(2);
+    choices[1].click();
+    fixture.detectChanges();
+    form.dispatchEvent(new Event('submit', { cancelable: true }));
+    expect(save).not.toHaveBeenCalled();
+    const selectAll = Array.from(form.querySelectorAll<HTMLButtonElement>('button')).find(
+      (button) => button.textContent.includes('Select all languages'),
+    )!;
+    selectAll.click();
+    fixture.detectChanges();
+    form.dispatchEvent(new Event('submit', { cancelable: true }));
+    expect(save).toHaveBeenCalledWith(
+      'panel',
+      expect.any(String),
+      expect.objectContaining({
+        languages: [SupportedLocale.Italian, SupportedLocale.English],
+        text: 'Shared clue',
+      }),
+    );
   });
   it('retains entered content and shows an API error when editing fails', async () => {
     const { fixture, form, text, closed } = await open(HintEditorMode.Edit);
@@ -174,6 +199,8 @@ describe('Hint editor', () => {
     async (type) => {
       const { fixture, form } = await open(HintEditorMode.Create, type);
       expect(form.querySelector('textarea')).toBeNull();
+      expect(form.querySelector('app-checkbox-choice')).toBeNull();
+      expect(form.querySelectorAll('app-select')).toHaveLength(1);
       expect(form.querySelector('app-file-dropzone')).not.toBeNull();
       form.dispatchEvent(new Event('submit', { cancelable: true }));
       fixture.detectChanges();
@@ -191,7 +218,8 @@ describe('Hint editor', () => {
         mode: HintEditorMode.Create,
         owner: createHintCommand().owner,
         type,
-        language: SupportedLocale.English,
+        language: SupportedLocale.Italian,
+        languages: [SupportedLocale.Italian, SupportedLocale.English],
         fileKey: 'file-key',
       });
     },
