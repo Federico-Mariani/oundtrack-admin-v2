@@ -27,12 +27,14 @@ import { isHintType } from '../../../domain/values/hint-type';
 import type { HintEditorParams } from './hint-editor-params';
 import { NotificationService } from '@app/core/notifications/notification.service';
 import { RequestErrorCode } from '@shared/state/request/request-error';
-import { type SupportedLocale, SUPPORTED_LOCALES } from '@shared/localization/supported-locale';
+import { SUPPORTED_LOCALES, type SupportedLocale } from '@shared/localization/supported-locale';
 import { ModalFrame } from '@shared/ui/modal/modal-frame';
 import type { ModalContent } from '@shared/ui/modal/modal-content';
 import { Button } from '@shared/ui/button/button';
 import { Select } from '@shared/ui/select/select';
 import { Textarea } from '@shared/ui/textarea/textarea';
+import Heading3 from '@shared/ui/typography/heading-3/heading-3';
+
 @Component({
   selector: 'app-hint-editor',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +48,7 @@ import { Textarea } from '@shared/ui/textarea/textarea';
     HintImageField,
     HintIcon,
     UploadProgress,
+    Heading3,
   ],
   providers: [
     HintImageSelection,

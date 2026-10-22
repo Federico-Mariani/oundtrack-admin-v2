@@ -5,16 +5,17 @@
   <div class="flex flex-wrap items-center gap-4 p-4 pe-8">
     <app-hint-icon [src]="hint().icon" />
     <div class="min-w-0 flex-1 space-y-2">
+      <h3 class="font-semibold">{{ t('types.' + hint().type) }}</h3>
       <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-        <h3 class="font-semibold">{{ t('types.' + hint().type) }}</h3>
+        <app-language-tags [languages]="languages()" />
         <span
           class="inline-flex items-center gap-1.5 text-sm text-muted-foreground"
           [attr.aria-label]="t('cost') + ': ' + hint().cost"
         >
-          <ng-icon name="lucideCoins" aria-hidden="true" />{{ hint().cost }}
+          <ng-icon name="lucideCoins" aria-hidden="true" />
+          {{ hint().cost }}
         </span>
       </div>
-      <app-language-tags [languages]="languages()" />
     </div>
     <div class="flex items-center gap-2">
       <app-button

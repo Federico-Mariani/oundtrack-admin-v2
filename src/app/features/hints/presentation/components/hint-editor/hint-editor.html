@@ -25,7 +25,7 @@
       @if (type(); as type) {
         <div class="flex items-center gap-4 rounded-lg bg-muted/50 p-4">
           <app-hint-icon [src]="icon()" />
-          <span class="font-medium">{{ t('types.' + type) }}</span>
+          <app-heading-3 [text]="t('types.' + type)" />
         </div>
       }
       @if (iconsError() && params.mode === modes.Create) {
@@ -105,12 +105,14 @@
         [loading]="busy()"
         [disabled]="busy() || selection.checking() || uncertain()"
         buttonClass="h-11 w-full"
-      /><app-button
+      />
+      <app-button
         [text]="t('cancel')"
         variant="outline"
         [disabled]="busy()"
         buttonClass="h-11 w-full"
         (click)="ref.close(false)"
       />
-    </div></form
-></app-modal-frame>
+    </div>
+  </form>
+</app-modal-frame>
