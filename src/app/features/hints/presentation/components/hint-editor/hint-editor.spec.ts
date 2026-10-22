@@ -1,6 +1,8 @@
+import { HintImageSelection } from '../../uploads/hint-image-selection';
 import {
   ChangeDetectionStrategy,
   Component,
+  getDebugNode,
   inject,
   signal,
   ViewContainerRef,
@@ -59,7 +61,13 @@ describe('Hint editor', () => {
         {
           provide: HintsFacade,
           useValue: {
-            data: { saveId },
+            data: {
+              saveId,
+              phase: signal('idle'),
+              progress: signal(null),
+              preparedHint: signal(null),
+              creationUncertain: signal(false),
+            },
             requests: { save: { isLoading: busy, isSuccess: success, error } },
             actions: { resetSave: vi.fn(), save },
           },
@@ -68,7 +76,10 @@ describe('Hint editor', () => {
     });
   });
   afterEach(() => TestBed.resetTestingModule());
-  async function open(mode: HintEditorMode = HintEditorMode.Create) {
+  async function open(
+    mode: HintEditorMode = HintEditorMode.Create,
+    type: HintType = HintType.Plot,
+  ) {
     const fixture = TestBed.createComponent(HintEditorTestHost);
     const ref = TestBed.inject(ModalService).open(
       HintEditor,
@@ -77,8 +88,8 @@ describe('Hint editor', () => {
         owner: createHintCommand().owner,
         mode,
         locale: SupportedLocale.English,
-        availableTypes: [HintType.Plot],
-        hint: mode === HintEditorMode.Create ? undefined : hintFixture(),
+        availableTypes: [type],
+        hint: mode === HintEditorMode.Create ? undefined : { ...hintFixture(), type },
       },
       { viewContainerRef: fixture.componentInstance.container, disableClose: true },
     );
@@ -116,7 +127,7 @@ describe('Hint editor', () => {
     });
     expect(text.disabled).toBe(true);
   });
-  it('retains entered content and shows an error when edit is unavailable', async () => {
+  it('retains entered content and shows an API error when editing fails', async () => {
     const { fixture, form, text, closed } = await open(HintEditorMode.Edit);
     fill(text, 'Changed clue');
     form.dispatchEvent(new Event('submit', { cancelable: true }));
@@ -126,7 +137,7 @@ describe('Hint editor', () => {
     fixture.detectChanges();
     expect(text.value).toBe('Changed clue');
     expect(closed).not.toHaveBeenCalled();
-    expect(form.textContent).toContain('Editing is not available yet');
+    expect(form.textContent).toContain('The operation could not be completed');
     expect(notifications.error).toHaveBeenCalledTimes(1);
   });
   it('closes and notifies only after the request succeeds', async () => {
@@ -158,4 +169,31 @@ describe('Hint editor', () => {
       }),
     );
   });
+  it.each([HintType.Actor, HintType.Frame])(
+    'replaces the text field with a single image picker for %s',
+    async (type) => {
+      const { fixture, form } = await open(HintEditorMode.Create, type);
+      expect(form.querySelector('textarea')).toBeNull();
+      expect(form.querySelector('app-file-dropzone')).not.toBeNull();
+      form.dispatchEvent(new Event('submit', { cancelable: true }));
+      fixture.detectChanges();
+      expect(save).not.toHaveBeenCalled();
+      const editor = document.querySelector('app-hint-editor')!;
+      const selection = getDebugNode(editor)!.injector.get(HintImageSelection);
+      selection.fileKey.set('file-key');
+      selection.name.set('image.png');
+      fixture.detectChanges();
+      expect(form.querySelector('app-file-dropzone')).toBeNull();
+      expect(form.querySelector('app-file-attachment')).not.toBeNull();
+      form.dispatchEvent(new Event('submit', { cancelable: true }));
+      fixture.detectChanges();
+      expect(save).toHaveBeenCalledWith('panel', expect.any(String), {
+        mode: HintEditorMode.Create,
+        owner: createHintCommand().owner,
+        type,
+        language: SupportedLocale.English,
+        fileKey: 'file-key',
+      });
+    },
+  );
 });

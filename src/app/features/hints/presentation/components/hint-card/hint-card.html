@@ -34,7 +34,7 @@
           [fallback]="t('imageUnavailable')"
         />
       }
-      @if (info.text) {
+      @if (info.text && !visual()) {
         <p class="whitespace-pre-wrap wrap-break-word text-sm leading-7">{{ info.text }}</p>
       }
     } @else {

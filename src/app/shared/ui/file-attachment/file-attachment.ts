@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideFileAudio, lucideX } from '@ng-icons/lucide';
+import { lucideFileAudio, lucideImage, lucideX } from '@ng-icons/lucide';
 import { HlmAttachmentImports } from '@spartan-ng/helm/attachment';
 import { FileAttachmentState } from './file-attachment-state';
 @Component({
   selector: 'app-file-attachment',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [HlmAttachmentImports, NgIcon],
-  providers: [provideIcons({ lucideFileAudio, lucideX })],
+  providers: [provideIcons({ lucideFileAudio, lucideImage, lucideX })],
   host: { class: 'block min-w-0' },
   template: `
     <div

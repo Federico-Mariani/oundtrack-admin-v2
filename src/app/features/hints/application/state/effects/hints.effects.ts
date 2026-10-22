@@ -1,3 +1,5 @@
+import { saveHintWorkflow } from '../workflows/save-hint.workflow';
+import { HintSaveEventKind } from '../workflows/hint-save-event.workflow';
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -6,6 +8,7 @@ import type { RequestError } from '@shared/state/request/request-error';
 import { HINTS_REPOSITORY } from '../../tokens/hints-repository.token';
 import { hintsFeature } from '../hints.feature';
 import {
+  HintsSaveProgressEvents,
   HintsPanelEvents as panel,
   HintsLoadActions as load,
   HintsSaveActions as save,
@@ -45,8 +48,12 @@ export const saveHint = createEffect(
           state().sessionId === sessionId && state().saveId === requestId,
       ),
       exhaustMap(({ sessionId, requestId, command }) =>
-        repository.save(command).pipe(
-          map((hint) => save.succeeded({ sessionId, requestId, hint })),
+        saveHintWorkflow(repository, command, state()).pipe(
+          map((event) =>
+            event.kind === HintSaveEventKind.Completed
+              ? save.succeeded({ sessionId, requestId, hint: event.hint })
+              : HintsSaveProgressEvents.changed({ sessionId, requestId, event }),
+          ),
           catchError((error: RequestError) => of(save.failed({ sessionId, requestId, error }))),
           takeUntil(
             actions$.pipe(

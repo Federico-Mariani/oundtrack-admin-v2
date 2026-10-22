@@ -7,7 +7,7 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { of } from 'rxjs';
-import { DirectAudioUpload } from './direct-audio-upload';
+import { DirectFileUpload } from './direct-file-upload';
 describe('Direct audio transport', () => {
   it('sends raw bytes without API interceptors and only reports completion after the storage response', () => {
     const intercepted = vi.fn();
@@ -33,7 +33,7 @@ describe('Direct audio transport', () => {
       );
     const file = new File(['ID3audio'], 'audio.mp3');
     const progress: Array<number> = [];
-    TestBed.inject(DirectAudioUpload)
+    TestBed.inject(DirectFileUpload)
       .put('https://storage.test/signed', { 'Content-Type': 'audio/mpeg' }, file)
       .subscribe((value) => progress.push(value));
     const request = transport.mock.calls[0][0];

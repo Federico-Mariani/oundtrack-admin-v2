@@ -12,14 +12,13 @@
   "type": "Tipo di indizio",
   "language": "Lingua",
   "text": "Contenuto dell’indizio",
-  "imageNote": "L’illustrazione viene assegnata automaticamente in base al tipo.",
+  "imageNote": "Icona e costo sono assegnati automaticamente in base al tipo.",
   "required": "Inserisci il contenuto dell’indizio.",
   "cancel": "Annulla",
   "save": "Salva indizio",
   "allTypes": "Sono stati creati tutti i tipi di indizio.",
   "deleteDescription": "L’indizio e tutte le sue traduzioni verranno eliminati definitivamente.",
   "failed": "Operazione non riuscita. I dati inseriti sono stati conservati.",
-  "editUnavailable": "La modifica non è ancora disponibile. I dati inseriti sono stati conservati.",
   "conflict": "Questo tipo di indizio o questa lingua esiste già. Ricarica gli indizi per vedere i dati aggiornati.",
   "success": "Indizio salvato.",
   "deleted": "Indizio eliminato.",
@@ -45,5 +44,31 @@
   "visualHint": "Indizio visivo",
   "textHint": "Indizio testuale",
   "imageUnavailable": "Immagine non disponibile",
-  "fixedCost": "Costo fisso associato al tipo di indizio."
+  "fixedCost": "Costo fisso associato al tipo di indizio.",
+  "image": {
+    "title": "Immagine dell’indizio",
+    "shared": "L’immagine è condivisa tra tutte le lingue di questo indizio. Sostituirla aggiorna tutte le traduzioni.",
+    "preview": "Anteprima dell’indizio",
+    "removeSelection": "Rimuovi il file selezionato",
+    "replace": "Trascina qui una nuova immagine per sostituire quella attuale",
+    "drop": "Trascina qui l’immagine",
+    "formats": "Un file JPG o PNG, massimo 10 MB.",
+    "browse": "Scegli immagine",
+    "checking": "Verifica dell’immagine…",
+    "invalid": "Il file non è un’immagine JPG/PNG valida oppure supera 10 MB.",
+    "single": "Seleziona una sola immagine.",
+    "required": "Seleziona l’immagine da caricare.",
+    "description": "Carica un’immagine per questo indizio. Il testo non è richiesto.",
+    "resume": "L’indizio è già stato salvato. Riprova per completare il caricamento senza crearlo di nuovo.",
+    "uncertain": "Non è stato possibile verificare il salvataggio. Chiudi questa finestra e controlla la lista aggiornata prima di riprovare.",
+    "phases": {
+      "preparing": "Preparazione del salvataggio…",
+      "uploading": "Caricamento dell’immagine…",
+      "confirming": "Conferma dell’immagine…",
+      "done": "Caricamento completato",
+      "idle": "In attesa"
+    },
+    "confirmFailed": "Impossibile confermare l’immagine. Riprova per completare il salvataggio.",
+    "uploadFailed": "Caricamento non riuscito. Controlla la connessione e riprova."
+  }
 }

@@ -1,3 +1,4 @@
+import { isImageHint } from '../../../domain/values/hint-image-policy';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
@@ -49,6 +50,7 @@ export class HintCard {
     )
       this.manage.emit(value);
   }
+  protected readonly visual = computed(() => isImageHint(this.hint().type));
   protected readonly modes = HintEditorMode;
   protected readonly info = computed(() =>
     this.hint().info.find((info) => info.language === this.locale()),

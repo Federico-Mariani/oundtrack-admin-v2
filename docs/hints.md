@@ -1,39 +1,49 @@
 # Catalog hints
 
-Movies and TV series share the Hints feature through the catalog detail tabs. The panel is loaded on first use and stays mounted when switching tabs. Switching tabs pauses soundtrack playback. Initial loading uses skeletons; refresh preserves the current list. Saving or closing a hint dialog never reloads the movie or series detail.
+Movies and TV series share the Hints feature in the catalog detail Line tabs. Hint mutations update the hint list without reloading the movie/series modal. Initial loading uses skeletons; refresh preserves current content. Card language badges use the shared LanguageTags component.
 
-## Backend contract
+## Content by type
 
-Verified against `oundtrack-api-v2` master, `src/modules/hints`.
+Actor and Frame use one JPEG/PNG image and have no text input. Year, Quote and Plot require text and cannot select or upload files. The image is shared across every translation of a hint; adding a language inherits it. Replacing the image updates all translations. The editor explains this before selection.
 
-| Operation                                   | Endpoint                     | Body                                                               |
-| ------------------------------------------- | ---------------------------- | ------------------------------------------------------------------ |
-| List                                        | `GET /hints/owner/{ownerId}` | None; response includes all translations                           |
-| Create                                      | `POST /hints`                | `ownerId`, `ownerType`, `type`, `cost`, `icon`, `language`, `text` |
-| Add translation                             | `POST /hints/{id}/info`      | `language`, `text`                                                 |
-| Delete hint                                 | `DELETE /hints/{id}`         | None; 204                                                          |
-| Edit (proposed, not implemented by backend) | `PATCH /hints/{id}`          | `type`, `cost`, `icon`, `language`, `text`                         |
+Image selection reuses FileDropzone and FileAttachment (Spartan Attachment). A selected file replaces the drop target, with a contained preview and a removal action. Validation checks a single file, extension, MIME type, signature, nonzero size, the 10 MiB limit and browser decoding. Object URLs and files held outside NgRx are released when replaced or when the editor is destroyed.
 
-Owner types are `movie` and `tv_series`. A type can occur only once per owner. Costs are fixed by type: Actor 200, Plot 300, Frame 300, Quote 200 and Year 100. The domain HINT_COSTS map is shared by the editor and HTTP request mapping; commands never accept a caller-provided cost. Existing records continue to display the stored API cost until updated; adding a translation does not change it. The UI normalizes `en-US` to the backend's `en-EN`. A translation cannot be added twice. Create and translation responses contain the updated hint and are applied to the local list without another GET.
+## API contract
 
-The editor requires text content. Existing image content is displayed when supplied by the API. The illustration identifying a hint type is separate from its clue content: a frame illustration is not a film still. There is no image upload control. Image-only hint creation is not part of this text-based editor.
+Verified against `oundtrack-api-v2` master and `docs/api/hint-images.md`.
 
-Edit intentionally issues PATCH and retains the form on failure. A 404/405 explains that editing is not yet available. There is no destructive delete/recreate fallback. The future endpoint must return `{ data: HintResponseDto }` containing the complete hint and translations. Confirm this proposed payload with the backend when implementing it.
+| Operation            | Endpoint                            | Body                                                              |
+| -------------------- | ----------------------------------- | ----------------------------------------------------------------- |
+| List                 | `GET /hints/owner/{ownerId}`        | None                                                              |
+| Create               | `POST /hints`                       | `ownerId`, `ownerType`, `type`, `language`; `text` for text hints |
+| Add translation      | `POST /hints/{id}/info`             | `language`; `text` for text hints                                 |
+| Edit text            | `PATCH /hints/{id}`                 | `language`, `text`                                                |
+| Request image upload | `POST /hints/{id}/image/upload-url` | `contentType`                                                     |
+| Transfer image       | Returned signed S3 URL, `PUT`       | Raw file bytes and returned headers                               |
+| Confirm image        | `POST /hints/{id}/image/complete`   | Same `contentType`                                                |
+| Delete hint          | `DELETE /hints/{id}`                | None; 204; backend deletes owned images                           |
 
-## Fixed illustrations and storage prerequisite
+Owner types are `movie` and `tv_series`. English UI locale `en-US` maps to API `en-EN`. The server assigns icon and cost; the Admin never submits icon, image path or cost. The read-only UI price map remains Actor 200, Plot 300, Frame 300, Quote 200, Year 100. There is no bulk rewrite of existing records.
 
-Five bundled SVG illustrations live in `public/assets/hints/`: actor, year, frame, quote and plot. The editor previews these illustrations; list cards use theme-aware Lucide icons and the shared language tags. `HINT_ICONS` centralizes the corresponding backend object keys: `hints/icons/{type}.svg`.
+Server-assigned icon keys are `hints/icons/{type}_icon.png`; these assets must exist in the configured bucket. Client-generated SVG icons and their obsolete key mapping have been removed. Image keys are assigned by the backend as `hints/{ownerId}/{hintId}.jpg` or `.png`. Response images and icons are already signed URLs and are never sent back as object keys.
 
-The backend signs `icon` as a storage object key. **Before production use, publish these five SVG files into the backend's media storage at those keys**, with `image/svg+xml` content type and the existing media access configuration. These keys are a new convention, not verified existing storage objects. Update the centralized mapping if deployment uses different keys. The Admin does not upload them during hint creation. Signed response URLs are never sent back as object keys.
+## Upload lifecycle and recovery
 
-## State and failure handling
+1. Validate and preview a selected image locally.
+2. Create the hint or add its translation, if necessary. Retain the returned hint as a checkpoint and immediately reconcile the list.
+3. Obtain an upload URL and send the raw file through DirectFileUpload, the same XHR transport used by soundtracks. This bypasses API interceptors, bearer tokens and locale headers while reporting upload progress.
+4. Confirm the upload. Only a successful confirmation closes the modal and displays success. The loader remains active through metadata saving, transfer and confirmation.
 
-The feature owns domain values/models, command and repository port, HTTP DTO mapping, NgRx requests/effects/facades, and presentation. Every load and mutation is correlated with panel session and request ID. Duplicate submissions and requests for the wrong owner are ignored; closing a session invalidates outstanding results. Mutations cancel older reads so stale data cannot replace a successful write. API errors remain separate per operation and preserve the editor's input. A delete requires an explicit confirmation dialog.
+Upload errors retain the selection and metadata checkpoint. Retrying a failed transfer requests a fresh URL without creating the hint or translation again. If only confirmation failed, retry confirmation without another PUT. A confirmation 409 clears the uploaded-file checkpoint and allows a new upload. Selecting a different file always starts a new transfer.
 
-No live backend or storage mutation is performed by automated checks. HTTP contract tests and workflow tests exercise both owner types, locale mapping, future edit errors, conflicts, deletion, retry, stale responses and duplicate submissions.
+An ambiguous network/server failure before receiving a creation response disables blind resubmission. Closing the editor refreshes the hint list so the user can reconcile the result. Partial hint creation remains visible and can be completed from its edit action. Cancellation does not pretend to roll back server-side work.
 
-## Requested follow-up
+Session and request IDs reject stale results and duplicate submissions. Writes are serialized within the panel; close and file selection controls are disabled during saving. Destroying the owner cancels subscriptions. Browser File objects stay in UploadFiles, not in NgRx state.
 
-The detail tabs now use Spartan's Line variant. Hint cards separate the clue content from cost and actions, use a reusable action menu, and display existing clue images without cropping.
+## Deployment and verification limits
 
-Image upload is not implemented yet. The current backend accepts a supplied cost and an existing storage object key, but has no hint-image upload endpoint or authoritative per-type price catalog. The user-supplied costs now replace the editable price field. The API still needs its own enforcement to prevent other clients from sending arbitrary prices. Actor and Frame require a visual-content editor and an end-to-end upload contract; a local file preview must not be presented as a completed upload.
+The API must include the image endpoints and updated create/PATCH DTOs. S3 CORS must permit PUT and Content-Type from the Admin origin, and the API identity needs the documented S3 permissions. No AWS resources are modified by this change.
+
+The fixed storage key means replacing a file may overwrite S3 before confirmation. Existing CloudFront caches may continue serving an older image until invalidation/expiry. The client does not change signed query strings or claim distributed rollback. Backend upload cleanup and CDN cache policy remain operational concerns documented by the API project.
+
+Automated checks cover current HTTP payloads, image-only UI, validation/decoding/resource cleanup, retry checkpoints, progress, confirmation, stale results and text-hint rejection. They do not perform live storage writes.

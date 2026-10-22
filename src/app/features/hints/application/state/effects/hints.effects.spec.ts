@@ -1,3 +1,5 @@
+import { HintType } from '../../../domain/values/hint-type';
+import { HintSavePhase } from '../../workflows/hint-save.phase';
 import { TestBed } from '@angular/core/testing';
 import { Actions } from '@ngrx/effects';
 import { provideStore, ScannedActionsSubject, Store } from '@ngrx/store';
@@ -22,6 +24,8 @@ describe('Hints workflow concurrency and lifecycle', () => {
   let reading: Subject<ReadonlyArray<HintModel>>;
   let writing: Subject<HintModel | null>;
   const repository = {
+    uploadImage: vi.fn<HintsRepositoryPort['uploadImage']>(),
+    completeImage: vi.fn<HintsRepositoryPort['completeImage']>(),
     getByOwner: vi.fn<HintsRepositoryPort['getByOwner']>(),
     save: vi.fn<HintsRepositoryPort['save']>(),
   };
@@ -157,5 +161,140 @@ describe('Hints workflow concurrency and lifecycle', () => {
     expect(state().hints).toHaveLength(1);
     writing.next(null);
     expect(state().hints).toEqual([]);
+  });
+  const imageCommand = () =>
+    ({
+      mode: HintEditorMode.Create,
+      owner,
+      type: HintType.Actor,
+      language: hintFixture().info[0].language,
+      fileKey: 'image',
+    }) as const;
+  const visualHint = () => ({ ...hintFixture(), type: HintType.Actor });
+  const submitImage = (requestId = 'image') => {
+    store.dispatch(save.requested({ sessionId: 'panel', requestId, command: imageCommand() }));
+  };
+  it('waits for PUT completion before confirming and keeps save pending through confirmation', () => {
+    const upload = new Subject<number>(),
+      confirmation = new Subject<HintModel>();
+    repository.uploadImage.mockReturnValue(upload);
+    repository.completeImage.mockReturnValue(confirmation);
+    submitImage();
+    writing.next(visualHint());
+    writing.complete();
+    upload.next(42);
+    expect(state().progress).toBe(42);
+    expect(state().hints).toEqual([visualHint()]);
+    expect(repository.completeImage).not.toHaveBeenCalled();
+    upload.next(100);
+    expect(repository.completeImage).not.toHaveBeenCalled();
+    upload.complete();
+    expect(state().phase).toBe(HintSavePhase.Confirming);
+    expect(isRequestPending(state().saveRequest)).toBe(true);
+    const result = {
+      ...visualHint(),
+      info: [{ ...hintFixture().info[0], image: 'https://media.test/image.jpg' }],
+    };
+    confirmation.next(result);
+    confirmation.complete();
+    expect(state().hints).toEqual([result]);
+    expect(isRequestPending(state().saveRequest)).toBe(false);
+  });
+  it('retries a failed PUT without creating the hint twice', () => {
+    const upload = new Subject<number>();
+    repository.uploadImage.mockReturnValue(upload);
+    submitImage();
+    writing.next(visualHint());
+    writing.complete();
+    upload.error({ code: RequestErrorCode.Network });
+    expect(state().preparedHint?.id).toBe('hint');
+    expect(state().creationUncertain).toBe(false);
+    const retry = new Subject<number>();
+    repository.uploadImage.mockReturnValue(retry);
+    submitImage('retry');
+    expect(repository.save).toHaveBeenCalledTimes(1);
+    expect(repository.uploadImage).toHaveBeenCalledTimes(2);
+  });
+  it('retries confirmation without uploading the same file again', () => {
+    const upload = new Subject<number>(),
+      confirmation = new Subject<HintModel>();
+    repository.uploadImage.mockReturnValue(upload);
+    repository.completeImage.mockReturnValue(confirmation);
+    submitImage();
+    writing.next(visualHint());
+    writing.complete();
+    upload.complete();
+    confirmation.error({ code: RequestErrorCode.Network });
+    repository.completeImage.mockReturnValue(new Subject());
+    submitImage('retry');
+    expect(repository.save).toHaveBeenCalledTimes(1);
+    expect(repository.uploadImage).toHaveBeenCalledTimes(1);
+    expect(repository.completeImage).toHaveBeenCalledTimes(2);
+  });
+  it('requests a fresh upload after the server rejects the uploaded object', () => {
+    const upload = new Subject<number>(),
+      confirmation = new Subject<HintModel>();
+    repository.uploadImage.mockReturnValue(upload);
+    repository.completeImage.mockReturnValue(confirmation);
+    submitImage();
+    writing.next(visualHint());
+    writing.complete();
+    upload.complete();
+    confirmation.error({ code: RequestErrorCode.Conflict, status: 409 });
+    repository.uploadImage.mockReturnValue(new Subject());
+    submitImage('retry');
+    expect(repository.uploadImage).toHaveBeenCalledTimes(2);
+  });
+  it('replaces an existing visual hint without creating or patching its text', () => {
+    read();
+    reading.next([visualHint()]);
+    reading.complete();
+    repository.uploadImage.mockReturnValue(new Subject());
+    store.dispatch(
+      save.requested({
+        sessionId: 'panel',
+        requestId: 'replace',
+        command: {
+          mode: HintEditorMode.Image,
+          owner,
+          hintId: 'hint',
+          type: HintType.Actor,
+          fileKey: 'image',
+        },
+      }),
+    );
+    expect(repository.save).not.toHaveBeenCalled();
+    expect(repository.uploadImage).toHaveBeenCalledWith('hint', 'image');
+  });
+  it('rejects uploads for a text-only type', () => {
+    store.dispatch(
+      save.requested({
+        sessionId: 'panel',
+        requestId: 'invalid',
+        command: { ...imageCommand(), type: HintType.Plot },
+      }),
+    );
+    expect(repository.save).not.toHaveBeenCalled();
+    expect(repository.uploadImage).not.toHaveBeenCalled();
+    expect(state().saveRequest.error?.code).toBe(RequestErrorCode.Validation);
+  });
+  it('blocks blind resubmission after an ambiguous create failure', () => {
+    submitImage();
+    writing.error({ code: RequestErrorCode.Network });
+    expect(state().creationUncertain).toBe(true);
+    submitImage('retry');
+    expect(repository.save).toHaveBeenCalledTimes(1);
+  });
+  it('cancels an active upload when its panel closes and discards late progress', () => {
+    const upload = new Subject<number>();
+    repository.uploadImage.mockReturnValue(upload);
+    submitImage();
+    writing.next(visualHint());
+    writing.complete();
+    store.dispatch(panel.closed({ sessionId: 'panel' }));
+    upload.next(90);
+    upload.complete();
+    expect(state().progress).toBeNull();
+    expect(repository.completeImage).not.toHaveBeenCalled();
   });
 });

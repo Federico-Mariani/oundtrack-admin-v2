@@ -1,0 +1,52 @@
+<section *transloco="let t; prefix: 'hints.editor'" class="space-y-4">
+  <div class="space-y-1">
+    <h3 class="text-sm font-medium">{{ t('image.title') }}</h3>
+    <p class="text-sm leading-relaxed text-muted-foreground">{{ t('image.shared') }}</p>
+  </div>
+  @if (selection().preview() || existingImage(); as image) {
+    <app-media-image
+      class="aspect-video w-full rounded-lg"
+      [contain]="true"
+      [src]="image"
+      [alt]="t('image.preview')"
+      [fallback]="t('imageUnavailable')"
+    />
+  }
+  @if (selection().fileKey()) {
+    <app-file-attachment
+      [name]="selection().name()"
+      [description]="selection().size() + ' MB'"
+      icon="lucideImage"
+      [removeLabel]="t('image.removeSelection')"
+      [disabled]="disabled()"
+      [state]="disabled() ? attachmentStates.Processing : attachmentStates.Idle"
+      (removed)="remove()"
+    />
+  } @else {
+    <app-file-dropzone
+      accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+      [title]="t(existingImage() ? 'image.replace' : 'image.drop')"
+      [description]="t('image.formats')"
+      [browseLabel]="t('image.browse')"
+      [disabled]="disabled() || selection().checking()"
+      [invalid]="selection().invalid() || selection().multiple() || (submitted() && required())"
+      describedBy="hint-image-errors"
+      (selected)="choose($event)"
+      (multipleRejected)="selection().multiple.set(true)"
+    />
+  }
+  <div id="hint-image-errors" aria-live="polite" class="space-y-1 text-sm text-destructive">
+    @if (selection().checking()) {
+      <p class="text-muted-foreground" role="status">{{ t('image.checking') }}</p>
+    }
+    @if (selection().invalid()) {
+      <p>{{ t('image.invalid') }}</p>
+    }
+    @if (selection().multiple()) {
+      <p>{{ t('image.single') }}</p>
+    }
+    @if (submitted() && required() && !selection().fileKey() && !selection().checking()) {
+      <p>{{ t('image.required') }}</p>
+    }
+  </div>
+</section>

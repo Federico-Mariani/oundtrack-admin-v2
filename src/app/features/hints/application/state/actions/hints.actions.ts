@@ -1,3 +1,4 @@
+import type { HintSaveEvent } from '../workflows/hint-save-event.workflow';
 import { createActionGroup, props } from '@ngrx/store';
 import { createRequestActions } from '@shared/state/ngrx/create-request-actions';
 import type { RequestError } from '@shared/state/request/request-error';
@@ -23,3 +24,8 @@ export const HintsSaveActions = createRequestActions<
   { sessionId: string; requestId: string; hint: HintModel | null },
   { sessionId: string; requestId: string; error: RequestError }
 >(HINTS_STATE_DEFINITION.source, HintsRequestOperation.Save);
+
+export const HintsSaveProgressEvents = createActionGroup({
+  source: `${HINTS_STATE_DEFINITION.source} ${HintsRequestOperation.Save} Progress` as const,
+  events: { Changed: props<{ sessionId: string; requestId: string; event: HintSaveEvent }>() },
+});

@@ -92,6 +92,7 @@ export class HintsPanel {
       )
       .closed$.subscribe(() => {
         this.editorOpen = false;
+        if (this.facade.data.creationUncertain()) this.reload();
       });
   }
 }

@@ -7,7 +7,7 @@ import { environment } from '@environments/environment';
 import { toApiLocales } from '@app/core/http/api-locale.mapper';
 import type { ApiResponse } from '@app/core/http/api-response';
 import { toRequestError } from '@app/core/http/http-error.mapper';
-import { DirectAudioUpload } from '@app/core/uploads/direct-audio-upload';
+import { DirectFileUpload } from '@app/core/uploads/direct-file-upload';
 import { UploadFiles } from '@app/core/uploads/upload-files';
 import type { SupportedLocale } from '@shared/localization/supported-locale';
 import type { SoundtracksRepositoryPort } from '../../application/ports/soundtracks-repository.port';
@@ -22,7 +22,7 @@ import { toSoundtrackTrack } from '@app/core/catalog/mappers/soundtrack-track.ma
 @Injectable()
 export class HttpSoundtracksRepository implements SoundtracksRepositoryPort {
   private readonly http = inject(HttpClient);
-  private readonly direct = inject(DirectAudioUpload);
+  private readonly direct = inject(DirectFileUpload);
   private readonly files = inject(UploadFiles);
   private readonly baseUrl = environment.apiUrl + '/soundtracks';
 

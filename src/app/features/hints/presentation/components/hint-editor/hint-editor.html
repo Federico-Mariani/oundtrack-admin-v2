@@ -1,7 +1,11 @@
 <app-modal-frame
   *transloco="let t; prefix: 'hints.editor'"
   [title]="t('modes.' + params.mode)"
-  [description]="params.mode === modes.Delete ? t('deleteDescription') : t('imageNote')"
+  [description]="
+    params.mode === modes.Delete
+      ? t('deleteDescription')
+      : t(visual() ? 'image.description' : 'imageNote')
+  "
   [closeDisabled]="busy()"
 >
   <form class="mt-7 space-y-6" (submit)="submit($event)">
@@ -13,17 +17,14 @@
             [items]="typeItems()"
             [value]="type()"
             [ariaLabel]="t('type')"
-            [disabled]="busy()"
+            [disabled]="metadataLocked()"
             (valueChange)="changeType($event)"
           />
         </div>
       }
       @if (type(); as type) {
         <div class="flex items-center gap-4 rounded-lg bg-muted/50 p-4">
-          <img class="size-14 shrink-0" [src]="'/assets/hints/' + type + '.svg'" alt="" /><span
-            class="font-medium"
-            >{{ t('types.' + type) }}</span
-          >
+          <span class="font-medium">{{ t('types.' + type) }}</span>
         </div>
       }
       <div class="grid gap-6">
@@ -33,7 +34,7 @@
             [items]="languageItems()"
             [value]="locale()"
             [ariaLabel]="t('language')"
-            [disabled]="busy() || params.mode === modes.Edit"
+            [disabled]="metadataLocked() || params.mode === modes.Edit"
             (valueChange)="changeLanguage($event)"
           />
         </div>
@@ -45,7 +46,23 @@
           </div>
         }
       </div>
-      <app-textarea [formField]="fields.text" [label]="t('text')" [messages]="textErrors()" />
+      @if (visual()) {
+        <app-hint-image-field
+          [selection]="selection"
+          [disabled]="busy() || uncertain()"
+          [submitted]="submitted()"
+          [existingImage]="existingImage()"
+          [required]="imageRequired()"
+        />
+      } @else {
+        <app-textarea [formField]="fields.text" [label]="t('text')" [messages]="textErrors()" />
+      }
+    }
+    @if (busy()) {
+      <app-upload-progress [label]="t('image.phases.' + phase())" [value]="progress()" />
+    }
+    @if (preparedHint() && error()) {
+      <p class="text-sm leading-relaxed text-muted-foreground">{{ t('image.resume') }}</p>
     }
     @if (error()) {
       <p role="alert" class="text-sm leading-relaxed text-destructive">{{ errorMessage() }}</p>
@@ -56,7 +73,7 @@
         [text]="params.mode === modes.Delete ? t('modes.delete') : t('save')"
         [variant]="params.mode === modes.Delete ? 'destructive' : 'default'"
         [loading]="busy()"
-        [disabled]="busy()"
+        [disabled]="busy() || selection.checking() || uncertain()"
         buttonClass="h-11 w-full"
       /><app-button
         [text]="t('cancel')"

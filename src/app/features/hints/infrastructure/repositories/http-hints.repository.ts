@@ -1,4 +1,5 @@
-import { HINT_COSTS } from '../../domain/values/hint-cost';
+import { HttpHintImageUploadRepository } from './http-hint-image-upload.repository';
+import { isImageHint } from '../../domain/values/hint-image-policy';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, throwError, type Observable } from 'rxjs';
@@ -11,11 +12,17 @@ import type { HintModel } from '../../domain/models/hint.model';
 import type { HintsRepositoryPort } from '../../application/ports/hints-repository.port';
 import type { SaveHintCommand } from '../../application/commands/save-hint.command';
 import { HintEditorMode } from '../../application/workflows/hint-editor.mode';
-import { HINT_ICONS } from '../config/hint-icon-keys';
 import type { HintResponseDto } from '../api/hint-response.dto';
 import { toHint } from '../mappers/hint.mapper';
 @Injectable()
 export class HttpHintsRepository implements HintsRepositoryPort {
+  private readonly images = inject(HttpHintImageUploadRepository);
+  uploadImage(id: string, fileKey: string): Observable<number> {
+    return this.images.upload(id, fileKey);
+  }
+  completeImage(id: string, fileKey: string): Observable<HintModel> {
+    return this.images.complete(id, fileKey);
+  }
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl + '/hints';
   getByOwner(ownerId: string): Observable<ReadonlyArray<HintModel>> {
@@ -35,7 +42,18 @@ export class HttpHintsRepository implements HintsRepositoryPort {
         catchError((error: unknown) => this.failure(error)),
       );
     }
-    const content = { language: toApiLocale(command.language), text: command.text.trim() };
+    if (command.mode === HintEditorMode.Image)
+      return throwError(() => ({ code: RequestErrorCode.Validation }));
+    const content = {
+      language: toApiLocale(command.language),
+      ...(command.text !== undefined ? { text: command.text.trim() } : {}),
+    };
+    if (
+      command.mode === HintEditorMode.Create &&
+      !isImageHint(command.type) &&
+      !command.text?.trim()
+    )
+      return throwError(() => ({ code: RequestErrorCode.Validation }));
     let request: Observable<ApiResponse<HintResponseDto>>;
     if (command.mode === HintEditorMode.Translate) {
       request = this.http.post<ApiResponse<HintResponseDto>>(
@@ -46,8 +64,6 @@ export class HttpHintsRepository implements HintsRepositoryPort {
       const body = {
         ...content,
         type: command.type,
-        cost: HINT_COSTS[command.type],
-        icon: HINT_ICONS[command.type],
       };
       request =
         command.mode === HintEditorMode.Create
@@ -58,7 +74,7 @@ export class HttpHintsRepository implements HintsRepositoryPort {
             })
           : this.http.patch<ApiResponse<HintResponseDto>>(
               `${this.baseUrl}/${encodeURIComponent(command.hintId)}`,
-              body,
+              content,
             );
     }
     return request.pipe(

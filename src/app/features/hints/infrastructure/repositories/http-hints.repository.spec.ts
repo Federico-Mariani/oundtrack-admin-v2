@@ -35,8 +35,6 @@ describe('HTTP hints contract', () => {
         ownerId: 'owner',
         ownerType: type,
         type: HintType.Plot,
-        icon: 'hints/icons/plot.svg',
-        cost: 300,
         language: 'en-EN',
         text: 'A clue',
       });
@@ -49,26 +47,28 @@ describe('HTTP hints contract', () => {
       expect(result.mock.calls.at(0)?.[0]?.info.at(0)?.language).toBe(SupportedLocale.English);
     },
   );
-  it.each([
-    [HintType.Actor, 200],
-    [HintType.Plot, 300],
-    [HintType.Frame, 300],
-    [HintType.Quote, 200],
-    [HintType.Year, 100],
-  ] as const)('derives the fixed price for %s', (type, cost) => {
-    repository
-      .save({
-        mode: HintEditorMode.Create,
-        owner: createHintCommand().owner,
+  it.each([HintType.Actor, HintType.Frame])(
+    'creates an image hint without client-owned metadata or text (%s)',
+    (type) => {
+      repository
+        .save({
+          mode: HintEditorMode.Create,
+          owner: createHintCommand().owner,
+          type,
+          language: SupportedLocale.Italian,
+          fileKey: 'local-file',
+        })
+        .subscribe();
+      const request = http.expectOne(url);
+      expect(request.request.body).toEqual({
+        ownerId: 'movie',
+        ownerType: HintOwnerType.Movie,
         type,
-        language: SupportedLocale.English,
-        text: 'Clue',
-      })
-      .subscribe();
-    const request = http.expectOne(url);
-    expect(request.request.body).toEqual(expect.objectContaining({ type, cost }));
-    request.flush({ data: hintFixture() });
-  });
+        language: 'it-IT',
+      });
+      request.flush({ data: hintFixture() });
+    },
+  );
   it('lists every translation and normalizes API locales', () => {
     const result = vi.fn();
     repository.getByOwner('owner').subscribe(result);
@@ -123,9 +123,6 @@ describe('HTTP hints contract', () => {
     const request = http.expectOne(url + '/hint');
     expect(request.request.method).toBe('PATCH');
     expect(request.request.body).toEqual({
-      type: HintType.Plot,
-      icon: 'hints/icons/plot.svg',
-      cost: 300,
       language: 'en-EN',
       text: 'Changed',
     });

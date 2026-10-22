@@ -3,7 +3,7 @@ import { HttpClient, HttpEventType, HttpXhrBackend } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core';
 import { filter, map, type Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
-export class DirectAudioUpload {
+export class DirectFileUpload {
   private readonly http = new HttpClient(new HttpXhrBackend(inject(XhrFactory)));
   put(url: string, headers: Readonly<Record<string, string>>, file: File): Observable<number> {
     return this.http
