@@ -1,14 +1,14 @@
 <article
   *transloco="let t; prefix: 'hints.editor'"
-  class="rounded-lg bg-muted/30 text-card-foreground"
+  class="rounded-lg bg-muted/30 border border-border text-card-foreground"
 >
-  <div class="flex flex-wrap items-center gap-4 p-4">
+  <div class="flex flex-wrap items-center gap-4 p-4 pe-8">
     <app-hint-icon [src]="hint().icon" />
     <div class="min-w-0 flex-1 space-y-2">
       <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-        <h4 class="text-sm font-semibold">{{ t('types.' + hint().type) }}</h4>
+        <h3 class="font-semibold">{{ t('types.' + hint().type) }}</h3>
         <span
-          class="inline-flex items-center gap-1.5 text-xs text-muted-foreground"
+          class="inline-flex items-center gap-1.5 text-sm text-muted-foreground"
           [attr.aria-label]="t('cost') + ': ' + hint().cost"
         >
           <ng-icon name="lucideCoins" aria-hidden="true" />{{ hint().cost }}
@@ -18,7 +18,7 @@
     </div>
     <div class="flex items-center gap-2">
       <app-button
-        variant="ghost"
+        variant="outline"
         size="sm"
         icon="lucideEye"
         [text]="t('viewContent')"
@@ -26,7 +26,7 @@
         (click)="preview.emit()"
       />
       <app-icon-button
-        variant="ghost"
+        variant="outline"
         size="icon-sm"
         icon="lucideEllipsis"
         [ariaLabel]="t('actions') + ': ' + t('types.' + hint().type)"

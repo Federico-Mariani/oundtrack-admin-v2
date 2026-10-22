@@ -1,0 +1,5 @@
+@if (visible()) {
+  <img [src]="src()" alt="" class="size-full object-contain" (error)="failed.set(src())" />
+} @else {
+  <ng-icon name="lucideImage" class="text-xl text-muted-foreground" aria-hidden="true" />
+}

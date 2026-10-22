@@ -24,7 +24,7 @@
     </div>
   }
   @if (loading() && !loaded()) {
-    <div class="space-y-4" role="status">
+    <div class="space-y-2 flex flex-col" role="status">
       <span class="sr-only">{{ t('loading') }}</span>
       @for (item of [1, 2, 3]; track item) {
         <div class="flex gap-4 py-4">
@@ -38,7 +38,7 @@
       }
     </div>
   } @else {
-    <div class="space-y-4">
+    <div class="space-y-2 flex flex-col">
       @for (hint of hints(); track hint.id) {
         <app-hint-card
           [hint]="hint"

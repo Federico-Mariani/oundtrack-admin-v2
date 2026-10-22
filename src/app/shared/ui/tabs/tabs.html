@@ -1,0 +1,26 @@
+<div hlmTabs [tab]="value()" (tabActivated)="value.set($event)" class="gap-0">
+  <div
+    hlmTabsList
+    variant="line"
+    class="relative -mb-px z-10 h-12 w-full gap-0 rounded-none p-0"
+    [attr.aria-label]="label()"
+  >
+    @for (tab of tabs(); track tab.value()) {
+      <button
+        type="button"
+        class="relative cursor-pointer min-w-0 flex-1 rounded-t-lg rounded-b-none border border-border! px-4 py-3 transition-colors data-active:bg-border! data-active:border-none! data-active:text-foreground group-data-[orientation=horizontal]/tabs:after:hidden"
+        [hlmTabsTrigger]="tab.value()"
+      >
+        {{ tab.label() }}
+      </button>
+    }
+  </div>
+  @for (tab of tabs(); track tab.value()) {
+    <div
+      class="rounded-b-lg border border-t-0 border-border bg-popover p-4 sm:p-6"
+      [hlmTabsContent]="tab.value()"
+    >
+      <ng-container [ngTemplateOutlet]="tab.template" />
+    </div>
+  }
+</div>
