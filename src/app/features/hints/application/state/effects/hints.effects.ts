@@ -8,6 +8,7 @@ import type { RequestError } from '@shared/state/request/request-error';
 import { HINTS_REPOSITORY } from '../../tokens/hints-repository.token';
 import { hintsFeature } from '../hints.feature';
 import {
+  HintsIconsActions as icons,
   HintsSaveProgressEvents,
   HintsPanelEvents as panel,
   HintsLoadActions as load,
@@ -59,6 +60,32 @@ export const saveHint = createEffect(
             actions$.pipe(
               ofType(panel.opened, panel.closed, save.reset),
               filter(() => state().sessionId !== sessionId || state().saveId !== requestId),
+            ),
+          ),
+        ),
+      ),
+    );
+  },
+  { functional: true },
+);
+
+export const loadHintIcons = createEffect(
+  (actions$ = inject(Actions), repository = inject(HINTS_REPOSITORY), store = inject(Store)) => {
+    const state = store.selectSignal(hintsFeature.selectHintsState);
+    return actions$.pipe(
+      ofType(icons.requested),
+      filter(
+        ({ sessionId, requestId }) =>
+          state().sessionId === sessionId && state().iconsId === requestId,
+      ),
+      switchMap(({ sessionId, requestId }) =>
+        repository.getIcons().pipe(
+          map((result) => icons.succeeded({ sessionId, requestId, icons: result })),
+          catchError((error: RequestError) => of(icons.failed({ sessionId, requestId, error }))),
+          takeUntil(
+            actions$.pipe(
+              ofType(panel.opened, panel.closed),
+              filter(() => state().sessionId !== sessionId),
             ),
           ),
         ),

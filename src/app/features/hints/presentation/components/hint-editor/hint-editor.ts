@@ -1,3 +1,4 @@
+import { HintIcon } from '../hint-icon/hint-icon';
 import { HintSavePhase } from '../../../application/workflows/hint-save.phase';
 import { HintImageSelection } from '../../uploads/hint-image-selection';
 import { HintImageField } from '../hint-image-field/hint-image-field';
@@ -43,6 +44,7 @@ import { Textarea } from '@shared/ui/textarea/textarea';
     CheckboxChoice,
     Textarea,
     HintImageField,
+    HintIcon,
     UploadProgress,
   ],
   providers: [
@@ -59,6 +61,19 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
   private readonly transloco = inject(TranslocoService);
   protected readonly selection = inject(HintImageSelection);
   protected readonly phase = this.facade.data.phase;
+  protected readonly icon = computed(() => {
+    const type = this.type();
+    return (
+      this.preparedHint()?.icon ??
+      this.params.hint?.icon ??
+      (type ? this.facade.data.icons()[type] : null)
+    );
+  });
+  protected readonly iconsError = this.facade.requests.icons.error;
+  protected readonly iconsLoading = this.facade.requests.icons.isLoading;
+  protected reloadIcons(): void {
+    this.facade.actions.loadIcons(this.params.sessionId);
+  }
   protected readonly progress = this.facade.data.progress;
   protected readonly preparedHint = this.facade.data.preparedHint;
   protected readonly uncertain = this.facade.data.creationUncertain;
@@ -144,6 +159,7 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
   });
   constructor() {
     this.facade.actions.resetSave();
+    if (this.params.mode === HintEditorMode.Create) this.reloadIcons();
     effect(() => {
       if (!this.requestId() || this.facade.data.saveId() !== this.requestId()) return;
       if (this.facade.requests.save.isSuccess())

@@ -1,3 +1,5 @@
+import type { HintTypeIcons } from '../../domain/values/hint-type-icons';
+import type { HintTypeIconResponseDto } from '../api/hint-type-icon-response.dto';
 import { HttpHintImageUploadRepository } from './http-hint-image-upload.repository';
 import { isImageHint } from '../../domain/values/hint-image-policy';
 import { inject, Injectable } from '@angular/core';
@@ -25,6 +27,14 @@ export class HttpHintsRepository implements HintsRepositoryPort {
   }
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl + '/hints';
+  getIcons(): Observable<HintTypeIcons> {
+    return this.http
+      .get<ApiResponse<ReadonlyArray<HintTypeIconResponseDto>>>(this.baseUrl + '/types')
+      .pipe(
+        map(({ data }) => Object.fromEntries(data.map((item) => [item.type, item.icon]))),
+        catchError((error: unknown) => this.failure(error)),
+      );
+  }
   getByOwner(ownerId: string): Observable<ReadonlyArray<HintModel>> {
     return this.http
       .get<ApiResponse<ReadonlyArray<HintResponseDto>>>(

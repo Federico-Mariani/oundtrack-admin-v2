@@ -11,6 +11,7 @@ import {
 import { isRequestPending } from '@shared/state/request/request-state.queries';
 import { initialHintsState, type HintsState } from './hints.state';
 import {
+  HintsIconsActions as icons,
   HintsSaveProgressEvents,
   HintsPanelEvents as panel,
   HintsLoadActions as load,
@@ -26,6 +27,25 @@ export const hintsReducer = createReducer(
   })),
   on(panel.closed, (state, { sessionId }): HintsState =>
     state.sessionId === sessionId ? initialHintsState : state,
+  ),
+  on(icons.requested, (state, { sessionId, requestId }): HintsState =>
+    state.sessionId !== sessionId
+      ? state
+      : { ...state, iconsId: requestId, iconsRequest: pendingRequest() },
+  ),
+  on(icons.succeeded, (state, { sessionId, requestId, icons }): HintsState =>
+    state.sessionId !== sessionId ||
+    state.iconsId !== requestId ||
+    !isRequestPending(state.iconsRequest)
+      ? state
+      : { ...state, icons, iconsRequest: succeededRequest() },
+  ),
+  on(icons.failed, (state, { sessionId, requestId, error }): HintsState =>
+    state.sessionId !== sessionId ||
+    state.iconsId !== requestId ||
+    !isRequestPending(state.iconsRequest)
+      ? state
+      : { ...state, iconsRequest: failedRequest(error) },
   ),
   on(load.requested, (state, { sessionId, requestId, ownerId }): HintsState =>
     state.sessionId !== sessionId ||

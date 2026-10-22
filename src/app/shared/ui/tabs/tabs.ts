@@ -6,21 +6,27 @@ import { TabContent } from './tab-content';
   selector: 'app-tabs',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [HlmTabs, HlmTabsList, HlmTabsTrigger, HlmTabsContent, NgTemplateOutlet],
-  template: ` <div hlmTabs [tab]="value()" (tabActivated)="value.set($event)" class="space-y-5">
+  template: ` <div hlmTabs [tab]="value()" (tabActivated)="value.set($event)" class="gap-0">
     <div
       hlmTabsList
       variant="line"
-      class="w-full justify-start gap-5 sm:w-auto"
+      class="relative z-10 -mb-px h-12 w-full gap-0 rounded-none p-0"
       [attr.aria-label]="label()"
     >
       @for (tab of tabs(); track tab.value()) {
-        <button type="button" class="flex-none px-1 pb-2" [hlmTabsTrigger]="tab.value()">
+        <button
+          type="button"
+          class="min-w-0 flex-1 rounded-none px-4 py-3 group-data-[orientation=horizontal]/tabs:after:bottom-0"
+          [hlmTabsTrigger]="tab.value()"
+        >
           {{ tab.label() }}
         </button>
       }
     </div>
     @for (tab of tabs(); track tab.value()) {
-      <div [hlmTabsContent]="tab.value()"><ng-container [ngTemplateOutlet]="tab.template" /></div>
+      <div class="rounded-b-lg border border-border p-4 sm:p-6" [hlmTabsContent]="tab.value()">
+        <ng-container [ngTemplateOutlet]="tab.template" />
+      </div>
     }
   </div>`,
 })

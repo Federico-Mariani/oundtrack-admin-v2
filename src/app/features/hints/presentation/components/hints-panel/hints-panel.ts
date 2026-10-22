@@ -1,3 +1,4 @@
+import { HintPreview } from '../hint-preview/hint-preview';
 import { HintCard } from '../hint-card/hint-card';
 import {
   ChangeDetectionStrategy,
@@ -69,6 +70,23 @@ export class HintsPanel {
   }
   protected reload(): void {
     this.facade.actions.load(this.sessionId, this.owner().id);
+  }
+  protected preview(hint: HintModel): void {
+    if (this.editorOpen) return;
+    this.editorOpen = true;
+    this.modals
+      .open(
+        HintPreview,
+        { hint, locale: this.locale() },
+        {
+          viewContainerRef: this.viewContainerRef,
+          contentClass:
+            'w-[min(40rem,calc(100vw-2rem))] max-w-none max-h-[calc(100dvh-2rem)] overflow-y-auto p-6 sm:p-8',
+        },
+      )
+      .closed$.subscribe(() => {
+        this.editorOpen = false;
+      });
   }
   protected manage(mode: HintEditorMode, hint?: HintModel): void {
     if (this.editorOpen || this.loading() || !this.loaded()) return;

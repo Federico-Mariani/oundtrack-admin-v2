@@ -24,6 +24,18 @@ describe('HTTP hints contract', () => {
   afterEach(() => {
     http.verify();
   });
+  it('loads server-owned signed type icons without modifying their URLs', () => {
+    const result = vi.fn();
+    repository.getIcons().subscribe(result);
+    const request = http.expectOne(url + '/types');
+    expect(request.request.method).toBe('GET');
+    request.flush({
+      data: [{ type: HintType.Actor, icon: 'https://media.test/actor.png?Signature=original' }],
+    });
+    expect(result).toHaveBeenCalledWith({
+      [HintType.Actor]: 'https://media.test/actor.png?Signature=original',
+    });
+  });
   it.each([HintOwnerType.Movie, HintOwnerType.TvSeries])(
     'creates for %s with a fixed object key and API locale',
     (type) => {

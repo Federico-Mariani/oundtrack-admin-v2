@@ -54,6 +54,7 @@ describe('Saving hint languages', () => {
         }
         return of(hint);
       }),
+      getIcons: vi.fn(),
       uploadImage: vi.fn(() => of(30, 100)),
       completeImage: vi.fn(() => {
         hint = {

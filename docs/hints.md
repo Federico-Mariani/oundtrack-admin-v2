@@ -51,3 +51,11 @@ The API must include the image endpoints and updated create/PATCH DTOs. S3 CORS 
 The fixed storage key means replacing a file may overwrite S3 before confirmation. Existing CloudFront caches may continue serving an older image until invalidation/expiry. The client does not change signed query strings or claim distributed rollback. Backend upload cleanup and CDN cache policy remain operational concerns documented by the API project.
 
 Automated checks cover current HTTP payloads, image-only UI, validation/decoding/resource cleanup, retry checkpoints, progress, confirmation, stale results and text-hint rejection. They do not perform live storage writes.
+
+## Compact presentation and server icons
+
+Hint cards show only the server icon, type, cost, languages and actions. View content opens a dedicated read-only modal; text previews can switch between available translations and image previews use the shared image without a locale selector. Opening and closing a preview does not mutate or reload hint data.
+
+The shared catalog tabs span the available width. Their line triggers sit above the bordered content panel, with consistent padding and section spacing. Inactive content remains mounted.
+
+Creation loads `GET /hints/types` through a separate NgRx request lifecycle. This admin-only endpoint returns `{ data: [{ type, icon }] }` with signed server-owned URLs. It is provided by API PR #14 and must be deployed for icon previews before creation. Existing hints always use their response icon; no signed URL is reconstructed or modified. Failed or missing icons show a neutral placeholder, and catalog failures offer retry without preventing creation.

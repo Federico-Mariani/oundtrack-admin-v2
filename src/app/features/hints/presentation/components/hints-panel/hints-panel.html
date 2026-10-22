@@ -42,9 +42,9 @@
       @for (hint of hints(); track hint.id) {
         <app-hint-card
           [hint]="hint"
-          [locale]="locale()"
           [disabled]="loading()"
           (manage)="manage($event, hint)"
+          (preview)="preview(hint)"
         />
       } @empty {
         @if (loaded()) {

@@ -1,3 +1,4 @@
+import type { HintTypeIcons } from '../../domain/values/hint-type-icons';
 import { HintSavePhase } from '../workflows/hint-save.phase';
 import type { RequestState } from '@shared/state/request/request-state';
 import type { RequestError } from '@shared/state/request/request-error';
@@ -6,6 +7,9 @@ import type { HintModel } from '../../domain/models/hint.model';
 import type { HintOwner } from '../../domain/values/hint-owner';
 import type { SaveHintCommand } from '../commands/save-hint.command';
 export interface HintsState {
+  readonly icons: HintTypeIcons;
+  readonly iconsId: string | null;
+  readonly iconsRequest: RequestState<RequestError>;
   readonly preparedHint: HintModel | null;
   readonly uploadedFileKey: string | null;
   readonly progress: number | null;
@@ -22,6 +26,9 @@ export interface HintsState {
   readonly saveRequest: RequestState<RequestError>;
 }
 export const initialHintsState: HintsState = {
+  icons: {},
+  iconsId: null,
+  iconsRequest: idleRequest(),
   preparedHint: null,
   uploadedFileKey: null,
   progress: null,

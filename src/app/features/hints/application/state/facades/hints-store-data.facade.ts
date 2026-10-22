@@ -4,6 +4,7 @@ import { hintsFeature } from '../hints.feature';
 @Injectable({ providedIn: 'root' })
 export class HintsStoreDataFacade {
   private readonly store = inject(Store);
+  readonly icons = this.store.selectSignal(hintsFeature.selectIcons);
   readonly preparedHint = this.store.selectSignal(hintsFeature.selectPreparedHint);
   readonly phase = this.store.selectSignal(hintsFeature.selectPhase);
   readonly progress = this.store.selectSignal(hintsFeature.selectProgress);

@@ -78,5 +78,7 @@
   "allLanguages": "Select all languages",
   "clearLanguages": "Clear selection",
   "requiredLanguage": "Select at least one language.",
-  "localizationFailed": "Some languages could not be saved. Retry to complete the remaining changes."
+  "localizationFailed": "Some languages could not be saved. Retry to complete the remaining changes.",
+  "viewContent": "View content",
+  "iconsError": "Type icons could not be loaded. You can still save the hint."
 }

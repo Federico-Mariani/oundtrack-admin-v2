@@ -63,13 +63,17 @@ describe('Hint editor', () => {
           useValue: {
             data: {
               saveId,
+              icons: signal({}),
               phase: signal('idle'),
               progress: signal(null),
               preparedHint: signal(null),
               creationUncertain: signal(false),
             },
-            requests: { save: { isLoading: busy, isSuccess: success, error } },
-            actions: { resetSave: vi.fn(), save },
+            requests: {
+              icons: { error: signal(null), isLoading: signal(false) },
+              save: { isLoading: busy, isSuccess: success, error },
+            },
+            actions: { loadIcons: vi.fn(), resetSave: vi.fn(), save },
           },
         },
       ],

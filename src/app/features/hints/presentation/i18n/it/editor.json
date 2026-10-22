@@ -78,5 +78,7 @@
   "allLanguages": "Seleziona tutte le lingue",
   "clearLanguages": "Deseleziona tutte",
   "requiredLanguage": "Seleziona almeno una lingua.",
-  "localizationFailed": "Non è stato possibile salvare alcune lingue. Riprova per completare le modifiche rimanenti."
+  "localizationFailed": "Non è stato possibile salvare alcune lingue. Riprova per completare le modifiche rimanenti.",
+  "viewContent": "Visualizza contenuto",
+  "iconsError": "Impossibile caricare le icone dei tipi. Puoi comunque salvare l’Hint."
 }

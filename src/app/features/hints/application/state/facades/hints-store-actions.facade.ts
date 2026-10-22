@@ -1,6 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { HintsPanelEvents, HintsLoadActions, HintsSaveActions } from '../actions/hints.actions';
+import {
+  HintsIconsActions,
+  HintsPanelEvents,
+  HintsLoadActions,
+  HintsSaveActions,
+} from '../actions/hints.actions';
 import type { HintOwner } from '../../../domain/values/hint-owner';
 import type { SaveHintCommand } from '../../commands/save-hint.command';
 @Injectable({ providedIn: 'root' })
@@ -16,6 +21,9 @@ export class HintsStoreActionsFacade {
     this.store.dispatch(
       HintsLoadActions.requested({ sessionId, ownerId, requestId: crypto.randomUUID() }),
     );
+  }
+  loadIcons(sessionId: string): void {
+    this.store.dispatch(HintsIconsActions.requested({ sessionId, requestId: crypto.randomUUID() }));
   }
   save(sessionId: string, requestId: string, command: SaveHintCommand): void {
     this.store.dispatch(HintsSaveActions.requested({ sessionId, requestId, command }));

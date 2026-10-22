@@ -7,11 +7,12 @@ import { Subject, Subscription } from 'rxjs';
 import { hintsReducer } from '../hints.reducer';
 import { hintsFeature } from '../hints.feature';
 import {
+  HintsIconsActions as icons,
   HintsPanelEvents as panel,
   HintsLoadActions as load,
   HintsSaveActions as save,
 } from '../actions/hints.actions';
-import { loadHints, saveHint } from './hints.effects';
+import { loadHints, saveHint, loadHintIcons } from './hints.effects';
 import type { HintsRepositoryPort } from '../../ports/hints-repository.port';
 import type { HintModel } from '../../../domain/models/hint.model';
 import { HintEditorMode } from '../../workflows/hint-editor.mode';
@@ -24,6 +25,7 @@ describe('Hints workflow concurrency and lifecycle', () => {
   let reading: Subject<ReadonlyArray<HintModel>>;
   let writing: Subject<HintModel | null>;
   const repository = {
+    getIcons: vi.fn(),
     uploadImage: vi.fn<HintsRepositoryPort['uploadImage']>(),
     completeImage: vi.fn<HintsRepositoryPort['completeImage']>(),
     getByOwner: vi.fn<HintsRepositoryPort['getByOwner']>(),
@@ -48,6 +50,11 @@ describe('Hints workflow concurrency and lifecycle', () => {
     const actions = new Actions(TestBed.inject(ScannedActionsSubject));
     subscription = new Subscription();
     subscription.add(
+      loadHintIcons(actions, repository, store).subscribe((action) => {
+        store.dispatch(action);
+      }),
+    );
+    subscription.add(
       loadHints(actions, repository, store).subscribe((action) => {
         store.dispatch(action);
       }),
@@ -61,6 +68,20 @@ describe('Hints workflow concurrency and lifecycle', () => {
   });
   afterEach(() => {
     subscription.unsubscribe();
+  });
+  it('isolates icon loading errors and rejects responses from a closed panel', () => {
+    const response = new Subject<Record<string, string>>();
+    repository.getIcons.mockReturnValue(response);
+    store.dispatch(icons.requested({ sessionId: 'panel', requestId: 'icons' }));
+    response.error({ code: RequestErrorCode.Network });
+    expect(state().iconsRequest.error?.code).toBe(RequestErrorCode.Network);
+    expect(state().saveRequest.error).toBeNull();
+    const retry = new Subject<Record<string, string>>();
+    repository.getIcons.mockReturnValue(retry);
+    store.dispatch(icons.requested({ sessionId: 'panel', requestId: 'retry' }));
+    store.dispatch(panel.closed({ sessionId: 'panel' }));
+    retry.next({ actor: 'stale' });
+    expect(state().icons).toEqual({});
   });
   it('ignores duplicate submissions and updates the list without a reload', () => {
     submit();

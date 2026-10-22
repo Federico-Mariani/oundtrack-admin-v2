@@ -1,0 +1,42 @@
+<app-modal-frame
+  *transloco="let t; prefix: 'hints.editor'"
+  [title]="t('viewContent')"
+  [description]="t('types.' + params.hint.type)"
+>
+  <div class="space-y-6">
+    <div class="flex flex-wrap items-center gap-4">
+      <app-hint-icon [src]="params.hint.icon" />
+      <div class="min-w-0 flex-1">
+        <h3 class="font-semibold">{{ t('types.' + params.hint.type) }}</h3>
+        <p class="text-sm text-muted-foreground">{{ t('cost') }}: {{ params.hint.cost }}</p>
+      </div>
+      @if (!visual) {
+        <app-select
+          class="w-40"
+          [items]="languageItems()"
+          [value]="locale()"
+          [ariaLabel]="t('language')"
+          (valueChange)="changeLanguage($event)"
+        />
+      }
+    </div>
+    @if (visual) {
+      @if (image) {
+        <app-media-image
+          class="aspect-video w-full rounded-lg"
+          [src]="image"
+          [contain]="true"
+          [alt]="t('types.' + params.hint.type)"
+          [fallback]="t('imageUnavailable')"
+        />
+      } @else {
+        <p class="py-8 text-center text-sm text-muted-foreground">{{ t('imageUnavailable') }}</p>
+      }
+      <p class="text-sm text-muted-foreground">{{ t('image.shared') }}</p>
+    } @else {
+      <p class="whitespace-pre-wrap wrap-anywhere text-sm leading-7">
+        {{ info()?.text || t('missing') }}
+      </p>
+    }
+  </div>
+</app-modal-frame>
