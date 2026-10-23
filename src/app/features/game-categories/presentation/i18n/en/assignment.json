@@ -1,0 +1,14 @@
+{
+  "title": "Game categories",
+  "description": "Select the categories for this title. Deselect all to remove every category.",
+  "search": "Search categories",
+  "searchPlaceholder": "Search by name…",
+  "selected": "{{count}} selected",
+  "loadFailed": "Categories could not be loaded.",
+  "retry": "Try again",
+  "empty": "No matching categories.",
+  "save": "Save categories",
+  "cancel": "Cancel",
+  "success": "Categories updated successfully.",
+  "failed": "Categories could not be saved. Your selection has been kept."
+}

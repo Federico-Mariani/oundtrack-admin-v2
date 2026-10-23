@@ -19,6 +19,7 @@ export const gameCategoriesGetAllReducer: Array<
   on(GameCategoriesGetAllActions.succeeded, (state, { categories }): GameCategoriesState => ({
     ...state,
     categories,
+    loaded: true,
     loadRequest: succeededRequest(),
   })),
 

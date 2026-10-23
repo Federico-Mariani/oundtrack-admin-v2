@@ -1,0 +1,62 @@
+<section *transloco="let t; prefix: 'hints.editor'" class="space-y-4" [attr.aria-busy]="loading()">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="space-y-1">
+      <h3 class="text-lg font-semibold">{{ t('title') }}</h3>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <app-icon-button
+        icon="lucideRefreshCw"
+        variant="outline"
+        size="icon-sm"
+        [ariaLabel]="t('refresh')"
+        [title]="t('refresh')"
+        [loading]="loading()"
+        [disabled]="loading()"
+        (click)="reload()"
+      />
+      <app-button
+        variant="outline"
+        size="sm"
+        icon="lucidePlus"
+        [text]="t('add')"
+        [disabled]="!loaded() || loading() || !availableTypes().length"
+        (click)="manage(modes.Create)"
+      />
+    </div>
+  </div>
+  @if (error()) {
+    <div
+      role="alert"
+      class="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-destructive/10 p-4 text-sm"
+    >
+      <p>{{ t('loadError') }}</p>
+      <app-button variant="outline" [text]="t('retry')" [disabled]="loading()" (click)="reload()" />
+    </div>
+  }
+  @if (loading() && !loaded()) {
+    <div class="space-y-2 flex flex-col" role="status">
+      <span class="sr-only">{{ t('loading') }}</span>
+      <app-hints-list-skeleton />
+    </div>
+  } @else {
+    <div class="space-y-2 flex flex-col">
+      @for (hint of hints(); track hint.id) {
+        <app-hint-card
+          [hint]="hint"
+          [disabled]="loading()"
+          (manage)="manage($event, hint)"
+          (preview)="preview(hint)"
+        />
+      } @empty {
+        @if (loaded()) {
+          <p class="rounded-lg bg-muted/40 px-6 py-12 text-center text-sm text-muted-foreground">
+            {{ t('empty') }}
+          </p>
+        }
+      }
+    </div>
+    @if (loaded() && !availableTypes().length) {
+      <p class="text-sm text-muted-foreground">{{ t('allTypes') }}</p>
+    }
+  }
+</section>

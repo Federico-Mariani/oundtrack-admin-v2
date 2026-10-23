@@ -50,5 +50,9 @@
   "replaceAudio": "Replace audio",
   "uploadAudio": "Upload audio",
   "refreshFailed": "Unable to refresh. Previously loaded data is still displayed.",
-  "recordId": "Movie ID"
+  "recordId": "Movie ID",
+  "hints": "Hints",
+  "content": "Content",
+  "addCategory": "Add category",
+  "editCategories": "Edit categories"
 }

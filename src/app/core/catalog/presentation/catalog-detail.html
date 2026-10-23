@@ -64,7 +64,7 @@
     }
     @if (loading() && !detail()) {
       <span role="status" class="sr-only">{{ t('loading') }}</span>
-      <app-media-detail-skeleton />
+      <app-media-detail-skeleton [class.invisible]="!showInitialLoading()" />
     } @else if (error() && !detail()) {
       <div class="flex min-h-96 flex-col items-center justify-center gap-4 p-8 text-center">
         <p role="alert">{{ t(error()?.status === 404 ? 'notFound' : 'failed') }}</p>
@@ -77,7 +77,7 @@
           class="absolute inset-0 bg-gradient-to-t from-popover from-0% via-popover/65 via-55% to-popover/20"
         ></div>
       </div>
-      <div class="relative -mt-20 space-y-7 px-5 pb-6 sm:-mt-24 sm:px-8 sm:pb-8">
+      <div class="relative -mt-20 space-y-8 px-5 pb-8 sm:-mt-24 sm:px-8 sm:pb-8">
         <header class="flex items-end gap-4 sm:gap-6">
           <app-media-image
             class="aspect-[2/3] w-28 shrink-0 rounded-xl border-4 border-popover shadow-xl sm:w-40"
@@ -94,8 +94,8 @@
             </p>
           </div>
         </header>
-        <div class="grid gap-5 pb-2 sm:grid-cols-2">
-          <div class="space-y-2.5">
+        <div class="grid gap-6 sm:grid-cols-2">
+          <div class="space-y-3">
             <h3 class="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               {{ t('genres') }}
             </h3>
@@ -113,7 +113,7 @@
               }
             </div>
           </div>
-          <div class="space-y-2.5">
+          <div class="space-y-3">
             <h3 class="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               {{ t('categories') }}
             </h3>
@@ -131,72 +131,89 @@
                   >{{ localizedName(category.info) }}</span
                 >
               } @empty {
-                <span class="text-sm text-muted-foreground">{{ t('noCategories') }}</span>
+                <app-button
+                  variant="outline"
+                  size="sm"
+                  icon="lucidePlus"
+                  [text]="t('addCategory')"
+                  [disabled]="loading()"
+                  (click)="manageCategories()"
+                />
+              }
+              @if (detail.gameCategories.length) {
+                <app-icon-button
+                  icon="lucidePlus"
+                  variant="outline"
+                  size="icon-sm"
+                  [ariaLabel]="t('editCategories')"
+                  [title]="t('editCategories')"
+                  [disabled]="loading()"
+                  (click)="manageCategories()"
+                />
               }
             </div>
           </div>
         </div>
-        <section class="space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <h3 class="text-lg font-semibold tracking-tight">{{ t('soundtracks') }}</h3>
-            <app-button
-              variant="outline"
-              size="sm"
-              icon="lucidePlus"
-              [text]="t('addSoundtrack')"
-              (click)="manageAudio(audioModes.Soundtrack)"
-            />
-          </div>
-          @for (soundtrack of detail.soundtracks; track soundtrack.id; let index = $index) {
-            <div class="space-y-3">
-              @for (track of localizedTracks(soundtrack.tracks); track track.id) {
-                <app-soundtrack-player
-                  [track]="track"
-                  [soundtrackId]="soundtrack.id"
-                  (playbackStarted)="play($event)"
-                  (editLanguages)="manageAudio(audioModes.Languages, soundtrack, track)"
-                  (uploadAudio)="manageAudio(audioModes.Upload, soundtrack, track)"
-                  (manageAudio)="manageAudio(audioModes.Version, soundtrack)"
-                  (reload)="reload()"
+        <app-tabs [value]="activeTab()" (valueChange)="changeTab($event)" [label]="t('content')">
+          <ng-template [appTabContent]="tabs.Soundtracks" [label]="t('soundtracks')">
+            <section class="space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <h3 class="text-lg font-semibold tracking-tight">{{ t('soundtracks') }}</h3>
+                <app-button
+                  variant="outline"
+                  size="sm"
+                  icon="lucidePlus"
+                  [text]="t('addSoundtrack')"
+                  (click)="manageAudio(audioModes.Soundtrack)"
                 />
+              </div>
+              @for (soundtrack of detail.soundtracks; track soundtrack.id; let index = $index) {
+                <div class="space-y-3">
+                  @for (track of localizedTracks(soundtrack.tracks); track track.id) {
+                    <app-soundtrack-player
+                      [track]="track"
+                      [soundtrackId]="soundtrack.id"
+                      (playbackStarted)="play($event)"
+                      (editLanguages)="manageAudio(audioModes.Languages, soundtrack, track)"
+                      (uploadAudio)="manageAudio(audioModes.Upload, soundtrack, track)"
+                      (manageAudio)="manageAudio(audioModes.Version, soundtrack)"
+                      (reload)="reload()"
+                    />
+                  } @empty {
+                    <p class="text-sm text-muted-foreground">{{ t('noLocalizedTracks') }}</p>
+                  }
+                </div>
               } @empty {
                 <p class="text-sm text-muted-foreground">{{ t('noLocalizedTracks') }}</p>
               }
-            </div>
-          } @empty {
-            <p class="text-sm text-muted-foreground">{{ t('noLocalizedTracks') }}</p>
-          }
-        </section>
-        <section class="space-y-5 pt-3">
+            </section>
+          </ng-template>
+          <ng-template [appTabContent]="tabs.Hints" [label]="t('hints')">
+            <app-hints-outlet [sessionId]="hintsSession.id" [owner]="owner()" [locale]="locale()" />
+          </ng-template>
+        </app-tabs>
+        <section class="space-y-4 mt-6">
           <div>
             <h3 class="text-lg font-semibold tracking-tight">{{ t('metadata') }}</h3>
             <p class="mt-1 text-sm text-muted-foreground">{{ t('metadataDescription') }}</p>
           </div>
-          <div class="grid gap-x-10 gap-y-7 lg:grid-cols-2">
+          <div class="grid gap-6 lg:grid-cols-2">
             <section class="min-w-0">
               <h4 class="mb-3 text-sm font-semibold">{{ t('record') }}</h4>
               <dl class="text-sm [&_dt]:text-muted-foreground [&_dd]:min-w-0 [&_dd]:font-medium">
-                <div
-                  class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-[0.35rem] py-2"
-                >
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2">
                   <dt>{{ t('createdAt') }}</dt>
                   <dd>{{ formatTimestamp(detail.createdAt) }}</dd>
                 </div>
-                <div
-                  class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-[0.35rem] py-2"
-                >
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2">
                   <dt>{{ t('updatedAt') }}</dt>
                   <dd>{{ formatTimestamp(detail.updatedAt) }}</dd>
                 </div>
-                <div
-                  class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-[0.35rem] py-2"
-                >
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2">
                   <dt>{{ t('externalId') }}</dt>
                   <dd class="font-mono">{{ detail.externalId }}</dd>
                 </div>
-                <div
-                  class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-[0.35rem] py-2"
-                >
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2">
                   <dt>{{ t('recordId') }}</dt>
                   <dd class="select-all wrap-anywhere font-mono text-xs leading-normal">
                     {{ detail.id }}
@@ -208,15 +225,11 @@
               <section class="min-w-0">
                 <h4 class="mb-3 text-sm font-semibold">{{ t('translation') }}</h4>
                 <dl class="text-sm [&_dt]:text-muted-foreground [&_dd]:min-w-0 [&_dd]:font-medium">
-                  <div
-                    class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-[0.35rem] py-2"
-                  >
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2">
                     <dt>{{ t('createdAt') }}</dt>
                     <dd>{{ formatTimestamp(info.createdAt) }}</dd>
                   </div>
-                  <div
-                    class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-[0.35rem] py-2"
-                  >
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2">
                     <dt>{{ t('updatedAt') }}</dt>
                     <dd>{{ formatTimestamp(info.updatedAt) }}</dd>
                   </div>

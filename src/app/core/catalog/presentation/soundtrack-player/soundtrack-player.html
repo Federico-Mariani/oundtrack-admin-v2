@@ -1,6 +1,6 @@
 <article
-  *transloco="let t; prefix: 'catalogAudio.player'"
-  class="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 gap-y-4 rounded-lg border border-border bg-card p-5 transition-[border-color,box-shadow] duration-150 motion-reduce:transition-none sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-x-8 sm:gap-y-3"
+  *transloco="let t; prefix: 'catalogAudio.player'; loadingTpl: loading"
+  class="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 gap-y-4 rounded-lg border border-border bg-muted/30 p-5 transition-[border-color,box-shadow] duration-150 motion-reduce:transition-none sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-x-8 sm:gap-y-3"
   [class]="playing() ? 'border-primary/45 ring-1 ring-primary/10' : ''"
 >
   @if (track().path && !failed()) {
@@ -207,3 +207,5 @@
     </dl>
   }
 </article>
+
+<ng-template #loading><app-audio-card-skeleton /></ng-template>

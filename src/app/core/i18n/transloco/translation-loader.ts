@@ -14,8 +14,8 @@ export function createTranslationLoader(
   translations: Record<SupportedLanguage, TranslationTree>,
 ): Record<SupportedLanguage, () => Promise<Translation>> {
   return {
-    en: () => loadTranslations(translations.en),
-    it: () => loadTranslations(translations.it),
+    en: cachedLoader(translations.en),
+    it: cachedLoader(translations.it),
   };
 }
 
@@ -33,4 +33,15 @@ async function loadTranslations(tree: TranslationTree): Promise<Translation> {
   );
 
   return Object.fromEntries(entries);
+}
+
+function cachedLoader(tree: TranslationTree): () => Promise<Translation> {
+  let pending: Promise<Translation> | undefined;
+  return () => {
+    pending ??= loadTranslations(tree).catch((error: unknown) => {
+      pending = undefined;
+      throw error;
+    });
+    return pending;
+  };
 }

@@ -9,7 +9,9 @@ import { ChangeDetectionStrategy, Component, computed, input, signal } from '@an
       <img
         [src]="src()"
         [alt]="alt()"
-        class="h-full w-full object-cover"
+        class="h-full w-full"
+        [class.object-cover]="!contain()"
+        [class.object-contain]="contain()"
         (error)="failedUrl.set(src())"
       />
     } @else if (alt()) {
@@ -24,6 +26,7 @@ export class MediaImage {
   readonly src = input<string | null | undefined>();
   readonly alt = input('');
   readonly fallback = input('');
+  readonly contain = input(false);
   protected readonly failedUrl = signal<string | null | undefined>(undefined);
   protected readonly visible = computed(() => !!this.src() && this.src() !== this.failedUrl());
 }

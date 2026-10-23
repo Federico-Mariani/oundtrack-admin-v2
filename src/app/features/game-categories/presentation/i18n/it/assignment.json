@@ -1,0 +1,14 @@
+{
+  "title": "Categorie di gioco",
+  "description": "Seleziona le categorie per questo titolo. Deselezionale tutte per rimuovere ogni categoria.",
+  "search": "Cerca categorie",
+  "searchPlaceholder": "Cerca per nome…",
+  "selected": "{{count}} selezionate",
+  "loadFailed": "Impossibile caricare le categorie.",
+  "retry": "Riprova",
+  "empty": "Nessuna categoria corrispondente.",
+  "save": "Salva categorie",
+  "cancel": "Annulla",
+  "success": "Categorie aggiornate con successo.",
+  "failed": "Impossibile salvare le categorie. La selezione è stata mantenuta."
+}

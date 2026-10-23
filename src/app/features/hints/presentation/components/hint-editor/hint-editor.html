@@ -1,0 +1,118 @@
+<app-modal-frame
+  *transloco="let t; prefix: 'hints.editor'"
+  [title]="t('modes.' + params.mode)"
+  [description]="
+    params.mode === modes.Delete
+      ? t('deleteDescription')
+      : t(visual() ? 'image.description' : 'imageNote')
+  "
+  [closeDisabled]="busy()"
+>
+  <form class="mt-7 space-y-6" (submit)="submit($event)">
+    @if (params.mode !== modes.Delete) {
+      @if (params.mode === modes.Create) {
+        <div class="space-y-2.5">
+          <p class="text-sm font-medium">{{ t('type') }}</p>
+          <app-select
+            [items]="typeItems()"
+            [value]="type()"
+            [ariaLabel]="t('type')"
+            [disabled]="metadataLocked()"
+            (valueChange)="changeType($event)"
+          />
+        </div>
+      }
+      @if (type(); as type) {
+        <div class="flex items-center gap-4 rounded-lg bg-muted/50 p-4">
+          <app-hint-icon [src]="icon()" />
+          <app-heading-3 [text]="t('types.' + type)" />
+        </div>
+      }
+      @if (iconsError() && params.mode === modes.Create) {
+        <div class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground" role="status">
+          <p>{{ t('iconsError') }}</p>
+          <app-button
+            variant="link"
+            [text]="t('retry')"
+            [disabled]="iconsLoading()"
+            (click)="reloadIcons()"
+          />
+        </div>
+      }
+      <div class="grid gap-6">
+        @if (!visual()) {
+          <fieldset class="space-y-3" [disabled]="metadataLocked()">
+            <legend class="mb-2 text-sm font-medium">{{ t('languageSelection') }}</legend>
+            <p class="text-sm leading-relaxed text-muted-foreground">
+              {{ t(params.mode === modes.Edit ? 'editLanguagesHint' : 'languagesHint') }}
+            </p>
+            <div class="grid gap-3 sm:grid-cols-2">
+              @for (language of languages; track language) {
+                <app-checkbox-choice
+                  [label]="t('languages.' + language)"
+                  [checked]="selectedLanguages().includes(language)"
+                  [disabled]="metadataLocked()"
+                  (changed)="toggleLanguage(language)"
+                />
+              }
+            </div>
+            <app-button
+              variant="link"
+              buttonClass="h-auto justify-start px-0 py-1 text-sm"
+              [text]="t(allSelected() ? 'clearLanguages' : 'allLanguages')"
+              [disabled]="metadataLocked()"
+              (click)="selectAllLanguages()"
+            />
+            @if (submitted() && !selectedLanguages().length) {
+              <p role="alert" class="text-sm text-destructive">{{ t('requiredLanguage') }}</p>
+            }
+          </fieldset>
+        }
+        @if (params.mode !== modes.Translate) {
+          <div class="space-y-2.5">
+            <p class="text-sm font-medium">{{ t('cost') }}</p>
+            <p class="text-lg font-semibold tabular-nums" aria-live="polite">{{ cost() }}</p>
+            <p class="text-xs leading-relaxed text-muted-foreground">{{ t('fixedCost') }}</p>
+          </div>
+        }
+      </div>
+      @if (visual()) {
+        <app-hint-image-field
+          [selection]="selection"
+          [disabled]="busy() || uncertain()"
+          [submitted]="submitted()"
+          [existingImage]="existingImage()"
+          [required]="imageRequired()"
+        />
+      } @else {
+        <app-textarea [formField]="fields.text" [label]="t('text')" [messages]="textErrors()" />
+      }
+    }
+    @if (busy()) {
+      <app-upload-progress [label]="t('image.phases.' + phase())" [value]="progress()" />
+    }
+    @if (preparedHint() && error()) {
+      <p class="text-sm leading-relaxed text-muted-foreground">{{ t('image.resume') }}</p>
+    }
+    @if (error()) {
+      <p role="alert" class="text-sm leading-relaxed text-destructive">{{ errorMessage() }}</p>
+    }
+    <div class="grid gap-3 pt-2">
+      <app-button
+        type="submit"
+        [text]="params.mode === modes.Delete ? t('modes.delete') : t('save')"
+        [variant]="params.mode === modes.Delete ? 'destructive' : 'default'"
+        [loading]="busy()"
+        [disabled]="busy() || selection.checking() || uncertain()"
+        buttonClass="h-11 w-full"
+      />
+      <app-button
+        [text]="t('cancel')"
+        variant="outline"
+        [disabled]="busy()"
+        buttonClass="h-11 w-full"
+        (click)="ref.close(false)"
+      />
+    </div>
+  </form>
+</app-modal-frame>

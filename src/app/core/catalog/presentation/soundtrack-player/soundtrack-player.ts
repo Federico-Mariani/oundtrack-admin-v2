@@ -1,3 +1,4 @@
+import { AudioCardSkeleton } from '@shared/ui/media-detail-skeleton/audio-card-skeleton';
 import { provideTranslocoScope, TranslocoDirective } from '@jsverse/transloco';
 import { catalogAudioTranslationsLoader } from '../../i18n/catalog-audio-translations.loader';
 import {
@@ -34,7 +35,7 @@ import type { SoundtrackTrackModel } from '@shared/types/catalog/soundtrack-trac
 @Component({
   selector: 'app-soundtrack-player',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslocoDirective, NgIcon, HlmButton, IconButton, HlmSlider],
+  imports: [AudioCardSkeleton, TranslocoDirective, NgIcon, HlmButton, IconButton, HlmSlider],
   providers: [
     provideTranslocoScope({ scope: 'catalogAudio', loader: catalogAudioTranslationsLoader }),
     provideIcons({

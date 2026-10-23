@@ -1,0 +1,53 @@
+<article
+  *transloco="let t; prefix: 'hints.editor'"
+  class="rounded-lg bg-muted/30 border border-border text-card-foreground"
+>
+  <div class="flex flex-wrap items-center gap-4 p-4 pe-8">
+    <app-hint-icon [src]="hint().icon" />
+    <div class="min-w-0 flex-1 space-y-2">
+      <h3 class="font-semibold">{{ t('types.' + hint().type) }}</h3>
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <app-language-tags [languages]="languages()" />
+        <span
+          class="inline-flex items-center gap-1.5 text-sm text-muted-foreground"
+          [attr.aria-label]="t('cost') + ': ' + hint().cost"
+        >
+          <ng-icon name="lucideCoins" aria-hidden="true" />
+          {{ hint().cost }}
+        </span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <app-button
+        variant="outline"
+        size="sm"
+        icon="lucideEye"
+        [text]="t('viewContent')"
+        [disabled]="disabled()"
+        (click)="preview.emit()"
+      />
+      <app-icon-button
+        variant="outline"
+        size="icon-sm"
+        icon="lucideEllipsis"
+        [ariaLabel]="t('actions') + ': ' + t('types.' + hint().type)"
+        [disabled]="disabled()"
+        [menu]="actions"
+      />
+    </div>
+  </div>
+  <ng-template #actions>
+    <app-action-menu
+      [items]="[
+        { value: modes.Edit, label: t('modes.edit'), disabled: disabled() },
+        {
+          value: modes.Translate,
+          label: t('modes.translate'),
+          disabled: disabled() || !canTranslate(),
+        },
+        { value: modes.Delete, label: t('modes.delete'), disabled: disabled(), destructive: true },
+      ]"
+      (selected)="selectAction($event)"
+    />
+  </ng-template>
+</article>

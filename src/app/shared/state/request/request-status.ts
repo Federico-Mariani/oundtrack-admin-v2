@@ -1,2 +1,7 @@
-/** Lifecycle of a single async operation tracked in a store. */
-export type RequestStatus = 'idle' | 'pending' | 'success' | 'error';
+export const RequestStatus = {
+  Idle: 'idle',
+  Pending: 'pending',
+  Success: 'success',
+  Error: 'error',
+} as const;
+export type RequestStatus = (typeof RequestStatus)[keyof typeof RequestStatus];

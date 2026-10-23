@@ -1,3 +1,10 @@
+import { delayedLoading } from '@shared/ui/shimmer/delayed-loading';
+import { catalogAudioTranslationsLoader } from '../i18n/catalog-audio-translations.loader';
+import { loadOwnerCategoriesModal } from '@features/game-categories';
+import { TabContent } from '@shared/ui/tabs/tab-content';
+import { HintsOutlet, HintsSession } from '@features/hints';
+import { Tabs } from '@shared/ui/tabs/tabs';
+import { CatalogDetailTab } from './catalog-detail-tab';
 import { SoundtrackPlayer } from './soundtrack-player/soundtrack-player';
 import type { CatalogDetailViewModel } from './catalog-detail.view-model';
 import type { RequestError } from '@shared/state/request/request-error';
@@ -22,6 +29,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
+  untracked,
   DestroyRef,
   inject,
   signal,
@@ -61,15 +70,28 @@ import type { SoundtrackTrackModel } from '@shared/types/catalog/soundtrack-trac
     MediaDetailSkeleton,
     MediaImage,
     SoundtrackPlayer,
+    HintsOutlet,
+    Tabs,
+    TabContent,
   ],
-  providers: [provideIcons({ lucidePlus, lucideRefreshCw })],
+  providers: [HintsSession, provideIcons({ lucidePlus, lucideRefreshCw })],
   templateUrl: './catalog-detail.html',
 })
 export class CatalogDetail {
+  protected readonly hintsSession = inject(HintsSession);
+  protected readonly tabs = CatalogDetailTab;
+  protected readonly activeTab = signal<string>(CatalogDetailTab.Soundtracks);
+  protected changeTab(tab: string): void {
+    this.playingAudio?.pause();
+    this.activeTab.set(tab);
+  }
   readonly detail = input<CatalogDetailViewModel | null>(null);
   readonly owner = input.required<SoundtrackOwner>();
   readonly translationScope = input.required<string>();
   readonly loading = input(false);
+  protected readonly showInitialLoading = delayedLoading(
+    computed(() => this.loading() && !this.detail()),
+  );
   readonly error = input<RequestError | null>(null);
   readonly selectedLocale = model<SupportedLocale | null>(null);
   readonly refresh = output();
@@ -137,6 +159,39 @@ export class CatalogDetail {
       }
     });
   }
+  private categoriesRef?: BrnDialogRef<boolean>;
+  private openingCategories = false;
+  protected async manageCategories(): Promise<void> {
+    const detail = this.detail();
+    if (!detail || this.loading() || this.categoriesRef || this.openingCategories) return;
+    this.playingAudio?.pause();
+    this.openingCategories = true;
+    let editor: Awaited<ReturnType<typeof loadOwnerCategoriesModal>>;
+    try {
+      editor = await loadOwnerCategoriesModal();
+    } catch {
+      this.notifications.error(
+        this.transloco.translate(this.translationScope() + '.detail.failed'),
+      );
+      return;
+    } finally {
+      this.openingCategories = false;
+    }
+    if (this.destroyRef.destroyed) return;
+    this.categoriesRef = this.modals.open(
+      editor,
+      { owner: this.owner(), categoryIds: detail.gameCategories.map((category) => category.id) },
+      {
+        viewContainerRef: this.viewContainerRef,
+        disableClose: true,
+        contentClass: 'w-[min(36rem,calc(100vw-2rem))] max-w-none p-6 sm:p-8',
+      },
+    );
+    this.categoriesRef.closed$.subscribe((changed) => {
+      this.categoriesRef = undefined;
+      if (changed) this.reload();
+    });
+  }
   protected readonly missingLanguages = computed(() =>
     LANGUAGE_OPTIONS.map((option) => toSupportedLocale(option.code)).filter(
       (locale) => !this.locales().includes(locale),
@@ -162,6 +217,15 @@ export class CatalogDetail {
     return detail ? resolveLocalized(detail.info, this.locale()) : undefined;
   });
   constructor() {
+    effect(() => {
+      void catalogAudioTranslationsLoader[this.language.activeLanguage()]().catch(() => undefined);
+    });
+    effect(() => {
+      const owner = this.owner();
+      untracked(() => {
+        this.hintsSession.open(owner);
+      });
+    });
     inject(DestroyRef).onDestroy(() => this.playingAudio?.pause());
   }
   protected addLanguage(): void {
