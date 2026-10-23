@@ -1,3 +1,14 @@
+import { TV_SERIES_QUERY_PARAMS } from '../../routing/tv-series.paths';
+import { ActivatedRoute } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TvSeriesNavigationService } from '../../routing/tv-series-navigation.service';
+import { CatalogDetailNavigation } from '@app/core/catalog/presentation/catalog-detail-navigation';
+import {
+  CatalogQueryKey,
+  readCatalogQuery,
+  writeCatalogQuery,
+  readCatalogDetailId,
+} from '@app/core/catalog/presentation/catalog-url-query';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,12 +16,9 @@ import {
   effect,
   inject,
   untracked,
-  ViewContainerRef,
 } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { ModalService } from '@shared/ui/modal/modal.service';
-import type { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { NotificationService } from '@app/core/notifications/notification.service';
@@ -19,7 +27,10 @@ import type { Id } from '@shared/types/id';
 import type { PageRequest } from '@shared/types/pagination/page-request';
 import { TvSeriesFacade } from '../../../application/state/facades/tv-series.facade';
 import type { TvSeriesFilterForm } from '../../forms/tv-series-filter.form';
-import { DEFAULT_TV_SERIES_LIST_QUERY } from '../../../application/queries/tv-series-list.query';
+import {
+  DEFAULT_TV_SERIES_LIST_QUERY,
+  type TvSeriesListQuery,
+} from '../../../application/queries/tv-series-list.query';
 import { applyTvSeriesFilterValues } from '../../mappers/tv-series-filter-values.mapper';
 import { TvSeriesFilters } from '../../components/tv-series-filters/tv-series-filters';
 import { TvSeriesTable } from '../../components/tv-series-table/tv-series-table';
@@ -32,16 +43,23 @@ import { TvSeriesDetailModal } from '../../components/tv-series-detail-modal/tv-
   imports: [NgIcon, TranslocoDirective, TvSeriesFilters, TvSeriesTable],
 })
 export class TvSeriesPage {
-  private readonly modal = inject(ModalService);
-  private readonly viewContainerRef = inject(ViewContainerRef);
-  private detailRef?: BrnDialogRef<void>;
+  private readonly route = inject(ActivatedRoute);
+  private readonly navigation = inject(TvSeriesNavigationService);
+  private readonly params = toSignal(this.route.queryParamMap, {
+    initialValue: this.route.snapshot.queryParamMap,
+  });
+  private readonly detailNavigation = new CatalogDetailNavigation();
+  private readonly urlQuery = computed<TvSeriesListQuery>(
+    () => readCatalogQuery(this.params(), TV_SERIES_QUERY_PARAMS.ExternalId),
+    { equal: (previous, next) => JSON.stringify(previous) === JSON.stringify(next) },
+  );
   private readonly tvSeriesFacade = inject(TvSeriesFacade);
   private readonly language = inject(LanguageService);
   private readonly clipboard = inject(Clipboard);
   private readonly notifications = inject(NotificationService);
   private readonly transloco = inject(TranslocoService);
 
-  protected readonly query = this.tvSeriesFacade.data.query;
+  protected readonly query = this.urlQuery;
   protected readonly remote = computed<DataTableRemoteState>(() => ({
     page: this.query().page,
     limit: this.query().limit,
@@ -58,29 +76,25 @@ export class TvSeriesPage {
   constructor() {
     effect(() => {
       this.language.activeLocale();
-
+      const query = this.urlQuery();
       untracked(() => {
-        this.reload();
+        this.tvSeriesFacade.actions.getAllTvSeries(query, true);
+      });
+    });
+    effect(() => {
+      const id = readCatalogDetailId(this.params());
+      untracked(() => {
+        this.detailNavigation.synchronize(id, TvSeriesDetailModal, (closedId) => {
+          if (readCatalogDetailId(this.route.snapshot.queryParamMap) === closedId) {
+            void this.navigation.updateCatalogQuery({ [CatalogQueryKey.Detail]: null });
+          }
+        });
       });
     });
   }
 
   protected openDetail(id: Id): void {
-    if (this.detailRef) {
-      return;
-    }
-    this.detailRef = this.modal.open(
-      TvSeriesDetailModal,
-      { id },
-      {
-        viewContainerRef: this.viewContainerRef,
-        contentClass:
-          'w-[64rem] max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-2rem)] p-0 overflow-hidden',
-      },
-    );
-    this.detailRef.closed$.subscribe(() => {
-      this.detailRef = undefined;
-    });
+    void this.navigation.updateCatalogQuery({ [CatalogQueryKey.Detail]: id }, false);
   }
 
   protected reload(): void {
@@ -88,19 +102,25 @@ export class TvSeriesPage {
   }
 
   protected changePage(page: PageRequest): void {
-    this.tvSeriesFacade.actions.getAllTvSeries({ ...this.query(), ...page });
+    void this.navigation.updateCatalogQuery(
+      writeCatalogQuery({ ...this.query(), ...page }, TV_SERIES_QUERY_PARAMS.ExternalId),
+    );
   }
   protected applyFilters(values: TvSeriesFilterForm): void {
-    this.tvSeriesFacade.actions.getAllTvSeries(
-      applyTvSeriesFilterValues(this.query(), values),
-      true,
+    void this.navigation.updateCatalogQuery(
+      writeCatalogQuery(
+        applyTvSeriesFilterValues(this.query(), values),
+        TV_SERIES_QUERY_PARAMS.ExternalId,
+      ),
     );
   }
   protected resetQuery(): void {
-    this.tvSeriesFacade.actions.getAllTvSeries({
-      ...DEFAULT_TV_SERIES_LIST_QUERY,
-      limit: this.query().limit,
-    });
+    void this.navigation.updateCatalogQuery(
+      writeCatalogQuery(
+        { ...DEFAULT_TV_SERIES_LIST_QUERY, limit: this.query().limit },
+        TV_SERIES_QUERY_PARAMS.ExternalId,
+      ),
+    );
   }
 
   protected copyIdentifier(value: string | number): void {

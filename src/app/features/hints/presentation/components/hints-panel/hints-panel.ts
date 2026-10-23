@@ -1,14 +1,12 @@
+import { IconButton } from '@shared/ui/icon-button/icon-button';
 import { HintPreview } from '../hint-preview/hint-preview';
 import { HintCard } from '../hint-card/hint-card';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
-  effect,
   inject,
   input,
-  untracked,
   ViewContainerRef,
 } from '@angular/core';
 import { provideTranslocoScope, TranslocoDirective } from '@jsverse/transloco';
@@ -21,18 +19,18 @@ import type { HintOwner } from '../../../domain/values/hint-owner';
 import type { SupportedLocale } from '@shared/localization/supported-locale';
 import { ModalService } from '@shared/ui/modal/modal.service';
 import { Button } from '@shared/ui/button/button';
-import { Shimmer } from '@shared/ui/shimmer/shimmer';
+import { HintsListSkeleton } from './hints-list-skeleton';
 import { HintEditor } from '../hint-editor/hint-editor';
 import { provideIcons } from '@ng-icons/core';
-import { lucidePlus } from '@ng-icons/lucide';
+import { lucidePlus, lucideRefreshCw } from '@ng-icons/lucide';
 
 @Component({
   selector: 'app-hints-panel',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslocoDirective, Button, Shimmer, HintCard],
+  imports: [TranslocoDirective, Button, HintsListSkeleton, HintCard, IconButton],
   providers: [
     provideTranslocoScope({ scope: 'hints', loader: hintsTranslationsLoader }),
-    provideIcons({ lucidePlus }),
+    provideIcons({ lucidePlus, lucideRefreshCw }),
   ],
   templateUrl: './hints-panel.html',
 })
@@ -42,7 +40,7 @@ export class HintsPanel {
   private readonly facade = inject(HintsFacade);
   private readonly modals = inject(ModalService);
   private readonly viewContainerRef = inject(ViewContainerRef);
-  private readonly sessionId = crypto.randomUUID();
+  readonly sessionId = input.required<string>();
   private editorOpen = false;
   protected readonly modes = HintEditorMode;
   protected readonly loading = this.facade.requests.load.isLoading;
@@ -56,20 +54,8 @@ export class HintsPanel {
   protected readonly availableTypes = computed(() =>
     HINT_TYPES.filter((type) => !this.hints().some((hint) => hint.type === type)),
   );
-  constructor() {
-    effect(() => {
-      const owner = this.owner();
-      untracked(() => {
-        this.facade.actions.open(this.sessionId, owner);
-        this.reload();
-      });
-    });
-    inject(DestroyRef).onDestroy(() => {
-      this.facade.actions.close(this.sessionId);
-    });
-  }
   protected reload(): void {
-    this.facade.actions.load(this.sessionId, this.owner().id);
+    this.facade.actions.load(this.sessionId(), this.owner().id);
   }
   protected preview(hint: HintModel): void {
     if (this.editorOpen) return;
@@ -98,7 +84,7 @@ export class HintsPanel {
           mode,
           owner: this.owner(),
           locale: this.locale(),
-          sessionId: this.sessionId,
+          sessionId: this.sessionId(),
           hint,
           availableTypes: this.availableTypes(),
         },

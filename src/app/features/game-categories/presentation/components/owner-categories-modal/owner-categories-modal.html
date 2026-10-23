@@ -1,0 +1,63 @@
+<app-modal-frame
+  *transloco="let t; prefix: 'gameCategories.assignment'"
+  [title]="t('title')"
+  [description]="t('description')"
+  [closeDisabled]="saving()"
+>
+  <div class="space-y-6">
+    <app-text-input
+      type="search"
+      inputMode="search"
+      [formField]="fields.search"
+      [label]="t('search')"
+      [placeholder]="t('searchPlaceholder')"
+    />
+    <p class="text-sm text-muted-foreground" aria-live="polite">
+      {{ t('selected', { count: selected().length }) }}
+    </p>
+    @if (loadError()) {
+      <div class="space-y-3" role="alert">
+        <p class="text-sm text-destructive">{{ t('loadFailed') }}</p>
+        <app-button variant="outline" [text]="t('retry')" (click)="reload()" />
+      </div>
+    }
+    <div class="max-h-80 min-h-32 overflow-y-auto space-y-2" [attr.aria-busy]="loading()">
+      @if (loading() && !loaded()) {
+        @for (item of [0, 1, 2]; track item) {
+          <app-shimmer class="h-14 rounded-md" />
+        }
+      } @else {
+        @for (category of categories(); track category.id) {
+          <app-checkbox-choice
+            [label]="category.name"
+            [checked]="selected().includes(category.id)"
+            [disabled]="saving() || loading() || !!loadError()"
+            (changed)="toggle(category.id)"
+          />
+        } @empty {
+          @if (!loadError()) {
+            <p class="py-8 text-center text-sm text-muted-foreground">{{ t('empty') }}</p>
+          }
+        }
+      }
+    </div>
+    @if (saveError()) {
+      <p role="alert" class="text-sm text-destructive">{{ t('failed') }}</p>
+    }
+    <div class="grid gap-3">
+      <app-button
+        [text]="t('save')"
+        [loading]="saving()"
+        [disabled]="saving() || loading() || !loaded() || !!loadError() || !changed()"
+        buttonClass="h-11 w-full"
+        (click)="save()"
+      /><app-button
+        [text]="t('cancel')"
+        variant="outline"
+        [disabled]="saving()"
+        buttonClass="h-11 w-full"
+        (click)="ref.close(false)"
+      />
+    </div>
+  </div>
+</app-modal-frame>

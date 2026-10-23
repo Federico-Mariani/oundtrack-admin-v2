@@ -1,3 +1,4 @@
+import { HintsSession } from '@features/hints';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TranslocoService } from '@jsverse/transloco';
@@ -38,7 +39,10 @@ describe('Catalog detail interactions', () => {
       const open = vi.fn().mockImplementation(() => ({ closed$: closed.asObservable() }));
       TestBed.configureTestingModule({
         providers: [
-          { provide: LanguageService, useValue: { activeLocale: signal('en-US') } },
+          {
+            provide: LanguageService,
+            useValue: { activeLocale: signal('en-US'), activeLanguage: signal('en') },
+          },
           { provide: NotificationService, useValue: {} },
           { provide: TranslocoService, useValue: {} },
           { provide: ModalService, useValue: { open } },
@@ -46,6 +50,7 @@ describe('Catalog detail interactions', () => {
       });
       TestBed.overrideComponent(CatalogDetail, {
         set: {
+          providers: [{ provide: HintsSession, useValue: { id: 'session', open: vi.fn() } }],
           imports: [],
           template: `<button (click)="manageAudio(audioModes.Soundtrack)">Audio</button><span>{{ locale() }}:{{ info()?.title }}</span>`,
         },

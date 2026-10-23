@@ -52,5 +52,7 @@
   "refreshFailed": "Impossibile aggiornare. Sono ancora visibili i dati caricati in precedenza.",
   "recordId": "ID film",
   "hints": "Indizi",
-  "content": "Contenuti"
+  "content": "Contenuti",
+  "addCategory": "Aggiungi categoria",
+  "editCategories": "Modifica categorie"
 }

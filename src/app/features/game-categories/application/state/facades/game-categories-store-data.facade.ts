@@ -7,5 +7,7 @@ import { gameCategoriesFeature } from '../game-categories.feature';
 export class GameCategoriesStoreDataFacade {
   private readonly store = inject(Store);
 
+  readonly loaded = this.store.selectSignal(gameCategoriesFeature.selectLoaded);
+  readonly assignmentId = this.store.selectSignal(gameCategoriesFeature.selectAssignmentId);
   readonly categories = this.store.selectSignal(gameCategoriesFeature.selectCategories);
 }

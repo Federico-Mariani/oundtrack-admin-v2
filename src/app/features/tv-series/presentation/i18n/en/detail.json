@@ -52,5 +52,7 @@
   "refreshFailed": "Unable to refresh. Previously loaded data is still displayed.",
   "recordId": "Tv series ID",
   "hints": "Hints",
-  "content": "Content"
+  "content": "Content",
+  "addCategory": "Add category",
+  "editCategories": "Edit categories"
 }

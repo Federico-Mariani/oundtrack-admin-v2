@@ -64,7 +64,7 @@
     }
     @if (loading() && !detail()) {
       <span role="status" class="sr-only">{{ t('loading') }}</span>
-      <app-media-detail-skeleton />
+      <app-media-detail-skeleton [class.invisible]="!showInitialLoading()" />
     } @else if (error() && !detail()) {
       <div class="flex min-h-96 flex-col items-center justify-center gap-4 p-8 text-center">
         <p role="alert">{{ t(error()?.status === 404 ? 'notFound' : 'failed') }}</p>
@@ -131,7 +131,25 @@
                   >{{ localizedName(category.info) }}</span
                 >
               } @empty {
-                <span class="text-sm text-muted-foreground">{{ t('noCategories') }}</span>
+                <app-button
+                  variant="outline"
+                  size="sm"
+                  icon="lucidePlus"
+                  [text]="t('addCategory')"
+                  [disabled]="loading()"
+                  (click)="manageCategories()"
+                />
+              }
+              @if (detail.gameCategories.length) {
+                <app-icon-button
+                  icon="lucidePlus"
+                  variant="outline"
+                  size="icon-sm"
+                  [ariaLabel]="t('editCategories')"
+                  [title]="t('editCategories')"
+                  [disabled]="loading()"
+                  (click)="manageCategories()"
+                />
               }
             </div>
           </div>
@@ -171,9 +189,7 @@
             </section>
           </ng-template>
           <ng-template [appTabContent]="tabs.Hints" [label]="t('hints')">
-            @defer (when activeTab() === tabs.Hints) {
-              <app-hints-outlet [owner]="owner()" [locale]="locale()" />
-            }
+            <app-hints-outlet [sessionId]="hintsSession.id" [owner]="owner()" [locale]="locale()" />
           </ng-template>
         </app-tabs>
         <section class="space-y-4 mt-6">
