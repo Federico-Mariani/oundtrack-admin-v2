@@ -1,3 +1,6 @@
+import { CreateTvSeriesModal } from '../../components/create-tv-series-modal/create-tv-series-modal';
+import { CatalogCreationDialog } from '@app/core/catalog/presentation/catalog-creation-dialog';
+import { Button } from '@shared/ui/button/button';
 import { TV_SERIES_QUERY_PARAMS } from '../../routing/tv-series.paths';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -17,7 +20,8 @@ import {
   inject,
   untracked,
 } from '@angular/core';
-import { NgIcon } from '@ng-icons/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucidePlus } from '@ng-icons/lucide';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -40,9 +44,16 @@ import { TvSeriesDetailModal } from '../../components/tv-series-detail-modal/tv-
   selector: 'app-tv-series-page',
   templateUrl: './tv-series-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIcon, TranslocoDirective, TvSeriesFilters, TvSeriesTable],
+  imports: [Button, NgIcon, TranslocoDirective, TvSeriesFilters, TvSeriesTable],
+  providers: [provideIcons({ lucidePlus })],
 })
 export class TvSeriesPage {
+  private readonly creationDialog = new CatalogCreationDialog();
+  protected openCreate(): void {
+    this.creationDialog.open(CreateTvSeriesModal, () => {
+      this.reload();
+    });
+  }
   private readonly route = inject(ActivatedRoute);
   private readonly navigation = inject(TvSeriesNavigationService);
   private readonly params = toSignal(this.route.queryParamMap, {

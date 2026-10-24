@@ -7,8 +7,6 @@
     "language": "Lingua"
   },
   "submit": "Crea film",
-  "reset": "Reimposta",
-  "backToMovies": "Torna ai film",
   "errors": {
     "network": "Impossibile connettersi al server. Riprova.",
     "bad-request": "Richiesta non valida. Controlla il modulo.",
@@ -19,5 +17,7 @@
     "validation": "Controlla i campi evidenziati.",
     "server": "Il server non è riuscito a creare il film. Riprova più tardi.",
     "unknown": "Impossibile creare il film. Riprova."
-  }
+  },
+  "cancel": "Annulla",
+  "success": "Film creato con successo."
 }

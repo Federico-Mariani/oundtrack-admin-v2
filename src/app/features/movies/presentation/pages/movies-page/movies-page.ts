@@ -1,3 +1,6 @@
+import { CreateMovieModal } from '../../components/create-movie-modal/create-movie-modal';
+import { CatalogCreationDialog } from '@app/core/catalog/presentation/catalog-creation-dialog';
+import { Button } from '@shared/ui/button/button';
 import { MOVIES_QUERY_PARAMS } from '../../routing/movies.paths';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -32,7 +35,7 @@ import {
 } from '@angular/core';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideFilm } from '@ng-icons/lucide';
+import { lucideFilm, lucidePlus } from '@ng-icons/lucide';
 import { NotificationService } from '@app/core/notifications/notification.service';
 import { MoviesFacade } from '../../../application/state/facades/movies.facade';
 import { MoviesTable } from '../../components/movies-table/movies-table';
@@ -41,10 +44,16 @@ import { MoviesTable } from '../../components/movies-table/movies-table';
   selector: 'app-movies-page',
   templateUrl: './movies-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MoviesFilters, MoviesTable, TranslocoDirective, NgIcon],
-  providers: [provideIcons({ lucideFilm })],
+  imports: [Button, MoviesFilters, MoviesTable, TranslocoDirective, NgIcon],
+  providers: [provideIcons({ lucideFilm, lucidePlus })],
 })
 export class MoviesPage {
+  private readonly creationDialog = new CatalogCreationDialog();
+  protected openCreate(): void {
+    this.creationDialog.open(CreateMovieModal, () => {
+      this.reload();
+    });
+  }
   private readonly route = inject(ActivatedRoute);
   private readonly navigation = inject(MoviesNavigationService);
   private readonly params = toSignal(this.route.queryParamMap, {

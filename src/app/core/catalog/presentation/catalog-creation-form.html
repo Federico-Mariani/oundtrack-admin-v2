@@ -1,0 +1,41 @@
+<form
+  *transloco="let t; prefix: translationPrefix()"
+  [formRoot]="controller.form"
+  [attr.aria-busy]="busy()"
+  class="space-y-6"
+>
+  <fieldset [disabled]="busy()" class="space-y-5">
+    <app-text-input [formField]="controller.form.title" [label]="t('fields.title')" />
+    <app-number-input
+      [formField]="controller.form.year"
+      [label]="t('fields.year')"
+      [min]="1"
+      [max]="9998"
+    />
+    <app-select-field
+      [formField]="controller.form.language"
+      [label]="t('fields.language')"
+      [items]="languages"
+      [disabled]="busy()"
+    />
+  </fieldset>
+  @if (error(); as failure) {
+    <p role="alert" class="text-sm text-destructive">{{ t('errors.' + failure.code) }}</p>
+  }
+  <div class="grid gap-3 pt-2">
+    <app-button
+      type="submit"
+      [text]="t('submit')"
+      [loading]="busy()"
+      [disabled]="busy() || !controller.form().valid()"
+      buttonClass="h-11 w-full"
+    />
+    <app-button
+      variant="outline"
+      [text]="t('cancel')"
+      [disabled]="busy()"
+      buttonClass="h-11 w-full"
+      (click)="cancelled.emit()"
+    />
+  </div>
+</form>

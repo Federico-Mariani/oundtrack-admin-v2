@@ -7,8 +7,6 @@
     "language": "Language"
   },
   "submit": "Create movie",
-  "reset": "Reset",
-  "backToMovies": "Back to movies",
   "errors": {
     "network": "Unable to connect to the server. Please try again.",
     "bad-request": "Invalid request. Check the form.",
@@ -19,5 +17,7 @@
     "validation": "Check the highlighted fields.",
     "server": "The server could not create the movie. Please try again later.",
     "unknown": "Unable to create the movie. Please try again."
-  }
+  },
+  "cancel": "Cancel",
+  "success": "Movie created successfully."
 }

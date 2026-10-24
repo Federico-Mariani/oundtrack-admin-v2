@@ -4,5 +4,6 @@
   "refresh": "Refresh",
   "loadFailed": "Could not load tv series. Please try again.",
   "copied": "Identifier copied.",
-  "copyFailed": "Could not copy the identifier."
+  "copyFailed": "Could not copy the identifier.",
+  "create": "New TV series"
 }
