@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { UploadFiles } from '@app/core/uploads/upload-files';
-import { HintImageSelection } from './hint-image-selection';
+import { ImageSelection } from './image-selection';
 class DecodableImage {
   naturalWidth = 100;
   naturalHeight = 100;
@@ -22,7 +22,7 @@ describe('Hint image selection lifecycle', () => {
         revokeObjectURL: revoke,
       }),
     );
-    TestBed.configureTestingModule({ providers: [HintImageSelection] });
+    TestBed.configureTestingModule({ providers: [ImageSelection] });
   });
   afterEach(() => {
     TestBed.resetTestingModule();
@@ -34,7 +34,7 @@ describe('Hint image selection lifecycle', () => {
     });
   }
   it('registers the decoded file, replaces it and releases resources on removal', async () => {
-    const selection = TestBed.inject(HintImageSelection),
+    const selection = TestBed.inject(ImageSelection),
       files = TestBed.inject(UploadFiles),
       file = png();
     await selection.choose(file);
@@ -56,14 +56,14 @@ describe('Hint image selection lifecycle', () => {
       }
     }
     vi.stubGlobal('Image', BrokenImage);
-    const selection = TestBed.inject(HintImageSelection);
+    const selection = TestBed.inject(ImageSelection);
     await selection.choose(png());
     expect(selection.invalid()).toBe(true);
     expect(selection.fileKey()).toBeNull();
     expect(revoke).toHaveBeenCalledWith('blob:preview');
   });
   it('does not register a late selection after its owner is destroyed', async () => {
-    const selection = TestBed.inject(HintImageSelection);
+    const selection = TestBed.inject(ImageSelection);
     const choosing = selection.choose(png());
     TestBed.resetTestingModule();
     await choosing;

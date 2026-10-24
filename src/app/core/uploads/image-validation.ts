@@ -1,13 +1,12 @@
 import {
-  HINT_IMAGE_MAX_BYTES,
-  HintImageContentType,
-  isHintImageContentType,
-} from '../../domain/values/hint-image-policy';
-export async function isHintImageFile(file: File): Promise<boolean> {
-  if (!isHintImageContentType(file.type) || !file.size || file.size > HINT_IMAGE_MAX_BYTES)
-    return false;
-  if (file.type === HintImageContentType.Jpeg && !/\.jpe?g$/i.test(file.name)) return false;
-  if (file.type === HintImageContentType.Png && !/\.png$/i.test(file.name)) return false;
+  IMAGE_MAX_BYTES,
+  ImageContentType,
+  isImageContentType,
+} from '@shared/types/uploads/image-policy';
+export async function isImageFile(file: File): Promise<boolean> {
+  if (!isImageContentType(file.type) || !file.size || file.size > IMAGE_MAX_BYTES) return false;
+  if (file.type === ImageContentType.Jpeg && !/\.jpe?g$/i.test(file.name)) return false;
+  if (file.type === ImageContentType.Png && !/\.png$/i.test(file.name)) return false;
   const bytes = await new Promise<Uint8Array>((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -19,7 +18,7 @@ export async function isHintImageFile(file: File): Promise<boolean> {
     };
     reader.readAsArrayBuffer(file.slice(0, 8));
   });
-  return file.type === HintImageContentType.Jpeg
+  return file.type === ImageContentType.Jpeg
     ? bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255
     : [137, 80, 78, 71, 13, 10, 26, 10].every((byte, index) => bytes[index] === byte);
 }

@@ -10,6 +10,7 @@
       </div>
       <p class="mt-1 text-sm text-muted-foreground">{{ t('description') }}</p>
     </div>
+    <app-button icon="lucidePlus" [text]="t('create')" (click)="manage()" />
   </header>
   <app-game-categories-table
     [categories]="categories()"
@@ -17,5 +18,6 @@
     [loading]="loading()"
     [errorMessage]="loadError() ? t('loadFailed') : null"
     (retry)="reload()"
+    (manage)="manageById($event)"
   />
 </div>

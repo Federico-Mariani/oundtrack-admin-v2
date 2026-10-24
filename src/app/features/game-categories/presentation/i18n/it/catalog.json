@@ -1,5 +1,6 @@
 {
   "title": "Categorie di giochi",
   "description": "Consulta e cerca le categorie di giochi nel catalogo.",
-  "loadFailed": "Impossibile caricare le categorie. Riprova."
+  "loadFailed": "Impossibile caricare le categorie. Riprova.",
+  "create": "Nuova categoria"
 }

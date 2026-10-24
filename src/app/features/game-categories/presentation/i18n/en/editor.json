@@ -1,0 +1,54 @@
+{
+  "createTitle": "New game category",
+  "editTitle": "Manage game category",
+  "description": "Manage translated names and the shared category icon.",
+  "names": "Translated names",
+  "namesHint": "Enter a name in at least one language. You can add other translations later.",
+  "requiredName": "Enter at least one name.",
+  "keepExisting": "Existing translations cannot be emptied. Enter a name to update them.",
+  "save": "Save category",
+  "cancel": "Close",
+  "success": "Category saved successfully.",
+  "failed": "The operation failed. Your data has been preserved. Try again.",
+  "conflict": "The name already exists or the uploaded file could not be confirmed. Check the values and try again.",
+  "uncertain": "Creation could not be verified. Close this dialog and check the updated list before creating the category again.",
+  "resume": "Names already saved are kept. Retry to complete the remaining steps.",
+  "languages": {
+    "it-IT": "Italian name",
+    "en-US": "English name"
+  },
+  "phases": {
+    "idle": "Preparing",
+    "names": "Saving translations",
+    "upload": "Uploading icon",
+    "confirm": "Confirming icon"
+  },
+  "image": {
+    "title": "Category icon",
+    "shared": "One icon shared by every language. Uploading is optional.",
+    "preview": "Hint preview",
+    "removeSelection": "Remove selected file",
+    "replace": "Drop a new image here to replace the current one",
+    "drop": "Drop your image here",
+    "formats": "One JPG or PNG file, up to 10 MB.",
+    "browse": "Choose image",
+    "checking": "Checking image…",
+    "invalid": "Select a valid JPG/PNG image no larger than 10 MB.",
+    "single": "Select one image only.",
+    "required": "Choose the image to upload.",
+    "description": "Upload an image for this hint. No text is required.",
+    "resume": "Part of the hint has already been saved. Retry to complete the remaining steps without creating it again.",
+    "uncertain": "The save result could not be verified. Close this dialog and check the refreshed list before trying again.",
+    "phases": {
+      "preparing": "Preparing the save…",
+      "uploading": "Uploading image…",
+      "confirming": "Confirming image…",
+      "done": "Upload complete",
+      "idle": "Waiting",
+      "localizing": "Saving languages…"
+    },
+    "confirmFailed": "The image could not be confirmed. Retry to finish saving.",
+    "uploadFailed": "Upload failed. Check your connection and retry."
+  },
+  "imageUnavailable": "Image unavailable"
+}

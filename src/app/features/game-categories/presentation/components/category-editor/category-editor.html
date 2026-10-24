@@ -1,0 +1,62 @@
+<app-modal-frame
+  *transloco="let t; prefix: 'gameCategories.editor'"
+  [title]="t(params.category ? 'editTitle' : 'createTitle')"
+  [description]="t('description')"
+  [closeDisabled]="busy()"
+  [closeResult]="!!prepared() || uncertain()"
+>
+  <form class="mt-6 space-y-6" (submit)="submit($event)">
+    <section class="space-y-4">
+      <div class="space-y-1">
+        <h3 class="text-sm font-semibold">{{ t('names') }}</h3>
+        <p class="text-sm text-muted-foreground">{{ t('namesHint') }}</p>
+      </div>
+      @for (locale of locales; track locale) {
+        <app-text-input
+          [formField]="fields[locale]"
+          [label]="t('languages.' + locale)"
+          [messages]="nameErrors()"
+        />
+      }
+      @if (submitted() && !names().length) {
+        <p role="alert" class="text-sm text-destructive">{{ t('requiredName') }}</p>
+      }
+      @if (removedExisting()) {
+        <p role="alert" class="text-sm text-destructive">{{ t('keepExisting') }}</p>
+      }
+    </section>
+    <app-image-upload-field
+      translationPrefix="gameCategories.editor"
+      previewClass="mx-auto aspect-square size-40 rounded-lg bg-muted/40"
+      [selection]="selection"
+      [disabled]="busy() || uncertain()"
+      [submitted]="submitted()"
+      [existingImage]="image()"
+      [required]="false"
+    />
+    @if (busy()) {
+      <app-upload-progress [label]="t('phases.' + phase())" [value]="progress()" />
+    }
+    @if (prepared() && error()) {
+      <p class="text-sm text-muted-foreground">{{ t('resume') }}</p>
+    }
+    @if (error()) {
+      <p role="alert" class="text-sm text-destructive">{{ t(errorKey()) }}</p>
+    }
+    <div class="grid gap-3 pt-2">
+      <app-button
+        type="submit"
+        [text]="t('save')"
+        [loading]="busy()"
+        [disabled]="busy() || uncertain() || selection.checking() || (!changed() && !prepared())"
+        buttonClass="h-11 w-full"
+      /><app-button
+        variant="outline"
+        [text]="t('cancel')"
+        [disabled]="busy()"
+        buttonClass="h-11 w-full"
+        (click)="cancel()"
+      />
+    </div>
+  </form>
+</app-modal-frame>

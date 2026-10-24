@@ -1,8 +1,8 @@
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { UploadFiles } from '@app/core/uploads/upload-files';
-import { isHintImageFile } from './hint-image-validation';
+import { isImageFile } from './image-validation';
 @Injectable()
-export class HintImageSelection {
+export class ImageSelection {
   private readonly files = inject(UploadFiles);
   private readonly destroyRef = inject(DestroyRef);
   private generation = 0;
@@ -44,7 +44,7 @@ export class HintImageSelection {
     this.checking.set(true);
     let preview: string | null = null;
     try {
-      if (!(await isHintImageFile(file))) throw new Error('Invalid image');
+      if (!(await isImageFile(file))) throw new Error('Invalid image');
       if (!this.isCurrent(generation)) return;
       preview = URL.createObjectURL(file);
       this.pendingPreview = preview;

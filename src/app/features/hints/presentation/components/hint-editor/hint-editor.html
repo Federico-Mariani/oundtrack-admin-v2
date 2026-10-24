@@ -77,7 +77,8 @@
         }
       </div>
       @if (visual()) {
-        <app-hint-image-field
+        <app-image-upload-field
+          translationPrefix="hints.editor"
           [selection]="selection"
           [disabled]="busy() || uncertain()"
           [submitted]="submitted()"

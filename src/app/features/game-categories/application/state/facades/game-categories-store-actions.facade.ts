@@ -1,3 +1,5 @@
+import { CategoryEditorEvents, CategorySaveActions } from '../actions/category-save.actions';
+import type { SaveCategoryCommand } from '../../commands/save-category.command';
 import {
   GameCategoriesAssignActions,
   GameCategoriesEditorEvents,
@@ -11,6 +13,15 @@ import { GameCategoriesGetAllActions } from '../actions/game-categories-get-all.
 export class GameCategoriesStoreActionsFacade {
   private readonly store = inject(Store);
 
+  openEditor(sessionId: string): void {
+    this.store.dispatch(CategoryEditorEvents.opened({ sessionId }));
+  }
+  closeEditor(sessionId: string): void {
+    this.store.dispatch(CategoryEditorEvents.closed({ sessionId }));
+  }
+  saveCategory(sessionId: string, requestId: string, command: SaveCategoryCommand): void {
+    this.store.dispatch(CategorySaveActions.requested({ sessionId, requestId, command }));
+  }
   openAssignment(sessionId: string): void {
     this.store.dispatch(GameCategoriesEditorEvents.opened({ sessionId }));
   }

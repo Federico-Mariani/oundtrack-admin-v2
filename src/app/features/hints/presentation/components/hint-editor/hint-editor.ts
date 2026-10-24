@@ -1,7 +1,7 @@
 import { HintIcon } from '../hint-icon/hint-icon';
 import { HintSavePhase } from '../../../application/workflows/hint-save.phase';
-import { HintImageSelection } from '../../uploads/hint-image-selection';
-import { HintImageField } from '../hint-image-field/hint-image-field';
+import { ImageSelection } from '@app/core/uploads/image-selection';
+import { ImageUploadField } from '@shared/ui/image-upload-field/image-upload-field';
 import { isImageHint } from '../../../domain/values/hint-image-policy';
 import { UploadProgress } from '@shared/ui/upload-progress/upload-progress';
 import { HINT_COSTS } from '../../../domain/values/hint-cost';
@@ -45,13 +45,13 @@ import Heading3 from '@shared/ui/typography/heading-3/heading-3';
     Select,
     CheckboxChoice,
     Textarea,
-    HintImageField,
+    ImageUploadField,
     HintIcon,
     UploadProgress,
     Heading3,
   ],
   providers: [
-    HintImageSelection,
+    ImageSelection,
     provideTranslocoScope({ scope: 'hints', loader: hintsTranslationsLoader }),
   ],
   templateUrl: './hint-editor.html',
@@ -62,7 +62,7 @@ export class HintEditor implements ModalContent<HintEditorParams, boolean> {
   private readonly facade = inject(HintsFacade);
   private readonly notifications = inject(NotificationService);
   private readonly transloco = inject(TranslocoService);
-  protected readonly selection = inject(HintImageSelection);
+  protected readonly selection = inject(ImageSelection);
   protected readonly phase = this.facade.data.phase;
   protected readonly icon = computed(() => {
     const type = this.type();
