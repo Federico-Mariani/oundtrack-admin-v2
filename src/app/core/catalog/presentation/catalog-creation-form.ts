@@ -1,16 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  untracked,
-} from '@angular/core';
+import type { RequestError } from '@shared/state/request/request-error';
+import type { CatalogCreationFields } from './catalog-creation-fields';
+import type { CatalogCreationValues } from './catalog-creation-values';
+import { ChangeDetectionStrategy, Component, computed, input, output, inject } from '@angular/core';
 import { FormRoot } from '@angular/forms/signals';
-import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { HlmCardImports } from '@spartan-ng/helm/card';
-import { HlmButton } from '@spartan-ng/helm/button';
 import { Button } from '@shared/ui/button/button';
 import { TextInput } from '@shared/ui/text-input/text-input';
 import { NumberInput } from '@shared/ui/number-input/number-input';
@@ -23,40 +16,26 @@ import { NonBlankInputRule } from '@app/core/forms/rules/non-blank-input-rule';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { toSupportedLocale } from '@app/core/i18n/language/language-locale.mapper';
 import { isSupportedLocale } from '@shared/localization/supported-locale';
-import { MoviesFacade } from '../../../application/state/facades/movies.facade';
-import type { CreateMovieForm } from '../../forms/create-movie.form';
-import { MOVIES_NAVIGATION } from '../../routing/movies.navigation';
-import { NgIcon } from '@ng-icons/core';
 
 @Component({
-  selector: 'app-create-one-movie-page',
-  templateUrl: './create-one-movie-page.html',
+  selector: 'app-catalog-creation-form',
+  templateUrl: './catalog-creation-form.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    FormRoot,
-    RouterLink,
-    TranslocoDirective,
-    HlmCardImports,
-    HlmButton,
-    Button,
-    TextInput,
-    NumberInput,
-    SelectField,
-    NgIcon,
-  ],
+  imports: [FormRoot, TranslocoDirective, Button, TextInput, NumberInput, SelectField],
 })
-export class CreateOneMoviePage {
-  private readonly movies = inject(MoviesFacade);
+export class CatalogCreationForm {
   private readonly language = inject(LanguageService);
-  protected readonly moviesLink = MOVIES_NAVIGATION.root();
-  protected readonly busy = this.movies.requests.create.isLoading;
-  protected readonly created = this.movies.requests.create.isSuccess;
+  readonly busy = input(false);
+  readonly error = input<RequestError | null>(null);
+  readonly translationPrefix = input.required<string>();
+  readonly submitted = output<CatalogCreationValues>();
+  readonly cancelled = output();
   protected readonly languages = this.language.options.map((option) => ({
     label: option.label,
     value: toSupportedLocale(option.code),
   }));
-  private readonly fieldErrors = computed(() => this.movies.requests.create.error()?.fieldErrors);
-  protected readonly controller = new AppFormController<CreateMovieForm>(
+  private readonly fieldErrors = computed(() => this.error()?.fieldErrors);
+  protected readonly controller = new AppFormController<CatalogCreationFields>(
     [
       new AppFormField('title', [new RequiredInputRule(), new NonBlankInputRule()]),
       new AppFormField('year', [new RequiredInputRule(), new IntegerInputRule(1, 9998)]),
@@ -69,26 +48,10 @@ export class CreateOneMoviePage {
   );
 
   constructor() {
-    this.movies.actions.resetCreateMovie();
-    this.controller.form().reset(this.emptyForm());
-    effect(() => {
-      if (this.created()) {
-        untracked(() => {
-          this.controller.form().reset(this.emptyForm());
-        });
-      }
-    });
-  }
-
-  protected reset(): void {
-    if (this.busy()) {
-      return;
-    }
-    this.movies.actions.resetCreateMovie();
     this.controller.form().reset(this.emptyForm());
   }
 
-  private emptyForm(): CreateMovieForm {
+  private emptyForm(): CatalogCreationFields {
     return { title: '', year: '', language: this.language.activeLocale() };
   }
 
@@ -100,7 +63,7 @@ export class CreateOneMoviePage {
     if (!isSupportedLocale(model.language)) {
       return;
     }
-    this.movies.actions.createMovie({
+    this.submitted.emit({
       title: model.title.trim(),
       year: Number(model.year),
       language: model.language,

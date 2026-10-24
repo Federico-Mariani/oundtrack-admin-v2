@@ -1,11 +1,11 @@
-<section *transloco="let t; prefix: 'hints.editor'" class="space-y-4">
+<section *transloco="let t; prefix: translationPrefix()" class="space-y-4">
   <div class="space-y-1">
     <h3 class="text-sm font-medium">{{ t('image.title') }}</h3>
     <p class="text-sm leading-relaxed text-muted-foreground">{{ t('image.shared') }}</p>
   </div>
   @if (selection().preview() || existingImage(); as image) {
     <app-media-image
-      class="aspect-video w-full rounded-lg"
+      [class]="previewClass()"
       [contain]="true"
       [src]="image"
       [alt]="t('image.preview')"
@@ -30,12 +30,12 @@
       [browseLabel]="t('image.browse')"
       [disabled]="disabled() || selection().checking()"
       [invalid]="selection().invalid() || selection().multiple() || (submitted() && required())"
-      describedBy="hint-image-errors"
+      [describedBy]="errorId"
       (selected)="choose($event)"
       (multipleRejected)="selection().multiple.set(true)"
     />
   }
-  <div id="hint-image-errors" aria-live="polite" class="space-y-1 text-sm text-destructive">
+  <div [id]="errorId" aria-live="polite" class="space-y-1 text-sm text-destructive">
     @if (selection().checking()) {
       <p class="text-muted-foreground" role="status">{{ t('image.checking') }}</p>
     }

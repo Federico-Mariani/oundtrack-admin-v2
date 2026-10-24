@@ -10,6 +10,7 @@
       </div>
       <p class="mt-1 text-sm text-muted-foreground">{{ t('description') }}</p>
     </div>
+    <app-button icon="lucidePlus" [text]="t('create')" (click)="openCreate()" />
   </header>
   <ng-template #controls>
     <app-tv-series-filters

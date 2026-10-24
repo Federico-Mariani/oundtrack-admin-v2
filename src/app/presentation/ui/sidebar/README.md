@@ -1,19 +1,9 @@
 # Sidebar
 
-`Sidebar` riceve `groups: readonly SidebarGroup[]`, utente e output logout.
-`SidebarNavigation` rende gli stessi gruppi tramite un solo template: link principali e
-sezioni con figli, icone opzionali, label tradotte e matching esatto configurabile.
+The layout composes `DEFAULT_SIDEBAR_GROUPS`; feature public navigation APIs own the destinations. Movies, TvSeries and GameCategories use direct `hlmSidebarMenuButton` anchors with icons and translated labels, without creation submenus.
 
-Il layout compone `DEFAULT_SIDEBAR_GROUPS` e registra le icone usate nella configurazione.
-Per aggiungere una voce si aggiunge un oggetto con ID stabile, chiave di traduzione e
-`commands`; per una sezione si aggiunge `children`. Le destinazioni Movies provengono
-esclusivamente da `MOVIES_NAVIGATION`, esportato dalla public API della feature.
-Questa configurazione descrive il menu, non definisce route e non sostituisce i guard.
+The links use RouterLink and RouterLinkActive, support keyboard navigation and opening in a new tab, and expose aria-current for the active destination. Catalog filters and detail query parameters keep their section active. Normal selection closes the mobile panel; modifier clicks preserve it.
 
-I link sono anchor con RouterLink: supportano tastiera e apertura in nuova scheda.
-Il titolo della sezione naviga alla sua destinazione anche nella sidebar ridotta a icone;
-il pulsante separato apre o chiude i figli. La sezione della route attiva si apre
-all’ingresso e solo il link preciso riceve aria-current. La selezione chiude il pannello mobile.
+Create actions belong to the catalog page headers and open dedicated modal components through the shared ModalService. Movie and TvSeries creation share CatalogCreationForm and CatalogCreationDialog. Successful creation closes the dialog and refreshes the current query; cancellation does not reload the list. The form preserves values on errors and disables dismissal while a request is pending.
 
-Le traduzioni della shell vivono in presentation/i18n, con scope `sidebar` privato alla vista della sidebar (`viewProviders`), così le pagine proiettate mantengono il proprio scope di feature.
-Il renderer non importa feature, Store o servizi di navigazione imperativa.
+The reusable renderer still supports optional child links for other configurations. Shell translations are scoped to the sidebar through viewProviders; the renderer does not import features, Store or imperative navigation services.

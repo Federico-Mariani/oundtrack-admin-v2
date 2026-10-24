@@ -1,3 +1,4 @@
+import { CategoryActionsCell } from '../category-actions-cell/category-actions-cell';
 import { type ColumnDef, createColumnHelper, flexRenderComponent } from '@tanstack/angular-table';
 import type { DataTableFeatures } from '@shared/ui/data-table/data-table-features';
 import type { GameCategoryTableRowModel } from '../../models/game-category-table-row.model';
@@ -9,6 +10,7 @@ const columnHelper = createColumnHelper<DataTableFeatures, GameCategoryTableRowM
 
 export function createGameCategoriesTableColumns(
   labels: GameCategoriesTableLabels,
+  manage: (id: string) => void,
 ): Array<ColumnDef<DataTableFeatures, GameCategoryTableRowModel>> {
   return columnHelper.columns([
     columnHelper.accessor('name', {
@@ -42,6 +44,24 @@ export function createGameCategoriesTableColumns(
       size: 260,
       minSize: 180,
       cell: (context) => context.getValue(),
+    }),
+    columnHelper.display({
+      id: 'actions',
+      header: labels.actions,
+      size: 100,
+      minSize: 100,
+      maxSize: 100,
+      enableHiding: false,
+      enableResizing: false,
+      cell: (context) =>
+        flexRenderComponent(CategoryActionsCell, {
+          inputs: { label: labels.manage },
+          outputs: {
+            manage: () => {
+              manage(context.row.original.id);
+            },
+          },
+        }),
     }),
   ]);
 }

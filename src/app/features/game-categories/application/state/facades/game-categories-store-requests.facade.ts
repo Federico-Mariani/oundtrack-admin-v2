@@ -7,6 +7,9 @@ import { gameCategoriesFeature } from '../game-categories.feature';
 export class GameCategoriesStoreRequestsFacade {
   private readonly store = inject(Store);
 
+  readonly save = createRequestSignals(
+    this.store.selectSignal(gameCategoriesFeature.selectSaveRequest),
+  );
   readonly assignment = createRequestSignals(
     this.store.selectSignal(gameCategoriesFeature.selectAssignmentRequest),
   );

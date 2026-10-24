@@ -1,14 +1,14 @@
-import { isHintImageFile } from './hint-image-validation';
-import { HINT_IMAGE_MAX_BYTES } from '../../domain/values/hint-image-policy';
+import { isImageFile } from './image-validation';
+import { IMAGE_MAX_BYTES } from '@shared/types/uploads/image-policy';
 describe('Hint image validation', () => {
   it('accepts JPEG and PNG signatures with matching MIME and extension', async () => {
     expect(
-      await isHintImageFile(
+      await isImageFile(
         new File([new Uint8Array([255, 216, 255, 0])], 'actor.JPG', { type: 'image/jpeg' }),
       ),
     ).toBe(true);
     expect(
-      await isHintImageFile(
+      await isImageFile(
         new File([new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])], 'frame.png', {
           type: 'image/png',
         }),
@@ -22,12 +22,12 @@ describe('Hint image validation', () => {
       new File(['image'], 'frame.gif', { type: 'image/gif' }),
       new File([new Uint8Array([255, 216, 255, 0])], 'actor.png', { type: 'image/png' }),
     ])
-      expect(await isHintImageFile(file)).toBe(false);
+      expect(await isImageFile(file)).toBe(false);
   });
   it('rejects images larger than the backend limit', async () => {
     expect(
-      await isHintImageFile(
-        new File([new Uint8Array(HINT_IMAGE_MAX_BYTES + 1)], 'large.png', { type: 'image/png' }),
+      await isImageFile(
+        new File([new Uint8Array(IMAGE_MAX_BYTES + 1)], 'large.png', { type: 'image/png' }),
       ),
     ).toBe(false);
   });

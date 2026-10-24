@@ -4,5 +4,6 @@
   "refresh": "Aggiorna",
   "loadFailed": "Impossibile caricare la serie tv. Riprova.",
   "copied": "Identificativo copiato.",
-  "copyFailed": "Impossibile copiare l’identificativo."
+  "copyFailed": "Impossibile copiare l’identificativo.",
+  "create": "Nuova serie TV"
 }

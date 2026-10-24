@@ -7,8 +7,6 @@
     "language": "Lingua"
   },
   "submit": "Crea serie tv",
-  "reset": "Reimposta",
-  "backToTvSeries": "Torna alle serie tv",
   "errors": {
     "network": "Impossibile connettersi al server. Riprova.",
     "bad-request": "Richiesta non valida. Controlla il modulo.",
@@ -19,5 +17,7 @@
     "validation": "Controlla i campi evidenziati.",
     "server": "Il server non è riuscito a creare la serie tv. Riprova più tardi.",
     "unknown": "Impossibile creare la serie tv. Riprova."
-  }
+  },
+  "cancel": "Annulla",
+  "success": "Serie TV creata con successo."
 }

@@ -8,5 +8,4 @@ import { MOVIES_PATHS } from './movies.paths';
  */
 export const MOVIES_NAVIGATION = {
   root: () => ['/', MOVIES_PATHS.root] as const,
-  create: () => ['/', MOVIES_PATHS.root, MOVIES_PATHS.create] as const,
 } as const;

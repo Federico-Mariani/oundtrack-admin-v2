@@ -13,8 +13,4 @@ export class TvSeriesNavigationService {
   goToTvSeries(extras?: NavigationExtras): Promise<boolean> {
     return this.router.navigate([...TV_SERIES_NAVIGATION.root()], extras);
   }
-
-  goToCreateTvSeries(extras?: NavigationExtras): Promise<boolean> {
-    return this.router.navigate([...TV_SERIES_NAVIGATION.create()], extras);
-  }
 }

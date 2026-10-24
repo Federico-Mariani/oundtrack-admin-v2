@@ -1,62 +1,54 @@
 import { signal } from '@angular/core';
+import { CatalogCreationForm } from './catalog-creation-form';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { provideTransloco, provideTranslocoScope } from '@jsverse/transloco';
+import { provideTransloco } from '@jsverse/transloco';
 import { of } from 'rxjs';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { LANGUAGE_OPTIONS } from '@app/core/i18n/language/language-options';
 import validation from '@app/core/i18n/translations/en/validation.json';
 import type { RequestError } from '@shared/state/request/request-error';
-import { MoviesFacade } from '../../../application/state/facades/movies.facade';
-import { moviesTranslationsLoader } from '../../i18n/movies-translations.loader';
-import { CreateOneMoviePage } from './create-one-movie-page';
 
 class TranslationLoader {
   getTranslation() {
-    return of({ validation });
+    return of({
+      validation,
+      create: {
+        fields: { title: 'Title', year: 'Year', language: 'Language' },
+        submit: 'Create',
+        cancel: 'Cancel',
+      },
+    });
   }
 }
 
 async function setup() {
-  const busy = signal(false);
-  const created = signal(false);
-  const error = signal<RequestError | null>(null);
   const createMovie = vi.fn();
   TestBed.configureTestingModule({
-    imports: [CreateOneMoviePage],
+    imports: [CatalogCreationForm],
     providers: [
-      provideRouter([]),
       provideTransloco({
         config: { availableLangs: ['en', 'it'], defaultLang: 'en', prodMode: true },
         loader: TranslationLoader,
       }),
-      provideTranslocoScope({ scope: 'movies', loader: moviesTranslationsLoader }),
       {
         provide: LanguageService,
         useValue: { options: LANGUAGE_OPTIONS, activeLocale: signal('it-IT') },
       },
-      {
-        provide: MoviesFacade,
-        useValue: {
-          requests: {
-            create: {
-              isLoading: busy,
-              isSuccess: created,
-              error,
-            },
-          },
-          actions: {
-            createMovie,
-            resetCreateMovie: () => {
-              error.set(null);
-              created.set(false);
-            },
-          },
-        },
-      },
     ],
   });
-  const fixture = TestBed.createComponent(CreateOneMoviePage);
+  const fixture = TestBed.createComponent(CatalogCreationForm);
+  fixture.componentRef.setInput('translationPrefix', 'create');
+  fixture.componentInstance.submitted.subscribe(createMovie);
+  const busy = {
+    set: (value: boolean) => {
+      fixture.componentRef.setInput('busy', value);
+    },
+  };
+  const error = {
+    set: (value: RequestError | null) => {
+      fixture.componentRef.setInput('error', value);
+    },
+  };
   await fixture.whenStable();
   const element = fixture.nativeElement as HTMLElement;
   await vi.waitFor(() => {
@@ -75,10 +67,10 @@ async function setup() {
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     await fixture.whenStable();
   };
-  return { fixture, element, fill, submit, busy, created, error, createMovie };
+  return { fixture, element, fill, submit, busy, error, createMovie };
 }
 
-describe('Create movie form', () => {
+describe('Catalog creation form', () => {
   it('requires a nonblank title and integer year and submits numeric year with the selected language', async () => {
     const { fill, submit, createMovie, element } = await setup();
     await submit();
@@ -121,8 +113,8 @@ describe('Create movie form', () => {
     expect(element.textContent).toContain('Year rejected');
   });
 
-  it('blocks duplicate submissions while pending and clears the form on success', async () => {
-    const { fill, submit, busy, created, fixture, element, createMovie } = await setup();
+  it('blocks duplicate submissions while pending and preserves values after failure', async () => {
+    const { fill, submit, busy, error, fixture, element, createMovie } = await setup();
     await fill('input[type="text"]', 'Dragon');
     await fill('input[type="number"]', '2025');
     await submit();
@@ -133,9 +125,9 @@ describe('Create movie form', () => {
     await submit();
     expect(createMovie).toHaveBeenCalledTimes(1);
     busy.set(false);
-    created.set(true);
+    error.set({ code: 'network' });
     await fixture.whenStable();
-    expect(element.querySelector<HTMLInputElement>('input[type="text"]')?.value).toBe('');
-    expect(element.querySelector<HTMLInputElement>('input[type="number"]')?.value).toBe('');
+    expect(element.querySelector<HTMLInputElement>('input[type="text"]')?.value).toBe('Dragon');
+    expect(element.querySelector<HTMLInputElement>('input[type="number"]')?.value).toBe('2025');
   });
 });

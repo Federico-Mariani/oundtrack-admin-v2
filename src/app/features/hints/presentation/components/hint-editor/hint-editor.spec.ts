@@ -1,4 +1,4 @@
-import { HintImageSelection } from '../../uploads/hint-image-selection';
+import { ImageSelection } from '@app/core/uploads/image-selection';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -210,7 +210,7 @@ describe('Hint editor', () => {
       fixture.detectChanges();
       expect(save).not.toHaveBeenCalled();
       const editor = document.querySelector('app-hint-editor')!;
-      const selection = getDebugNode(editor)!.injector.get(HintImageSelection);
+      const selection = getDebugNode(editor)!.injector.get(ImageSelection);
       selection.fileKey.set('file-key');
       selection.name.set('image.png');
       fixture.detectChanges();

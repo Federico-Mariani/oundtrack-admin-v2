@@ -1,5 +1,7 @@
 {
   "name": "Category",
   "languages": "Languages",
-  "id": "ID"
+  "id": "ID",
+  "actions": "Actions",
+  "manage": "Manage category"
 }

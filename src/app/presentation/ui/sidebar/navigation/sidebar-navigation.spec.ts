@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { provideTransloco, TranslocoService } from '@jsverse/transloco';
 import { provideIcons } from '@ng-icons/core';
-import { lucideFilm, lucideHome } from '@ng-icons/lucide';
+import { lucideFilm, lucideHome, lucideTags, lucideTv } from '@ng-icons/lucide';
 import { HlmSidebarService } from '@spartan-ng/helm/sidebar';
 import { of } from 'rxjs';
 import { SidebarNavigation } from './sidebar-navigation';
@@ -32,10 +32,11 @@ describe('Configured sidebar navigation', () => {
         provideRouter([
           { path: '', pathMatch: 'full', component: SidebarTestPage },
           { path: 'movies', component: SidebarTestPage },
-          { path: 'movies/create', component: SidebarTestPage },
+          { path: 'tv-series', component: SidebarTestPage },
+          { path: 'game-categories', component: SidebarTestPage },
           { path: 'reports', component: SidebarTestPage },
         ]),
-        provideIcons({ lucideFilm, lucideHome }),
+        provideIcons({ lucideFilm, lucideHome, lucideTags, lucideTv }),
         provideTransloco({
           config: {
             availableLangs: ['en', 'it'],
@@ -57,45 +58,31 @@ describe('Configured sidebar navigation', () => {
     };
   }
 
-  it('navigates to Movies and Create with real anchors and correct active children', async () => {
+  it('renders direct icon links without submenu toggles and keeps the active item with URL filters', async () => {
     const { fixture, element, router } = await setup();
-    const toggle = element.querySelector<HTMLButtonElement>('button[data-sidebar="menu-button"]')!;
-    toggle.click();
+    expect(element.querySelector('button[data-sidebar="menu-button"]')).toBeNull();
+    expect(element.querySelector('a[href="/movies/create"]')).toBeNull();
+    for (const path of ['/movies', '/tv-series', '/game-categories']) {
+      const link = element.querySelector<HTMLAnchorElement>(`a[href="${path}"]`)!;
+      expect(link.querySelector('ng-icon')).not.toBeNull();
+      link.click();
+      await fixture.whenStable();
+      expect(router.url).toBe(path);
+      expect(link.getAttribute('aria-current')).toBe('page');
+    }
+    await router.navigateByUrl('/movies?search=Dune&detail=movie-1');
     await fixture.whenStable();
-    expect(router.url).toBe('/');
-    expect(toggle.getAttribute('aria-expanded')).toBe('true');
-    const movies = element.querySelector<HTMLAnchorElement>('a[href="/movies"]')!;
-    movies.click();
-    await fixture.whenStable();
-    expect(router.url).toBe('/movies');
-    const create = element.querySelector<HTMLAnchorElement>('a[href="/movies/create"]')!;
-    create.click();
-    await fixture.whenStable();
-    expect(router.url).toBe('/movies/create');
-    expect(create.getAttribute('aria-current')).toBe('page');
-    expect(toggle.hasAttribute('data-active')).toBe(false);
-    expect(create.getAttribute('data-active')).toBe('true');
-    toggle.click();
-    await fixture.whenStable();
-    expect(router.url).toBe('/movies/create');
-    expect(toggle.getAttribute('aria-expanded')).toBe('false');
-    expect(
-      element
-        .querySelector('a[data-sidebar="menu-sub-button"][href="/movies"]')
-        ?.hasAttribute('aria-current'),
-    ).toBe(false);
-    element.querySelector<HTMLAnchorElement>('a[href="/"]')!.click();
-    await fixture.whenStable();
-    expect(router.url).toBe('/');
+    expect(element.querySelector('a[href="/movies"]')?.getAttribute('data-active')).toBe('true');
+    expect(element.querySelectorAll('a[aria-current="page"]')).toHaveLength(1);
   });
 
-  it('opens the active section on direct navigation and closes the mobile panel on selection', async () => {
-    const { fixture, element, router } = await setup();
-    await router.navigateByUrl('/movies/create');
-    await fixture.whenStable();
-    expect(element.querySelector('button[aria-expanded="true"]')).not.toBeNull();
+  it('closes the mobile panel on normal navigation but preserves modifier clicks', async () => {
+    const { fixture, element } = await setup();
     const close = vi.spyOn(TestBed.inject(HlmSidebarService), 'setOpenMobile');
-    element.querySelector<HTMLAnchorElement>('a[href="/movies"]')!.click();
+    const link = element.querySelector<HTMLAnchorElement>('a[href="/movies"]')!;
+    link.dispatchEvent(new MouseEvent('click', { ctrlKey: true, bubbles: true }));
+    expect(close).not.toHaveBeenCalled();
+    link.click();
     await fixture.whenStable();
     expect(close).toHaveBeenCalledWith(false);
   });

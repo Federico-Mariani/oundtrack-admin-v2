@@ -4,5 +4,6 @@
   "refresh": "Aggiorna",
   "loadFailed": "Impossibile caricare i film. Riprova.",
   "copied": "Identificativo copiato.",
-  "copyFailed": "Impossibile copiare l’identificativo."
+  "copyFailed": "Impossibile copiare l’identificativo.",
+  "create": "Nuovo film"
 }

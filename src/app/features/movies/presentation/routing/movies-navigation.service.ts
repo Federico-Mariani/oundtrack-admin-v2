@@ -13,8 +13,4 @@ export class MoviesNavigationService {
   goToMovies(extras?: NavigationExtras): Promise<boolean> {
     return this.router.navigate([...MOVIES_NAVIGATION.root()], extras);
   }
-
-  goToCreateMovie(extras?: NavigationExtras): Promise<boolean> {
-    return this.router.navigate([...MOVIES_NAVIGATION.create()], extras);
-  }
 }

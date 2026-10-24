@@ -26,6 +26,7 @@ export class GameCategoriesTable {
   readonly loading = input(false);
   readonly errorMessage = input<string | null>(null);
   readonly retry = output();
+  readonly manage = output<string>();
 
   private readonly labels = toSignal(
     this.transloco.selectTranslateObject<GameCategoriesTableLabels>('table', {}, 'gameCategories'),
@@ -34,7 +35,11 @@ export class GameCategoriesTable {
   protected readonly columns = computed(() => {
     const labels = this.labels();
 
-    return labels ? createGameCategoriesTableColumns(labels) : [];
+    return labels
+      ? createGameCategoriesTableColumns(labels, (id) => {
+          this.manage.emit(id);
+        })
+      : [];
   });
 
   protected readonly rows = computed(() => {

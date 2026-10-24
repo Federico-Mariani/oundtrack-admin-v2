@@ -1,0 +1,54 @@
+{
+  "createTitle": "Nuova categoria di gioco",
+  "editTitle": "Gestisci categoria di gioco",
+  "description": "Gestisci i nomi tradotti e l’icona condivisa della categoria.",
+  "names": "Nomi nelle lingue disponibili",
+  "namesHint": "Inserisci un nome in almeno una lingua. Potrai aggiungere altre traduzioni in seguito.",
+  "requiredName": "Inserisci almeno un nome.",
+  "keepExisting": "Le traduzioni esistenti non possono essere svuotate. Inserisci un nome per aggiornarle.",
+  "save": "Salva categoria",
+  "cancel": "Chiudi",
+  "success": "Categoria salvata correttamente.",
+  "failed": "Operazione non riuscita. I dati sono stati conservati: riprova.",
+  "conflict": "Il nome esiste già oppure il file caricato non è stato confermato. Verifica i dati e riprova.",
+  "uncertain": "Non è stato possibile verificare la creazione. Chiudi e controlla l’elenco aggiornato prima di creare nuovamente la categoria.",
+  "resume": "I nomi già salvati sono stati mantenuti. Riprova per completare i passaggi rimanenti.",
+  "languages": {
+    "it-IT": "Nome italiano",
+    "en-US": "Nome inglese"
+  },
+  "phases": {
+    "idle": "Preparazione",
+    "names": "Salvataggio traduzioni",
+    "upload": "Caricamento icona",
+    "confirm": "Conferma icona"
+  },
+  "image": {
+    "title": "Icona della categoria",
+    "shared": "Un’icona condivisa da tutte le lingue. Il caricamento è facoltativo.",
+    "preview": "Anteprima dell’indizio",
+    "removeSelection": "Rimuovi il file selezionato",
+    "replace": "Trascina qui una nuova immagine per sostituire quella attuale",
+    "drop": "Trascina qui l’immagine",
+    "formats": "Un file JPG o PNG, massimo 10 MB.",
+    "browse": "Scegli immagine",
+    "checking": "Verifica dell’immagine…",
+    "invalid": "Il file non è un’immagine JPG/PNG valida oppure supera 10 MB.",
+    "single": "Seleziona una sola immagine.",
+    "required": "Seleziona l’immagine da caricare.",
+    "description": "Carica un’immagine per questo indizio. Il testo non è richiesto.",
+    "resume": "Una parte dell’Hint è già stata salvata. Riprova per completare i passaggi rimanenti senza crearlo nuovamente.",
+    "uncertain": "Non è stato possibile verificare il salvataggio. Chiudi questa finestra e controlla la lista aggiornata prima di riprovare.",
+    "phases": {
+      "preparing": "Preparazione del salvataggio…",
+      "uploading": "Caricamento dell’immagine…",
+      "confirming": "Conferma dell’immagine…",
+      "done": "Caricamento completato",
+      "idle": "In attesa",
+      "localizing": "Salvataggio delle lingue…"
+    },
+    "confirmFailed": "Impossibile confermare l’immagine. Riprova per completare il salvataggio.",
+    "uploadFailed": "Caricamento non riuscito. Controlla la connessione e riprova."
+  },
+  "imageUnavailable": "Immagine non disponibile"
+}

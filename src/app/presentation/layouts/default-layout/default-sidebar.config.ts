@@ -19,13 +19,6 @@ export const DEFAULT_SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
         icon: 'lucideTags',
         commands: GAME_CATEGORIES_NAVIGATION.root(),
         exact: false,
-        children: [
-          {
-            id: 'game-categories-all',
-            labelKey: 'sidebar.menu.gameCategories.all',
-            commands: GAME_CATEGORIES_NAVIGATION.root(),
-          },
-        ],
       },
       {
         id: 'movies',
@@ -33,18 +26,6 @@ export const DEFAULT_SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
         icon: 'lucideFilm',
         commands: MOVIES_NAVIGATION.root(),
         exact: false,
-        children: [
-          {
-            id: 'movies-all',
-            labelKey: 'sidebar.menu.movies.all',
-            commands: MOVIES_NAVIGATION.root(),
-          },
-          {
-            id: 'movies-create',
-            labelKey: 'sidebar.menu.movies.createOne',
-            commands: MOVIES_NAVIGATION.create(),
-          },
-        ],
       },
       {
         id: 'tv-series',
@@ -52,18 +33,6 @@ export const DEFAULT_SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
         icon: 'lucideTv',
         commands: TV_SERIES_NAVIGATION.root(),
         exact: false,
-        children: [
-          {
-            id: 'tv-series-all',
-            labelKey: 'sidebar.menu.tvSeries.all',
-            commands: TV_SERIES_NAVIGATION.root(),
-          },
-          {
-            id: 'tv-series-create',
-            labelKey: 'sidebar.menu.tvSeries.createOne',
-            commands: TV_SERIES_NAVIGATION.create(),
-          },
-        ],
       },
     ],
   },

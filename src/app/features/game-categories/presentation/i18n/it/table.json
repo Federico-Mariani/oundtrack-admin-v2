@@ -1,5 +1,7 @@
 {
   "name": "Categoria",
   "languages": "Lingue",
-  "id": "ID"
+  "id": "ID",
+  "actions": "Azioni",
+  "manage": "Gestisci categoria"
 }

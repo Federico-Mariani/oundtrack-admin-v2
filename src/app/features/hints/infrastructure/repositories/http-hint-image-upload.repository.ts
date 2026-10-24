@@ -7,10 +7,7 @@ import { toRequestError } from '@app/core/http/http-error.mapper';
 import { UploadFiles } from '@app/core/uploads/upload-files';
 import { DirectFileUpload } from '@app/core/uploads/direct-file-upload';
 import { RequestErrorCode } from '@shared/state/request/request-error';
-import {
-  HINT_IMAGE_MAX_BYTES,
-  isHintImageContentType,
-} from '../../domain/values/hint-image-policy';
+import { IMAGE_MAX_BYTES, isImageContentType } from '@shared/types/uploads/image-policy';
 import type { HintModel } from '../../domain/models/hint.model';
 import type { HintResponseDto } from '../api/hint-response.dto';
 import type { HintImageUploadResponseDto } from '../api/hint-image-upload-response.dto';
@@ -56,12 +53,7 @@ export class HttpHintImageUploadRepository {
   }
   private validFile(key: string): File {
     const file = this.files.get(key);
-    if (
-      !file ||
-      !isHintImageContentType(file.type) ||
-      file.size === 0 ||
-      file.size > HINT_IMAGE_MAX_BYTES
-    )
+    if (!file || !isImageContentType(file.type) || file.size === 0 || file.size > IMAGE_MAX_BYTES)
       throw new Error('Invalid local image');
     return file;
   }
