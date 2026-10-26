@@ -1,0 +1,9 @@
+{
+  "image": "Preview",
+  "id": "ID",
+  "createdAt": "Created",
+  "updatedAt": "Updated",
+  "actions": "Actions",
+  "edit": "Edit avatar",
+  "copy": "Copy ID"
+}

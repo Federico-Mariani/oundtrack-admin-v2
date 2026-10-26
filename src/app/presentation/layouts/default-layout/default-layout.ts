@@ -16,6 +16,7 @@ import type { SelectItem } from '@shared/interfaces/select-item';
 import { IconButton } from '@shared/ui/icon-button/icon-button';
 import { provideIcons } from '@ng-icons/core';
 import {
+  lucideUserRound,
   lucideFilm,
   lucideHome,
   lucideMoon,
@@ -33,7 +34,15 @@ import { AuthFacade, AuthNavigationService } from '@features/auth';
   templateUrl: './default-layout.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    provideIcons({ lucideSunMedium, lucideMoon, lucideHome, lucideFilm, lucideTags, lucideTv }),
+    provideIcons({
+      lucideUserRound,
+      lucideSunMedium,
+      lucideMoon,
+      lucideHome,
+      lucideFilm,
+      lucideTags,
+      lucideTv,
+    }),
   ],
   imports: [RouterOutlet, Sidebar, HlmSidebarInset, HlmSidebarTrigger, Select, IconButton],
 })

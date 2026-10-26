@@ -1,0 +1,41 @@
+{
+  "createTitle": "Nuovo avatar",
+  "editTitle": "Modifica avatar",
+  "description": "Carica un’immagine per creare un avatar nel catalogo.",
+  "editDescription": "La nuova immagine sostituirà quella attuale anche per i profili che usano questo avatar.",
+  "save": "Salva avatar",
+  "cancel": "Annulla",
+  "success": "Avatar salvato con successo.",
+  "failed": "Impossibile salvare l’avatar. Riprova.",
+  "phases": {
+    "idle": "Preparazione",
+    "upload": "Caricamento immagine",
+    "confirm": "Conferma immagine"
+  },
+  "image": {
+    "removeSelection": "Rimuovi il file selezionato",
+    "replace": "Trascina qui una nuova immagine per sostituire quella attuale",
+    "drop": "Trascina qui l’immagine",
+    "formats": "Un file JPG o PNG, massimo 10 MB.",
+    "browse": "Scegli immagine",
+    "checking": "Verifica dell’immagine…",
+    "invalid": "Il file non è un’immagine JPG/PNG valida oppure supera 10 MB.",
+    "single": "Seleziona una sola immagine.",
+    "required": "Seleziona l’immagine da caricare.",
+    "title": "Immagine avatar",
+    "shared": "Seleziona un’immagine quadrata per una resa ottimale.",
+    "preview": "Anteprima avatar"
+  },
+  "imageUnavailable": "Immagine non disponibile",
+  "errors": {
+    "network": "Impossibile connettersi al server. Riprova.",
+    "bad-request": "Richiesta non valida. Controlla il modulo.",
+    "unauthorized": "La sessione è scaduta. Accedi nuovamente.",
+    "forbidden": "Non hai i permessi per gestire gli avatar.",
+    "not-found": "L’avatar non esiste più. Chiudi e aggiorna la lista.",
+    "conflict": "L’immagine è già associata a un altro avatar. Seleziona il file e riprova.",
+    "validation": "Controlla i campi evidenziati.",
+    "server": "Salvataggio non riuscito. Riprova per completare il caricamento.",
+    "unknown": "Impossibile salvare l’avatar. Riprova."
+  }
+}

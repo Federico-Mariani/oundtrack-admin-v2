@@ -19,5 +19,6 @@
   },
   "logout": "Log out",
   "navigation": "Main navigation",
-  "toggleSection": "Toggle {{section}} menu"
+  "toggleSection": "Toggle {{section}} menu",
+  "avatars": "Avatars"
 }

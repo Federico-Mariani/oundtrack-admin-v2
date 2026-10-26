@@ -1,0 +1,39 @@
+<app-modal-frame
+  *transloco="let t; prefix: 'avatars.editor'"
+  [title]="t(params.avatar ? 'editTitle' : 'createTitle')"
+  [description]="t(params.avatar ? 'editDescription' : 'description')"
+  [closeDisabled]="busy()"
+>
+  <form class="space-y-6" (submit)="submit($event)">
+    <app-image-upload-field
+      translationPrefix="avatars.editor"
+      previewClass="mx-auto aspect-square size-40 rounded-lg bg-muted/40"
+      [selection]="selection"
+      [disabled]="busy()"
+      [submitted]="submitted()"
+      [existingImage]="params.avatar?.path ?? null"
+    />
+    @if (busy()) {
+      <app-upload-progress [label]="t('phases.' + phase())" [value]="progress()" />
+    }
+    @if (error(); as failure) {
+      <p role="alert" class="text-sm text-destructive">{{ t('errors.' + failure.code) }}</p>
+    }
+    <div class="grid gap-3 pt-2">
+      <app-button
+        type="submit"
+        [text]="t('save')"
+        [loading]="busy()"
+        [disabled]="busy() || selection.checking() || !selection.fileKey()"
+        buttonClass="h-11 w-full"
+      />
+      <app-button
+        variant="outline"
+        [text]="t('cancel')"
+        [disabled]="busy()"
+        buttonClass="h-11 w-full"
+        (click)="ref.close(false)"
+      />
+    </div>
+  </form>
+</app-modal-frame>

@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { provideTransloco, TranslocoService } from '@jsverse/transloco';
 import { provideIcons } from '@ng-icons/core';
-import { lucideFilm, lucideHome, lucideTags, lucideTv } from '@ng-icons/lucide';
+import { lucideFilm, lucideHome, lucideTags, lucideTv, lucideUserRound } from '@ng-icons/lucide';
 import { HlmSidebarService } from '@spartan-ng/helm/sidebar';
 import { of } from 'rxjs';
 import { SidebarNavigation } from './sidebar-navigation';
@@ -33,10 +33,11 @@ describe('Configured sidebar navigation', () => {
           { path: '', pathMatch: 'full', component: SidebarTestPage },
           { path: 'movies', component: SidebarTestPage },
           { path: 'tv-series', component: SidebarTestPage },
+          { path: 'avatars', component: SidebarTestPage },
           { path: 'game-categories', component: SidebarTestPage },
           { path: 'reports', component: SidebarTestPage },
         ]),
-        provideIcons({ lucideFilm, lucideHome, lucideTags, lucideTv }),
+        provideIcons({ lucideFilm, lucideHome, lucideTags, lucideTv, lucideUserRound }),
         provideTransloco({
           config: {
             availableLangs: ['en', 'it'],
@@ -62,7 +63,7 @@ describe('Configured sidebar navigation', () => {
     const { fixture, element, router } = await setup();
     expect(element.querySelector('button[data-sidebar="menu-button"]')).toBeNull();
     expect(element.querySelector('a[href="/movies/create"]')).toBeNull();
-    for (const path of ['/movies', '/tv-series', '/game-categories']) {
+    for (const path of ['/movies', '/tv-series', '/game-categories', '/avatars']) {
       const link = element.querySelector<HTMLAnchorElement>(`a[href="${path}"]`)!;
       expect(link.querySelector('ng-icon')).not.toBeNull();
       link.click();

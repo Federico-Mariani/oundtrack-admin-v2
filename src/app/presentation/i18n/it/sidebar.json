@@ -19,5 +19,6 @@
   },
   "logout": "Esci",
   "navigation": "Navigazione principale",
-  "toggleSection": "Apri o chiudi il menu {{section}}"
+  "toggleSection": "Apri o chiudi il menu {{section}}",
+  "avatars": "Avatar"
 }
