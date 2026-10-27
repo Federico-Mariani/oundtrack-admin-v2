@@ -16,18 +16,19 @@ import type { SelectItem } from '@shared/interfaces/select-item';
 import { IconButton } from '@shared/ui/icon-button/icon-button';
 import { provideIcons } from '@ng-icons/core';
 import {
-  lucideUserRound,
   lucideFilm,
   lucideHome,
   lucideMoon,
   lucideSunMedium,
   lucideTags,
   lucideTv,
+  lucideUserRound,
 } from '@ng-icons/lucide';
 import { LanguageService } from '@app/core/i18n/language/language.service';
 import { isSupportedLanguage } from '@app/core/i18n/language/supported-language';
 import { ThemeService } from '@app/core/theme/theme.service';
 import { AuthFacade, AuthNavigationService } from '@features/auth';
+import { toSidebarUser } from './mappers/sidebar-user.mapper';
 
 @Component({
   selector: 'app-default-layout',
@@ -56,7 +57,7 @@ export class DefaultLayout {
 
   protected readonly sidebarGroups = DEFAULT_SIDEBAR_GROUPS;
 
-  protected readonly currentUser = this.authFacade.data.user;
+  protected readonly sidebarUser = computed(() => toSidebarUser(this.authFacade.data.user()));
 
   protected readonly languagesAvailable: Array<SelectItem> = this.language.options.map(
     (option) => ({

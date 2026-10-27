@@ -1,5 +1,6 @@
 import type { UserModel } from '../../domain/models/user.model';
 import type { UserResponseDto } from '../api/dto/user-response.dto';
+import { toUserProfile } from './user-profile.mapper';
 
 export function toUser(dto: UserResponseDto): UserModel {
   return {
@@ -7,5 +8,6 @@ export function toUser(dto: UserResponseDto): UserModel {
     firstName: dto.firstName,
     lastName: dto.lastName,
     email: dto.email,
+    profile: toUserProfile(dto.profile),
   };
 }

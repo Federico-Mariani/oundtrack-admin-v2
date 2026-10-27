@@ -28,10 +28,9 @@
             [disabled]="loggingOut()"
             [attr.aria-busy]="loggingOut()"
           >
-            <app-avatar
-              [alt]="'avatar'"
-              [source]="'https://image.tmdb.org/t/p/original/9i6966Py1jvnGHFFwxf3CGku7GV.jpg'"
-            />
+            @if (user()?.avatar) {
+              <app-avatar [alt]="'avatar'" [source]="user()!.avatar!" />
+            }
             <div class="grid flex-1 text-start text-sm leading-tight">
               <span class="truncate font-medium"
                 >{{ user()?.firstName }} {{ user()?.lastName }}</span
@@ -48,10 +47,9 @@
             <hlm-dropdown-menu>
               <hlm-dropdown-menu-group>
                 <button class="p-3 pe-10 pointer-events-none" hlmDropdownMenuItem size="lg">
-                  <app-avatar
-                    [alt]="'avatar'"
-                    [source]="'https://image.tmdb.org/t/p/original/9i6966Py1jvnGHFFwxf3CGku7GV.jpg'"
-                  />
+                  @if (user()?.avatar) {
+                    <app-avatar [alt]="'avatar'" [source]="user()!.avatar!" />
+                  }
                   <div class="grid flex-1 text-start text-sm leading-tight">
                     <span class="truncate font-medium"
                       >{{ user()?.firstName }} {{ user()?.lastName }}</span

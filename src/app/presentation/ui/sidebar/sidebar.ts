@@ -46,5 +46,6 @@ export class Sidebar {
   readonly groups = input.required<ReadonlyArray<SidebarGroup>>();
   readonly user = input<SidebarUser | null>(null);
   readonly loggingOut = input(false);
+
   readonly logout = output();
 }
