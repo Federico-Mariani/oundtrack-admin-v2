@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { authFeature } from '../auth.feature';
 
-/** Read-only auth data as Signals. Never dispatches. */
 @Injectable({ providedIn: 'root' })
 export class AuthStoreDataFacade {
   private readonly store = inject(Store);

@@ -1,0 +1,10 @@
+{
+  "title": "Avatar",
+  "description": "Manage the avatars available for profiles.",
+  "create": "New avatar",
+  "refresh": "Refresh",
+  "search": "Search by ID",
+  "loadFailed": "Unable to load avatars. Please retry.",
+  "copied": "ID copied.",
+  "copyFailed": "Unable to copy the ID."
+}

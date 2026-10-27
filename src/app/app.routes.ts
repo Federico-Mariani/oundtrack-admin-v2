@@ -1,3 +1,4 @@
+import { AVATARS_PATHS } from '@features/avatars';
 import type { Routes } from '@angular/router';
 import { AUTH_PATHS, authGuard } from '@features/auth';
 import { MOVIES_PATHS } from '@features/movies';
@@ -18,6 +19,10 @@ export const routes: Routes = [
         ({ DefaultLayout }) => DefaultLayout,
       ),
     children: [
+      {
+        path: AVATARS_PATHS.root,
+        loadChildren: () => import('@features/avatars').then((m) => m.AVATARS_ROUTES),
+      },
       {
         path: '',
         loadChildren: () => import('@features/home').then(({ HOME_ROUTES }) => HOME_ROUTES),

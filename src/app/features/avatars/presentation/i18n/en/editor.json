@@ -1,0 +1,41 @@
+{
+  "createTitle": "New avatar",
+  "editTitle": "Edit avatar",
+  "description": "Upload an image to create a catalog avatar.",
+  "editDescription": "The new image will also replace the current one for profiles using this avatar.",
+  "save": "Save avatar",
+  "cancel": "Cancel",
+  "success": "Avatar saved successfully.",
+  "failed": "Unable to save the avatar. Please retry.",
+  "phases": {
+    "idle": "Preparing",
+    "upload": "Uploading image",
+    "confirm": "Confirming image"
+  },
+  "image": {
+    "removeSelection": "Remove selected file",
+    "replace": "Drop a new image here to replace the current one",
+    "drop": "Drop your image here",
+    "formats": "One JPG or PNG file, up to 10 MB.",
+    "browse": "Choose image",
+    "checking": "Checking image…",
+    "invalid": "Select a valid JPG/PNG image no larger than 10 MB.",
+    "single": "Select one image only.",
+    "required": "Choose the image to upload.",
+    "title": "Avatar image",
+    "shared": "Choose a square image for the best result.",
+    "preview": "Avatar preview"
+  },
+  "imageUnavailable": "Image unavailable",
+  "errors": {
+    "network": "Unable to connect to the server. Please try again.",
+    "bad-request": "Invalid request. Check the form.",
+    "unauthorized": "Your session has expired. Please sign in again.",
+    "forbidden": "You do not have permission to manage avatars.",
+    "not-found": "This avatar no longer exists. Close and refresh the list.",
+    "conflict": "The image belongs to another avatar. Select the file and retry.",
+    "validation": "Check the highlighted fields.",
+    "server": "Save failed. Retry to finish uploading.",
+    "unknown": "Unable to save the avatar. Please retry."
+  }
+}

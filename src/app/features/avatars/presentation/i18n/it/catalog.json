@@ -1,0 +1,10 @@
+{
+  "title": "Avatar",
+  "description": "Gestisci gli avatar disponibili per i profili.",
+  "create": "Nuovo avatar",
+  "refresh": "Ricarica",
+  "search": "Cerca per ID",
+  "loadFailed": "Impossibile caricare gli avatar. Riprova.",
+  "copied": "ID copiato.",
+  "copyFailed": "Impossibile copiare l’ID."
+}

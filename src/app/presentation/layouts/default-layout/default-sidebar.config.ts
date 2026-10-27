@@ -1,3 +1,4 @@
+import { AVATARS_NAVIGATION } from '@features/avatars';
 import { MOVIES_NAVIGATION } from '@features/movies';
 import type { SidebarGroup } from '../../ui/sidebar/sidebar-group';
 import { GAME_CATEGORIES_NAVIGATION } from '@features/game-categories';
@@ -13,6 +14,13 @@ export const DEFAULT_SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
     id: 'entities',
     labelKey: 'sidebar.menu.entities',
     items: [
+      {
+        id: 'avatars',
+        labelKey: 'sidebar.menu.avatars',
+        icon: 'lucideUserRound',
+        commands: AVATARS_NAVIGATION.root(),
+        exact: false,
+      },
       {
         id: 'gameCategories',
         labelKey: 'sidebar.menu.gameCategories.label',

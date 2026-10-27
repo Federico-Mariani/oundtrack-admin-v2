@@ -1,3 +1,4 @@
+import { provideAvatars } from '@features/avatars';
 import { provideHints } from '@features/hints';
 import { provideSoundtracks } from '@features/soundtracks';
 import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
@@ -35,5 +36,6 @@ export const appConfig: ApplicationConfig = {
     provideHints(),
     provideTvSeries(),
     provideGameCategories(),
+    provideAvatars(),
   ],
 };
