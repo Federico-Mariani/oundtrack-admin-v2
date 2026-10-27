@@ -1,0 +1,22 @@
+<div hlmAttachment class="w-full flex-nowrap gap-3 rounded-lg p-3 shadow-none" [state]="state()">
+  <div hlmAttachmentMedia class="size-10 rounded-md">
+    <ng-icon [name]="icon()" aria-hidden="true" />
+  </div>
+  <div hlmAttachmentContent>
+    <span hlmAttachmentTitle [title]="name()">{{ name() }}</span>
+    <span hlmAttachmentDescription>{{ description() }}</span>
+  </div>
+  @if (removable()) {
+    <div hlmAttachmentActions>
+      <button
+        hlmAttachmentAction
+        size="icon-sm"
+        [attr.aria-label]="removeLabel() + ': ' + name()"
+        [disabled]="disabled()"
+        (click)="removed.emit()"
+      >
+        <ng-icon name="lucideX" aria-hidden="true" />
+      </button>
+    </div>
+  }
+</div>

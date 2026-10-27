@@ -10,15 +10,7 @@
       </div>
       <p class="mt-1 text-sm text-muted-foreground">{{ t('description') }}</p>
     </div>
-    <div class="flex flex-wrap gap-3">
-      <app-button
-        icon="lucideRefreshCw"
-        variant="outline"
-        [text]="t('refresh')"
-        [disabled]="loading()"
-        (click)="reload()"
-      /><app-button icon="lucidePlus" [text]="t('create')" (click)="manage()" />
-    </div>
+    <app-button icon="lucidePlus" [text]="t('create')" (click)="manage()" />
   </header>
   <app-avatars-table
     [avatars]="avatars()"

@@ -4,7 +4,9 @@ import type { AvatarModel } from '../../../domain/models/avatar.model';
 import type { AvatarsTableLabels } from './avatars-table-labels';
 import { AvatarImageCell } from '../avatar-image-cell/avatar-image-cell';
 import { AvatarActionsCell } from '../avatar-actions-cell/avatar-actions-cell';
+
 const helper = createColumnHelper<DataTableFeatures, AvatarModel>();
+
 export function createAvatarsTableColumns(
   labels: AvatarsTableLabels,
   locale: string,
@@ -44,9 +46,9 @@ export function createAvatarsTableColumns(
     helper.display({
       id: 'actions',
       header: labels.actions,
-      size: 110,
-      minSize: 110,
-      maxSize: 110,
+      size: 100,
+      minSize: 100,
+      maxSize: 100,
       enableHiding: false,
       enableResizing: false,
       cell: (context) =>

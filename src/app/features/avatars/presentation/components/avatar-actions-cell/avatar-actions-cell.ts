@@ -1,25 +1,15 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { provideIcons } from '@ng-icons/core';
-import { lucidePencil, lucideCopy } from '@ng-icons/lucide';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideCopy, lucideEllipsis, lucidePencil } from '@ng-icons/lucide';
 import { IconButton } from '@shared/ui/icon-button/icon-button';
+import { HlmDropdownMenu, HlmDropdownMenuItem } from '@spartan-ng/helm/dropdown-menu';
+
 @Component({
   selector: 'app-avatar-actions-cell',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IconButton],
-  providers: [provideIcons({ lucidePencil, lucideCopy })],
-  template: `<div class="flex items-center gap-1">
-    <app-icon-button
-      icon="lucidePencil"
-      variant="ghost"
-      [ariaLabel]="editLabel()"
-      (click)="edit.emit()"
-    /><app-icon-button
-      icon="lucideCopy"
-      variant="ghost"
-      [ariaLabel]="copyLabel()"
-      (click)="copyId.emit()"
-    />
-  </div>`,
+  imports: [IconButton, HlmDropdownMenu, HlmDropdownMenuItem, NgIcon],
+  providers: [provideIcons({ lucideEllipsis, lucidePencil, lucideCopy })],
+  templateUrl: './avatar-actions-cell.html',
 })
 export class AvatarActionsCell {
   readonly editLabel = input.required<string>();
