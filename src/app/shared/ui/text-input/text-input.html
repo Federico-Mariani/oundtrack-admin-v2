@@ -1,11 +1,12 @@
 <div class="relative min-w-0" [class]="comfortable() ? 'space-y-2.5' : 'space-y-1'">
-  <label
-    class="block font-medium"
-    [class]="comfortable() ? 'text-sm text-foreground' : 'text-xs text-muted-foreground'"
-    [class.sr-only]="hideLabel()"
-    [for]="id"
-    >{{ label() }}</label
-  >
+  @if (label()) {
+    <label
+      class="block font-medium"
+      [class]="comfortable() ? 'text-sm text-foreground' : 'text-xs text-muted-foreground'"
+      [for]="id"
+      >{{ label() }}</label
+    >
+  }
   <input
     hlmInput
     class="min-w-0 w-full text-sm"

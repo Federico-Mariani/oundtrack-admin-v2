@@ -17,6 +17,7 @@ import type { DataTableRemoteState } from '@shared/ui/data-table/data-table-remo
 import type { AvatarModel } from '../../../domain/models/avatar.model';
 import type { AvatarsTableLabels } from './avatars-table-labels';
 import { createAvatarsTableColumns } from './avatars-table.columns';
+
 @Component({
   selector: 'app-avatars-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +26,6 @@ import { createAvatarsTableColumns } from './avatars-table.columns';
     <ng-template #controls
       ><app-text-input
         [formField]="searchForm.query"
-        [label]="t('search')"
         type="search"
         inputMode="search"
         [placeholder]="t('search')"
